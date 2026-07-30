@@ -8,12 +8,40 @@ Input:  reference/password-live.html
 Output: index.html (root del repo)
 """
 
+import json
 import re
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
 SRC = ROOT / "reference" / "password-live.html"
 OUT = ROOT / "index.html"
+
+# True sul branch experiment/glass-interactions (glassmorphism interattivo)
+ENABLE_GLASS_EXPERIMENTS = True
+
+# Dominio definitivo della landing (es. GitHub Pages). Quando è noto,
+# inserirlo qui: il build emette <link rel="canonical"> e lo usa nel JSON-LD.
+CANONICAL_URL = ""
+
+BRAND_URL = "https://volturia.com"
+
+# Video sotto la fold: poster frame + preload="metadata" (branch experiment)
+FOLD_VIDEOS = [
+    "mission",
+    "bento-1",
+    "bento-3",
+    "nfc-blockchain",
+    "virtual-try-on",
+    "benefits",
+]
+
+# Alt descrittivi per le icone benefit (branch experiment)
+ALT_TEXTS = {
+    "eco.png": "Eco-friendly materials icon",
+    "italy.png": "Made in Italy icon",
+    "sewing-machine.png": "Artisanal craftsmanship icon",
+    "group-users.png": "Volturia community icon",
+}
 
 # --- Mappa URL CDN Shopify -> path locali ---------------------------------
 VIDEO_MAP = {
@@ -48,6 +76,59 @@ NEWSLETTER_FORM = """<form method="post" action="https://formspree.io/f/YOUR_FOR
     </div>
     <p class="nl-form-status" data-form-status role="status" aria-live="polite"></p></form>"""
 
+GLASS_CSS_LINK = (
+    '\n  <link rel="stylesheet" href="./assets/css/glass-experiments.css">'
+    if ENABLE_GLASS_EXPERIMENTS
+    else ""
+)
+GLASS_JS_SCRIPT = (
+    '\n  <script src="./assets/js/glass-interactions.js"></script>'
+    if ENABLE_GLASS_EXPERIMENTS
+    else ""
+)
+EXPERIMENTS_JS_SCRIPT = (
+    '\n  <script src="./assets/js/experiments.js"></script>'
+    if ENABLE_GLASS_EXPERIMENTS
+    else ""
+)
+
+# Head extra del branch experiment: preload Carrie, Lenis, canonical, JSON-LD
+def build_experiment_head() -> str:
+    if not ENABLE_GLASS_EXPERIMENTS:
+        return ""
+    parts = [
+        '\n  <link rel="preload" as="image" '
+        'href="./media/images/carrie_croptop_AIV2_cropped.jpg" fetchpriority="high">',
+        '\n  <script src="./assets/js/vendor/lenis.min.js"></script>',
+    ]
+    if CANONICAL_URL:
+        parts.append(f'\n  <link rel="canonical" href="{CANONICAL_URL}">')
+    else:
+        parts.append(
+            "\n  <!-- TODO: imposta CANONICAL_URL in tools/build.py quando il"
+            " dominio GitHub Pages e' noto -->"
+        )
+    json_ld = {
+        "@context": "https://schema.org",
+        "@type": "Organization",
+        "name": "Volturia",
+        "url": CANONICAL_URL or BRAND_URL,
+        "logo": "./media/images/logoV.svg",
+        "description": DESCRIPTION,
+        "sameAs": [
+            "https://instagram.com/volturia_official",
+            "https://www.linkedin.com/company/volturia/",
+        ],
+    }
+    parts.append(
+        '\n  <script type="application/ld+json">'
+        + json.dumps(json_ld, indent=2).replace("\n", "\n  ")
+        + "</script>"
+    )
+    return "".join(parts)
+
+EXPERIMENT_HEAD = build_experiment_head()
+
 HEAD = f"""<!doctype html>
 <html class="no-js" lang="en" dir="ltr">
 <head>
@@ -77,16 +158,42 @@ HEAD = f"""<!doctype html>
 
   <link rel="stylesheet" href="./assets/css/fonts.css">
   <link rel="stylesheet" href="./assets/css/theme.css">
-  <link rel="stylesheet" href="./assets/css/site.css">
+  <link rel="stylesheet" href="./assets/css/site.css">{GLASS_CSS_LINK}
 
   <script>
     document.documentElement.className = document.documentElement.className.replace('no-js', 'js');
   </script>
   <script src="./assets/js/vendor/gsap.min.js"></script>
-  <script src="./assets/js/vendor/ScrollTrigger.min.js"></script>
+  <script src="./assets/js/vendor/ScrollTrigger.min.js"></script>{EXPERIMENT_HEAD}
 </head>
 
 """
+
+
+def add_experiment_enhancements(html: str) -> str:
+    # Poster frame su tutti i video; preload="metadata" solo sotto la fold
+    def posterize(match: re.Match) -> str:
+        tag_start, name = match.group(1), match.group(2)
+        extra = f' poster="./media/images/posters/{name}.jpg"'
+        if name in FOLD_VIDEOS:
+            extra += ' preload="metadata"'
+        return tag_start + extra
+
+    html = re.sub(
+        r'(<video\b[^>]*?src="\./media/videos/'
+        r"(background|mission|bento-1|bento-3|nfc-blockchain|virtual-try-on|benefits)"
+        r'\.(?:mp4|webm)")',
+        posterize,
+        html,
+    )
+
+    for filename, alt in ALT_TEXTS.items():
+        html = html.replace(
+            f'src="./media/images/{filename}" alt="Benefit icon"',
+            f'src="./media/images/{filename}" alt="{alt}"',
+        )
+
+    return html
 
 
 def replace_media_urls(html: str) -> str:
@@ -180,9 +287,15 @@ def main() -> None:
 
     body = replace_media_urls(body)
 
+    if ENABLE_GLASS_EXPERIMENTS:
+        body = add_experiment_enhancements(body)
+
     OUT.write_text(
         HEAD + body_tag + "\n" + body
-        + '\n  <script src="./assets/js/main.js"></script>\n</body>\n</html>\n',
+        + '\n  <script src="./assets/js/main.js"></script>'
+        + GLASS_JS_SCRIPT
+        + EXPERIMENTS_JS_SCRIPT
+        + "\n</body>\n</html>\n",
         encoding="utf-8",
     )
 

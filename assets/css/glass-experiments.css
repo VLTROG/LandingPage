@@ -1,0 +1,152 @@
+/*
+ * Branch experiment/glass-interactions
+ * Glassmorphism interattivo: sheen al cursore + tilt 3D (solo desktop, pointer fine).
+ */
+
+@media (hover: hover) and (pointer: fine) {
+  html.glass-experiments .bento-container {
+    perspective: 1200px;
+  }
+
+  html.glass-experiments .bento .box,
+  html.glass-experiments .nl-pill-button,
+  html.glass-experiments .faq-item,
+  html.glass-experiments .sw-window {
+    --mx: 50%;
+    --my: 50%;
+  }
+
+  html.glass-experiments .glass-sheen {
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    pointer-events: none;
+    z-index: 4;
+    opacity: 0;
+    transition: opacity 0.35s ease;
+    background: radial-gradient(
+      520px circle at var(--mx) var(--my),
+      rgba(255, 255, 255, 0.34),
+      transparent 42%
+    );
+  }
+
+  html.glass-experiments .is-glass-active > .glass-sheen {
+    opacity: 1;
+  }
+
+  html.glass-experiments .bento .box {
+    transform-style: preserve-3d;
+    will-change: transform;
+  }
+
+  html.glass-experiments .bento .box .bento-content {
+    transform: translateZ(24px);
+  }
+
+  html.glass-experiments .nl-pill-button {
+    position: relative;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+
+  html.glass-experiments .faq-item,
+  html.glass-experiments .sw-window {
+    position: relative;
+  }
+
+  /* 2c — Cursore glass: anello con blur + dot, posizione via custom
+     properties (aggiornate ogni frame in JS), dimensione in transizione. */
+  html.glass-experiments .glass-cursor {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    border: 1.5px solid rgba(255, 255, 255, 0.7);
+    background: rgba(255, 255, 255, 0.1);
+    -webkit-backdrop-filter: blur(4px) saturate(160%);
+    backdrop-filter: blur(4px) saturate(160%);
+    box-shadow:
+      0 2px 10px rgba(0, 0, 0, 0.18),
+      inset 0 0 8px rgba(255, 255, 255, 0.22);
+    pointer-events: none;
+    z-index: 9999;
+    opacity: 0;
+    transform: translate3d(var(--cx, -100px), var(--cy, -100px), 0)
+      translate(-50%, -50%);
+    transition:
+      width 0.25s ease,
+      height 0.25s ease,
+      opacity 0.3s ease,
+      border-color 0.25s ease,
+      background-color 0.25s ease;
+  }
+
+  html.glass-experiments .glass-cursor.is-visible {
+    opacity: 1;
+  }
+
+  html.glass-experiments .glass-cursor.is-cursor-hover {
+    width: 58px;
+    height: 58px;
+    border-color: rgba(255, 255, 255, 0.95);
+    background-color: rgba(255, 255, 255, 0.16);
+  }
+
+  html.glass-experiments .glass-cursor-dot {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.9);
+    box-shadow: 0 0 6px rgba(255, 255, 255, 0.5);
+    pointer-events: none;
+    z-index: 9999;
+    opacity: 0;
+    transform: translate3d(var(--cx, -100px), var(--cy, -100px), 0)
+      translate(-50%, -50%);
+    transition: opacity 0.3s ease;
+  }
+
+  html.glass-experiments .glass-cursor-dot.is-visible {
+    opacity: 1;
+  }
+
+  /* 2d — con il magnetico JS il translate è inline sul link: lo scale
+     dell'hover si sposta sullo span dell'icona. */
+  html.glass-experiments [id^="SocialWindow"] .sw-icon:hover,
+  html.glass-experiments [id^="SocialWindow"] .sw-icon:active {
+    transform: none !important;
+  }
+
+  html.glass-experiments [id^="SocialWindow"] .sw-icon .sw-ico {
+    transition: transform 0.2s ease, filter 0.2s ease;
+  }
+
+  html.glass-experiments [id^="SocialWindow"] .sw-icon:hover .sw-ico {
+    transform: scale(1.12);
+    filter: brightness(110%);
+  }
+
+  html.glass-experiments [id^="SocialWindow"] .sw-icon:active .sw-ico {
+    transform: scale(0.97);
+  }
+
+  /* 3b — stato success del form newsletter: il gruppo input+bottone
+     scompare e resta il messaggio di conferma. */
+  html.glass-experiments .nl-form form.is-success .newsletter-form-group {
+    opacity: 0;
+    transform: translateY(-8px);
+    visibility: hidden;
+    pointer-events: none;
+    transition: opacity 0.35s ease, transform 0.35s ease,
+      visibility 0s linear 0.35s;
+  }
+
+  html.glass-experiments .nl-form form .newsletter-form-group {
+    transition: opacity 0.35s ease, transform 0.35s ease;
+  }
+}

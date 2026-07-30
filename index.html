@@ -28,12 +28,28 @@
   <link rel="stylesheet" href="./assets/css/fonts.css">
   <link rel="stylesheet" href="./assets/css/theme.css">
   <link rel="stylesheet" href="./assets/css/site.css">
+  <link rel="stylesheet" href="./assets/css/glass-experiments.css">
 
   <script>
     document.documentElement.className = document.documentElement.className.replace('no-js', 'js');
   </script>
   <script src="./assets/js/vendor/gsap.min.js"></script>
   <script src="./assets/js/vendor/ScrollTrigger.min.js"></script>
+  <link rel="preload" as="image" href="./media/images/carrie_croptop_AIV2_cropped.jpg" fetchpriority="high">
+  <script src="./assets/js/vendor/lenis.min.js"></script>
+  <!-- TODO: imposta CANONICAL_URL in tools/build.py quando il dominio GitHub Pages e' noto -->
+  <script type="application/ld+json">{
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    "name": "Volturia",
+    "url": "https://volturia.com",
+    "logo": "./media/images/logoV.svg",
+    "description": "Discover the latest fashion designs by Volturia. Shop the exclusive high-end collections and unique pieces for men and women. Settled in Rome, Italy and Los Angeles, US. Worldwide Shipping.",
+    "sameAs": [
+      "https://instagram.com/volturia_official",
+      "https://www.linkedin.com/company/volturia/"
+    ]
+  }</script>
 </head>
 
 <body data-transitions="false" data-animate_underlines="true" data-animate_images="false" data-button_style="round" data-type_product_capitalize="false" data-type_header_capitalize="false" data-product_image_scatter="false" data-button_type_style="normal">
@@ -41,7 +57,7 @@
   <a class="in-page-link visually-hidden skip-link" href="#MainContent">Skip to content</a>
   
   <div class="background-video">
-    <video src="./media/videos/background.mp4" width="3840" height="2160" type="video/mp4" autoplay muted loop playsinline>   <!-- VALORE BACKGROUND!!! -->
+    <video src="./media/videos/background.mp4" poster="./media/images/posters/background.jpg" width="3840" height="2160" type="video/mp4" autoplay muted loop playsinline>   <!-- VALORE BACKGROUND!!! -->
     </video>
   </div>
 
@@ -784,7 +800,7 @@
       <div class="to-media">
         <div class="to-media-frame">
           
-            <video src="./media/videos/mission.webm" autoplay muted loop playsinline></video>
+            <video src="./media/videos/mission.webm" poster="./media/images/posters/mission.jpg" preload="metadata" autoplay muted loop playsinline></video>
           
         </div>
       </div>
@@ -1025,7 +1041,7 @@
           </div>
           
             <video
-              src="./media/videos/bento-1.webm"
+              src="./media/videos/bento-1.webm" poster="./media/images/posters/bento-1.jpg" preload="metadata"
               autoplay
               muted
               loop
@@ -1049,7 +1065,7 @@
         <div class="box box-03">
           
             <video
-              src="./media/videos/bento-3.mp4"
+              src="./media/videos/bento-3.mp4" poster="./media/images/posters/bento-3.jpg" preload="metadata"
               autoplay
               muted
               loop
@@ -1648,7 +1664,7 @@
               
                 <video
                   class="iad-card-video"
-                  src="./media/videos/nfc-blockchain.mp4"
+                  src="./media/videos/nfc-blockchain.mp4" poster="./media/images/posters/nfc-blockchain.jpg" preload="metadata"
                   autoplay
                   muted
                   loop
@@ -1845,7 +1861,7 @@
       <div class="to-media">
         <div class="to-media-frame">
           
-            <video src="./media/videos/virtual-try-on.webm" autoplay muted loop playsinline></video>
+            <video src="./media/videos/virtual-try-on.webm" poster="./media/images/posters/virtual-try-on.jpg" preload="metadata" autoplay muted loop playsinline></video>
           
         </div>
       </div>
@@ -2285,7 +2301,7 @@
               <div class="benefit-item" >
                 
                   <div class="benefit-icon">
-                    <img src="./media/images/eco.png" alt="Benefit icon" srcset="./media/images/eco.png 128w" width="128" height="128" loading="lazy" decoding="async">
+                    <img src="./media/images/eco.png" alt="Eco-friendly materials icon" srcset="./media/images/eco.png 128w" width="128" height="128" loading="lazy" decoding="async">
                   </div>
                 
                 
@@ -2299,7 +2315,7 @@
               <div class="benefit-item" >
                 
                   <div class="benefit-icon">
-                    <img src="./media/images/italy.png" alt="Benefit icon" srcset="./media/images/italy.png 128w" width="128" height="128" loading="lazy" decoding="async">
+                    <img src="./media/images/italy.png" alt="Made in Italy icon" srcset="./media/images/italy.png 128w" width="128" height="128" loading="lazy" decoding="async">
                   </div>
                 
                 
@@ -2313,7 +2329,7 @@
               <div class="benefit-item" >
                 
                   <div class="benefit-icon">
-                    <img src="./media/images/sewing-machine.png" alt="Benefit icon" srcset="./media/images/sewing-machine.png 128w" width="128" height="128" loading="lazy" decoding="async">
+                    <img src="./media/images/sewing-machine.png" alt="Artisanal craftsmanship icon" srcset="./media/images/sewing-machine.png 128w" width="128" height="128" loading="lazy" decoding="async">
                   </div>
                 
                 
@@ -2327,7 +2343,7 @@
               <div class="benefit-item" >
                 
                   <div class="benefit-icon">
-                    <img src="./media/images/group-users.png" alt="Benefit icon" srcset="./media/images/group-users.png 128w" width="128" height="128" loading="lazy" decoding="async">
+                    <img src="./media/images/group-users.png" alt="Volturia community icon" srcset="./media/images/group-users.png 128w" width="128" height="128" loading="lazy" decoding="async">
                   </div>
                 
                 
@@ -2348,7 +2364,7 @@
               
                 <video
                   class="iad-card-video"
-                  src="./media/videos/benefits.mp4"
+                  src="./media/videos/benefits.mp4" poster="./media/images/posters/benefits.jpg" preload="metadata"
                   autoplay
                   muted
                   loop
@@ -3022,5 +3038,7 @@ srl - P.IVA 18252951001
 
   
   <script src="./assets/js/main.js"></script>
+  <script src="./assets/js/glass-interactions.js"></script>
+  <script src="./assets/js/experiments.js"></script>
 </body>
 </html>

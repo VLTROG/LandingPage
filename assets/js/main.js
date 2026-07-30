@@ -28,6 +28,37 @@
     status.classList.toggle('is-error', Boolean(isError));
   }
 
+  function handleSuccess(form) {
+    var submitBtn = form.querySelector('button[type="submit"]');
+    var pillBtn = document.querySelector('.nl-pill-button');
+    var input = form.querySelector('input[type="email"]');
+    if (input) input.disabled = true;
+    if (submitBtn) submitBtn.disabled = true;
+    if (pillBtn) pillBtn.disabled = true;
+
+    form.classList.add('is-success');
+
+    /* Micro-animazione di conferma: impulso sul bottone prima che il
+       gruppo scompaia, poi enfasi sul messaggio di stato. */
+    if (window.gsap) {
+      if (pillBtn) {
+        window.gsap.fromTo(
+          pillBtn,
+          { scale: 1 },
+          { scale: 1.06, duration: 0.14, yoyo: true, repeat: 1, ease: 'power2.out' }
+        );
+      }
+      var status = form.querySelector('[data-form-status]');
+      if (status) {
+        window.gsap.fromTo(
+          status,
+          { opacity: 0, y: 6 },
+          { opacity: 1, y: 0, duration: 0.45, delay: 0.3, ease: 'power2.out' }
+        );
+      }
+    }
+  }
+
   function initNewsletterForm() {
     var form = document.querySelector('[data-newsletter-form]');
     if (!form) return;
@@ -61,7 +92,7 @@
         .then(function (response) {
           if (response.ok) {
             showStatus(form, MESSAGES.success, false);
-            form.reset();
+            handleSuccess(form);
           } else {
             showStatus(form, MESSAGES.error, true);
           }
@@ -70,7 +101,9 @@
           showStatus(form, MESSAGES.error, true);
         })
         .finally(function () {
-          if (submitBtn) submitBtn.disabled = false;
+          if (submitBtn && !form.classList.contains('is-success')) {
+            submitBtn.disabled = false;
+          }
         });
     });
   }
