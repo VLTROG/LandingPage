@@ -1,0 +1,188 @@
+{% liquid
+  assign title_text = section.settings.title | default: 'DROPS CALENDAR'
+  assign subtitle_text = section.settings.subtitle | default: 'Upcoming releases and priority access'
+  assign drop_name = section.settings.drop_name | default: 'MIDNIGHT'
+  assign desc_text = section.settings.description | default: 'The collection is available for a limited time'
+
+  capture target_str
+    echo section.settings.year
+    echo '-'
+    echo section.settings.month
+    echo '-'
+    echo section.settings.day
+    echo ' '
+    echo section.settings.hour
+    echo ':'
+    echo section.settings.minute
+    echo ':00'
+  endcapture
+
+  assign target_unix = target_str | date: '%s'
+  assign now_unix = 'now' | date: '%s'
+  assign is_live = false
+  if now_unix >= target_unix
+    assign is_live = true
+  endif
+%}
+
+<section class="drop-cal-section" id="DropsCalendar-{{ section.id }}" data-section-type="drops-calendar">
+  <div class="drop-cal" data-live="{{ is_live }}">
+    <header class="drop-cal__header">
+      <h2 class="drop-cal__title">{{ title_text | upcase }}</h2>
+      <p class="drop-cal__subtitle">{{ subtitle_text }}</p>
+    </header>
+
+    <div class="drop-cal__status" data-status>
+      <span class="dot" aria-hidden="true"></span>
+      <span class="label">DROP {% if is_live %}NOW LIVE{% else %}COMING SOON{% endif %}: ‘{{ drop_name }}’</span>
+    </div>
+
+    <p class="drop-cal__desc">{{ desc_text }}</p>
+
+    <div class="drop-cal__timer" data-timer
+      data-year="{{ section.settings.year }}"
+      data-month="{{ section.settings.month }}"
+      data-day="{{ section.settings.day }}"
+      data-hour="{{ section.settings.hour }}"
+      data-minute="{{ section.settings.minute }}">
+      <div class="tblock"><div class="num" data-dd>00</div><div class="unit">DAYS</div></div>
+      <div class="tblock"><div class="num" data-hh>00</div><div class="unit">HOURS</div></div>
+      <div class="tblock"><div class="num" data-mm>00</div><div class="unit">MINUTES</div></div>
+      <div class="tblock"><div class="num" data-ss>00</div><div class="unit">SECONDS</div></div>
+    </div>
+
+    <div class="drop-cal__cta drop-cal__cta--{{ section.settings.button_align | default: 'center' }}">
+      {% if is_live %}
+        <a class="btn btn--enter" href="{{ section.settings.enter_url }}" data-enter-btn>
+          <span class="btn__label">Enter the Drop</span>
+        </a>
+      {% else %}
+        <a class="btn btn--enter is-locked" data-enter-btn>
+          <span class="btn__label">Enter the Drop</span>
+        </a>
+      {% endif %}
+    </div>
+  </div>
+
+  {% style %}
+    #DropsCalendar-{{ section.id }} .drop-cal{
+      border:1px solid #fff; border-color:#fff; background:transparent; border-radius:24px;
+      padding:28px; max-width:980px; margin:0 auto;
+    }
+    #DropsCalendar-{{ section.id }} .drop-cal__header{ text-align:center; margin-bottom:10px; }
+    #DropsCalendar-{{ section.id }} .drop-cal__title{ margin:0 0 6px; font-weight:800; letter-spacing:.06em; }
+    #DropsCalendar-{{ section.id }} .drop-cal__subtitle{ margin:0; color:#9aa0a6; }
+    #DropsCalendar-{{ section.id }} .drop-cal__status{ display:flex; align-items:center; justify-content:center; gap:8px; margin:16px 0 6px; }
+    #DropsCalendar-{{ section.id }} .drop-cal__status .dot{ width:10px; height:10px; border-radius:50%; background:#00e5ff; box-shadow:0 0 8px rgba(0,229,255,.6); }
+    #DropsCalendar-{{ section.id }} .drop-cal__status .label{ font-weight:700; letter-spacing:.04em; }
+    #DropsCalendar-{{ section.id }} [data-live="false"] .drop-cal__status .label{ opacity:.9; }
+    #DropsCalendar-{{ section.id }} .drop-cal__desc{ text-align:center; margin:0 0 16px; opacity:.9; }
+
+    #DropsCalendar-{{ section.id }} .drop-cal__timer{ display:flex; justify-content:center; gap:12px; flex-wrap:wrap; margin:12px 0 20px; }
+    #DropsCalendar-{{ section.id }} .tblock{ min-width:110px; border-radius:16px; border:1px solid rgba(255,255,255,.7); padding:14px 16px; text-align:center; backdrop-filter:blur(8px); background:rgba(255,255,255,.08); }
+    #DropsCalendar-{{ section.id }} .tblock .num{ font-size:28px; font-weight:800; transition:transform .2s ease, opacity .2s ease; }
+    #DropsCalendar-{{ section.id }} .tblock .unit{ font-size:12px; letter-spacing:.12em; opacity:.8; }
+
+    #DropsCalendar-{{ section.id }} .drop-cal__cta{ display:flex; }
+    #DropsCalendar-{{ section.id }} .drop-cal__cta--left{ justify-content:flex-start; }
+    #DropsCalendar-{{ section.id }} .drop-cal__cta--center{ justify-content:center; }
+    #DropsCalendar-{{ section.id }} .drop-cal__cta--right{ justify-content:flex-end; }
+    #DropsCalendar-{{ section.id }} .btn.btn--enter{ display:inline-flex; align-items:center; justify-content:center; gap:8px; padding:12px 20px; border-radius:16px; background:#fff; color:#000; font-weight:700; text-transform:uppercase; letter-spacing:.06em; transition:transform .12s ease, opacity .2s ease; }
+    #DropsCalendar-{{ section.id }} .btn.btn--enter:active{ transform:scale(.97); }
+    #DropsCalendar-{{ section.id }} .btn.btn--enter.is-locked{ cursor:not-allowed; position:relative; }
+    #DropsCalendar-{{ section.id }} .btn.btn--enter.is-locked .btn__label{ transition:opacity .2s ease; }
+    #DropsCalendar-{{ section.id }} .btn.btn--enter.is-locked:hover .btn__label{ opacity:0; }
+    #DropsCalendar-{{ section.id }} .btn.btn--enter.is-locked::after{ content:'locked'; position:absolute; left:50%; top:50%; transform:translate(-50%,-50%); opacity:0; transition:opacity .2s ease; font-size:12px; letter-spacing:.06em; }
+    #DropsCalendar-{{ section.id }} .btn.btn--enter.is-locked:hover::after{ opacity:1; }
+  {% endstyle %}
+
+  <script>
+    (function(){
+      var root = document.getElementById('DropsCalendar-{{ section.id }}');
+      if(!root) return;
+      var wrap = root.querySelector('.drop-cal');
+      var timer = root.querySelector('[data-timer]');
+      var btn = root.querySelector('[data-enter-btn]');
+      var status = root.querySelector('[data-status] .label');
+      var live = wrap.getAttribute('data-live') === 'true';
+
+      function setNums(d,h,m,s){
+        root.querySelector('[data-dd]').textContent = (d<10? ('0'+d): d);
+        root.querySelector('[data-hh]').textContent = ('0'+h).slice(-2);
+        root.querySelector('[data-mm]').textContent = ('0'+m).slice(-2);
+        root.querySelector('[data-ss]').textContent = ('0'+s).slice(-2);
+      }
+      setNums(0,0,0,0);
+
+      var Y = parseInt(timer.getAttribute('data-year'),10);
+      var Mo = parseInt(timer.getAttribute('data-month'),10)-1;
+      var D = parseInt(timer.getAttribute('data-day'),10);
+      var H = parseInt(timer.getAttribute('data-hour'),10);
+      var Mi = parseInt(timer.getAttribute('data-minute'),10);
+      var target = new Date(Y,Mo,D,H,Mi,0).getTime();
+
+      function unlock(){
+        if(btn && btn.classList.contains('is-locked')){
+          btn.classList.remove('is-locked');
+          btn.setAttribute('href', {{ section.settings.enter_url | json }});
+          if(status){ status.textContent = "DROP NOW LIVE: ‘{{ drop_name }}’"; }
+        }
+      }
+
+      if(live){ unlock(); }
+      else{
+        var iv = setInterval(function(){
+          var now = Date.now();
+          var diff = Math.max(0, target - now);
+          var d = Math.floor(diff/86400000);
+          var h = Math.floor((diff%86400000)/3600000);
+          var m = Math.floor((diff%3600000)/60000);
+          var s = Math.floor((diff%60000)/1000);
+          setNums(d,h,m,s);
+          if(diff <= 0){ clearInterval(iv); setNums(0,0,0,0); unlock(); }
+        }, 1000);
+      }
+    })();
+  </script>
+</section>
+
+{% schema %}
+{
+  "name": "Drops Calendar",
+  "settings": [
+    { "type": "text", "id": "title", "label": "Title", "default": "DROPS CALENDAR" },
+    { "type": "text", "id": "subtitle", "label": "Subtitle", "default": "Upcoming releases and priority access" },
+    { "type": "text", "id": "drop_name", "label": "Drop name", "default": "MIDNIGHT" },
+    { "type": "text", "id": "description", "label": "Description", "default": "The collection is available for a limited time" },
+    { "type": "url", "id": "enter_url", "label": "Enter drop URL" },
+    { "type": "header", "content": "End date/time" },
+    { "type": "select", "id": "year", "label": "Year", "default": "2025", "options": [ {"value":"2025","label":"2025"}, {"value":"2026","label":"2026"} ] },
+    { "type": "select", "id": "month", "label": "Month", "default": "01", "options": [
+      {"value":"01","label":"01"},{"value":"02","label":"02"},{"value":"03","label":"03"},{"value":"04","label":"04"},{"value":"05","label":"05"},{"value":"06","label":"06"},{"value":"07","label":"07"},{"value":"08","label":"08"},{"value":"09","label":"09"},{"value":"10","label":"10"},{"value":"11","label":"11"},{"value":"12","label":"12"}
+    ] },
+    { "type": "select", "id": "day", "label": "Day", "default": "1", "options": [
+      {"value":"1","label":"1"},{"value":"2","label":"2"},{"value":"3","label":"3"},{"value":"4","label":"4"},{"value":"5","label":"5"},{"value":"6","label":"6"},{"value":"7","label":"7"},{"value":"8","label":"8"},{"value":"9","label":"9"},{"value":"10","label":"10"},{"value":"11","label":"11"},{"value":"12","label":"12"},{"value":"13","label":"13"},{"value":"14","label":"14"},{"value":"15","label":"15"},{"value":"16","label":"16"},{"value":"17","label":"17"},{"value":"18","label":"18"},{"value":"19","label":"19"},{"value":"20","label":"20"},{"value":"21","label":"21"},{"value":"22","label":"22"},{"value":"23","label":"23"},{"value":"24","label":"24"},{"value":"25","label":"25"},{"value":"26","label":"26"},{"value":"27","label":"27"},{"value":"28","label":"28"},{"value":"29","label":"29"},{"value":"30","label":"30"},{"value":"31","label":"31"}
+    ] },
+    { "type": "select", "id": "hour", "label": "Hour (24h)", "default": "00", "options": [
+      {"value":"00","label":"00"},{"value":"01","label":"01"},{"value":"02","label":"02"},{"value":"03","label":"03"},{"value":"04","label":"04"},{"value":"05","label":"05"},{"value":"06","label":"06"},{"value":"07","label":"07"},{"value":"08","label":"08"},{"value":"09","label":"09"},{"value":"10","label":"10"},{"value":"11","label":"11"},{"value":"12","label":"12"},{"value":"13","label":"13"},{"value":"14","label":"14"},{"value":"15","label":"15"},{"value":"16","label":"16"},{"value":"17","label":"17"},{"value":"18","label":"18"},{"value":"19","label":"19"},{"value":"20","label":"20"},{"value":"21","label":"21"},{"value":"22","label":"22"},{"value":"23","label":"23"}
+    ] },
+    { "type": "select", "id": "minute", "label": "Minute", "default": "00", "options": [
+      {"value":"00","label":"00"},{"value":"01","label":"01"},{"value":"02","label":"02"},{"value":"03","label":"03"},{"value":"04","label":"04"},{"value":"05","label":"05"},{"value":"06","label":"06"},{"value":"07","label":"07"},{"value":"08","label":"08"},{"value":"09","label":"09"},
+      {"value":"10","label":"10"},{"value":"11","label":"11"},{"value":"12","label":"12"},{"value":"13","label":"13"},{"value":"14","label":"14"},{"value":"15","label":"15"},{"value":"16","label":"16"},{"value":"17","label":"17"},{"value":"18","label":"18"},{"value":"19","label":"19"},
+      {"value":"20","label":"20"},{"value":"21","label":"21"},{"value":"22","label":"22"},{"value":"23","label":"23"},{"value":"24","label":"24"},{"value":"25","label":"25"},{"value":"26","label":"26"},{"value":"27","label":"27"},{"value":"28","label":"28"},{"value":"29","label":"29"},
+      {"value":"30","label":"30"},{"value":"31","label":"31"},{"value":"32","label":"32"},{"value":"33","label":"33"},{"value":"34","label":"34"},{"value":"35","label":"35"},{"value":"36","label":"36"},{"value":"37","label":"37"},{"value":"38","label":"38"},{"value":"39","label":"39"},
+      {"value":"40","label":"40"},{"value":"41","label":"41"},{"value":"42","label":"42"},{"value":"43","label":"43"},{"value":"44","label":"44"},{"value":"45","label":"45"},{"value":"46","label":"46"},{"value":"47","label":"47"},{"value":"48","label":"48"},{"value":"49","label":"49"},
+      {"value":"50","label":"50"},{"value":"51","label":"51"},{"value":"52","label":"52"},{"value":"53","label":"53"},{"value":"54","label":"54"},{"value":"55","label":"55"},{"value":"56","label":"56"},{"value":"57","label":"57"},{"value":"58","label":"58"},{"value":"59","label":"59"}
+    ] }
+    ,
+    { "type": "select", "id": "button_align", "label": "Button alignment", "default": "center", "options": [
+      {"value":"left","label":"Left"},
+      {"value":"center","label":"Center"},
+      {"value":"right","label":"Right"}
+    ] }
+  ],
+  "presets": [ {"name":"Drops Calendar"} ]
+}
+{% endschema %}
+
+

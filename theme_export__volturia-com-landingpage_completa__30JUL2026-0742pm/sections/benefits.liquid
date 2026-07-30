@@ -1,0 +1,445 @@
+<div class="index-section benefits-section benefits-{{ section.id }}">
+  <div class="page-width">
+    {% style %}
+      .benefits-{{ section.id }}{ padding-top: clamp(6px, 1.5vw, 14px); padding-bottom: clamp(6px, 1.5vw, 14px); }
+      .benefits-{{ section.id }} .to-eyebrow{ text-align:center; margin:0 0 8px; opacity:.8; font-family: 'PPNeueMontreal', sans-serif !important; letter-spacing:.06em; will-change: opacity, transform; opacity: 0; transform: translateY(18px); animation: toFadeUp-{{ section.id }} .55s ease forwards; animation-delay: .06s; }
+      .benefits-{{ section.id }} .to-title{ text-align:center; margin:0; line-height:1.1; font-family: 'PPNeueMontrealTitoli', sans-serif !important; font-weight: 0 !important; letter-spacing: -0.05rem; color: {{ section.settings.title_color | default: '#212121' }}; will-change: opacity, transform; opacity: 0; transform: translateY(18px); animation: toFadeUp-{{ section.id }} .55s ease forwards; animation-delay: .08s; }
+      .benefits-{{ section.id }} .to-subtitle{ text-align:center; margin:10px 0 0; opacity:.8; font-family: 'PPNeueMontreal', sans-serif !important; color: {{ section.settings.subtitle_color | default: '#393939' }}; will-change: opacity, transform; opacity: 0; transform: translateY(18px); animation: toFadeUp-{{ section.id }} .55s ease forwards; animation-delay: .1s; }
+      .benefits-{{ section.id }} .to-media{ margin-top: 14px; will-change: opacity, transform; opacity: 0; transform: translateY(18px); animation: toFadeUp-{{ section.id }} .55s ease forwards; animation-delay: .12s; }
+      .benefits-{{ section.id }} .to-media-frame{ position:relative; width:100%; aspect-ratio: 21 / 9; border-radius:50px; overflow:hidden; background: rgba(255,255,255,0.06); box-shadow: 4px 8px 8px rgba(0, 0, 0, 0.18); }
+      .benefits-{{ section.id }} .to-media-frame > video,
+      .benefits-{{ section.id }} .to-media-frame > img{ width:100%; height:100%; object-fit:cover; display:block; }
+
+      /* Benefits bullets container */
+      .benefits-{{ section.id }} .benefits-bullets {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: clamp(24px, 3vw, 48px);
+        margin-top: clamp(64px, 10vw, 120px);
+        padding: 0 clamp(16px, 2vw, 32px);
+        max-width: 1200px;
+        margin-left: auto;
+        margin-right: auto;
+      }
+
+      /* Single bullet item */
+      .benefits-{{ section.id }} .benefit-item {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        gap: clamp(12px, 1.5vw, 16px);
+      }
+
+      @media (min-width: 769px) {
+        .benefits-{{ section.id }} .benefit-item {
+          transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease;
+          cursor: pointer;
+        }
+
+        .benefits-{{ section.id }} .benefit-item:hover {
+          transform: translateY(-12px);
+          opacity: 1;
+        }
+      }
+
+      /* Icon container */
+      .benefits-{{ section.id }} .benefit-icon {
+        width: clamp(58px, 7.2vw, 77px);
+        height: clamp(58px, 7.2vw, 77px);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+      }
+
+      @media (min-width: 769px) {
+        .benefits-{{ section.id }} .benefit-icon {
+          transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1), filter 0.3s ease;
+        }
+
+        .benefits-{{ section.id }} .benefit-item:hover .benefit-icon {
+          transform: scale(1.15) rotate(5deg);
+          filter: brightness(1.1);
+        }
+      }
+
+      .benefits-{{ section.id }} .benefit-icon img {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+        display: block;
+        filter: brightness(0) saturate(100%) invert(30%);
+      }
+
+      /* Benefit title */
+      .benefits-{{ section.id }} .benefit-title {
+        margin: 0;
+        font-family: 'PPNeueMontreal', sans-serif !important;
+        font-weight: 600 !important;
+        line-height: 1.2;
+        color: {{ section.settings.benefit_title_color | default: '#212121' }};
+        font-size: clamp({{ section.settings.benefit_title_size_mobile | default: 16 }}px, 2vw, {{ section.settings.benefit_title_size_desktop | default: 20 }}px);
+      }
+
+      @media (min-width: 769px) {
+        .benefits-{{ section.id }} .benefit-title {
+          transition: color 0.3s ease, transform 0.3s ease;
+        }
+
+        .benefits-{{ section.id }} .benefit-item:hover .benefit-title {
+          transform: translateY(-2px);
+          color: {{ section.settings.benefit_title_color | default: '#212121' | color_lighten: 10 }};
+        }
+      }
+
+      /* Benefit text */
+      .benefits-{{ section.id }} .benefit-text {
+        margin: 0;
+        font-family: 'PPNeueMontreal', sans-serif !important;
+        font-weight: 400 !important;
+        line-height: 1.5;
+        color: {{ section.settings.benefit_text_color | default: '#666666' }};
+        font-size: clamp({{ section.settings.benefit_text_size_mobile | default: 14 }}px, 1.6vw, {{ section.settings.benefit_text_size_desktop | default: 16 }}px);
+        opacity: 0.9;
+      }
+
+      @media (min-width: 769px) {
+        .benefits-{{ section.id }} .benefit-text {
+          transition: opacity 0.3s ease, transform 0.3s ease;
+        }
+
+        .benefits-{{ section.id }} .benefit-item:hover .benefit-text {
+          opacity: 1;
+          transform: translateY(-1px);
+        }
+      }
+
+      @media (max-width: 768px) {
+        .benefits-{{ section.id }} .to-eyebrow{ font-size: {{ section.settings.eyebrow_size_mobile | default: 14 }}px; }
+        .benefits-{{ section.id }} .to-title{ font-size: {{ section.settings.title_size_mobile | default: 36 }}px; }
+        .benefits-{{ section.id }} .to-subtitle{ font-size: {{ section.settings.subtitle_size_mobile | default: 16 }}px; line-height: 1.5; }
+        .benefits-{{ section.id }} .to-media-frame{ aspect-ratio: 3 / 4; }
+        
+        /* Mobile: vertical layout */
+        .benefits-{{ section.id }} .benefits-bullets {
+          grid-template-columns: 1fr;
+          gap: clamp(32px, 8vw, 48px);
+          margin-top: clamp(56px, 12vw, 80px);
+        }
+
+        /* Mobile: horizontal layout con icona a sinistra */
+        .benefits-{{ section.id }} .benefit-item {
+          display: grid;
+          grid-template-columns: auto 1fr;
+          grid-template-rows: auto auto;
+          column-gap: clamp(24px, 6vw, 32px);
+          row-gap: clamp(6px, 1.5vw, 8px);
+          align-items: center;
+          text-align: left;
+        }
+
+        /* Icon a sinistra, span 2 righe */
+        .benefits-{{ section.id }} .benefit-icon {
+          grid-column: 1;
+          grid-row: 1 / 3;
+          width: clamp(56px, 14vw, 70px);
+          height: clamp(56px, 14vw, 70px);
+          align-items: center;
+          justify-content: center;
+        }
+
+        /* Titolo: seconda colonna, prima riga */
+        .benefits-{{ section.id }} .benefit-title {
+          grid-column: 2;
+          grid-row: 1;
+          text-align: left;
+        }
+
+        /* Testo: seconda colonna, seconda riga */
+        .benefits-{{ section.id }} .benefit-text {
+          grid-column: 2;
+          grid-row: 2;
+          text-align: left;
+        }
+      }
+      @media (min-width: 769px) {
+        .benefits-{{ section.id }} .to-eyebrow{ font-size: {{ section.settings.eyebrow_size_desktop | default: 16 }}px; }
+        .benefits-{{ section.id }} .to-title{ font-size: {{ section.settings.title_size_desktop | default: 64 }}px; }
+        .benefits-{{ section.id }} .to-subtitle{ font-size: {{ section.settings.subtitle_size_desktop | default: 20 }}px; line-height: 1.6; }
+        /* Ingrandimento del 30% del contenitore immagine (solo desktop) con responsive fluida e margini laterali */
+        .benefits-{{ section.id }} .to-media{ display: block; position: relative; --to-scale: 1.3; overflow: visible; max-width: min(100%, 70vw); margin-left: auto; margin-right: auto; }
+        /* Pseudo-elemento per riservare spazio verticale: aspect 21/9 scalato del 30% */
+        .benefits-{{ section.id }} .to-media::before{ content:''; display:block; padding-top: calc((9 / 21) * 100% * var(--to-scale)); }
+        .benefits-{{ section.id }} .to-media-frame{ position: absolute; left: 50%; top: 0; transform: translateX(-50%) scale(var(--to-scale)); transform-origin: top center; will-change: transform; }
+      }
+      @keyframes toFadeUp-{{ section.id }} {
+        0% { opacity: 0; transform: translateY(18px); }
+        100% { opacity: 1; transform: translateY(0); }
+      }
+
+      /* GSAP helpers: disattiva animazioni CSS quando GSAP è attivo per evitare doppie animazioni */
+      .benefits-{{ section.id }}.gsap-enabled .to-eyebrow,
+      .benefits-{{ section.id }}.gsap-enabled .to-title,
+      .benefits-{{ section.id }}.gsap-enabled .to-subtitle,
+      .benefits-{{ section.id }}.gsap-enabled .to-media { animation: none !important; }
+
+      /* Stato iniziale blur-to-focus per elementi gestiti da GSAP */
+      .benefits-{{ section.id }} .gsap-reveal{
+        filter: blur(10px);
+        opacity: 0.9;
+        transform: translateY(18px);
+        will-change: opacity, transform, filter;
+      }
+    {% endstyle %}
+
+    {% if section.settings.eyebrow_text != blank %}
+      <div class="to-eyebrow">{{ section.settings.eyebrow_text }}</div>
+    {% endif %}
+    {% if section.settings.title_text != blank %}
+      <h2 class="to-title">{{ section.settings.title_text }}</h2>
+    {% endif %}
+    {% if section.settings.subtitle_text != blank %}
+      <p class="to-subtitle">{{ section.settings.subtitle_text }}</p>
+    {% endif %}
+
+    {% if section.settings.media_enable %}
+      <div class="to-media">
+        <div class="to-media-frame">
+          {% if section.settings.media_type == 'video' and section.settings.media_source_url != blank %}
+            <video src="{{ section.settings.media_source_url }}" autoplay muted loop playsinline></video>
+          {% elsif section.settings.media_image != blank %}
+            {{ section.settings.media_image | image_url: width: 2400 | image_tag: loading: 'lazy', decoding: 'async', alt: section.settings.media_alt }}
+          {% endif %}
+        </div>
+      </div>
+    {% endif %}
+
+    {%- comment -%} Benefits bullets {%- endcomment -%}
+    <div class="benefits-bullets">
+      {% for block in section.blocks %}
+        <div class="benefit-item" {{ block.shopify_attributes }}>
+          {% if block.settings.icon != blank %}
+            <div class="benefit-icon">
+              {{ block.settings.icon | image_url: width: 128 | image_tag: loading: 'lazy', decoding: 'async', alt: block.settings.icon_alt }}
+            </div>
+          {% endif %}
+          {% if block.settings.benefit_title != blank %}
+            <h3 class="benefit-title">{{ block.settings.benefit_title }}</h3>
+          {% endif %}
+          {% if block.settings.benefit_text != blank %}
+            <p class="benefit-text">{{ block.settings.benefit_text }}</p>
+          {% endif %}
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+  try{
+    var root = document.querySelector('.benefits-{{ section.id }}');
+    if(!root) return;
+
+    var prefersReduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    function loadScript(src){
+      return new Promise(function(resolve, reject){
+        var s = document.createElement('script');
+        s.src = src; s.async = true; s.onload = resolve; s.onerror = reject;
+        document.head.appendChild(s);
+      });
+    }
+
+    function init(){
+      if(!window.gsap || !window.ScrollTrigger) return;
+      gsap.registerPlugin(ScrollTrigger);
+
+      // Abilita GSAP e prepara stato iniziale
+      root.classList.add('gsap-enabled');
+
+      // Header: eyebrow, title, subtitle, media
+      var headerEls = [
+        root.querySelector('.to-eyebrow'),
+        root.querySelector('.to-title'),
+        root.querySelector('.to-subtitle'),
+        root.querySelector('.to-media')
+      ].filter(Boolean);
+
+      if(prefersReduced){
+        headerEls.forEach(function(el){ el.style.filter='none'; el.style.opacity='1'; el.style.transform='none'; });
+      } else {
+        headerEls.forEach(function(el){ el.classList.add('gsap-reveal'); el.style.animation='none'; });
+        headerEls.forEach(function(el){
+          gsap.to(el, {
+            opacity: 1,
+            filter: 'blur(0px)',
+            y: 0,
+            duration: 1.6,
+            delay: 0,
+            ease: 'power2.out',
+            scrollTrigger: {
+              trigger: el,
+              start: 'top 75%',
+              toggleActions: 'play none none none',
+              once: true
+            }
+          });
+        });
+      }
+
+      // Video: riproduci solo quando la section è in viewport
+      var benefitsVideo = root.querySelector('.to-media video');
+      if (benefitsVideo && !prefersReduced) {
+        // Disattiva autoplay di default
+        benefitsVideo.autoplay = false;
+        benefitsVideo.removeAttribute('autoplay');
+        benefitsVideo.muted = true;
+        benefitsVideo.setAttribute('muted', '');
+        benefitsVideo.setAttribute('playsinline', '');
+
+        // Usa ScrollTrigger per gestire play/pause in base alla visibilità della section
+        ScrollTrigger.create({
+          trigger: root,
+          start: 'top 75%',
+          end: 'bottom 20%',
+          onEnter: function(){ try{ benefitsVideo.play(); }catch(e){} },
+          onEnterBack: function(){ try{ benefitsVideo.play(); }catch(e){} },
+          onLeave: function(){ try{ benefitsVideo.pause(); }catch(e){} },
+          onLeaveBack: function(){ try{ benefitsVideo.pause(); }catch(e){} }
+        });
+      }
+
+      // Bullets container + singoli bullets: stesso timing di avvio per contenitore e items
+      var bulletsContainer = root.querySelector('.benefits-bullets');
+      if (bulletsContainer) {
+        var bullets = Array.prototype.slice.call(bulletsContainer.querySelectorAll('.benefit-item'));
+        var group = [bulletsContainer].concat(bullets);
+
+        if(prefersReduced){
+          group.forEach(function(el){ el.style.filter='none'; el.style.opacity='1'; el.style.transform='none'; });
+        } else {
+          group.forEach(function(el){ el.classList.add('gsap-reveal'); });
+          gsap.to(group, {
+            opacity: 1,
+            filter: 'blur(0px)',
+            y: 0,
+            duration: 1.6,
+            delay: 0,
+            ease: 'power2.out',
+            scrollTrigger: {
+              trigger: bulletsContainer,
+              start: 'top 75%',
+              toggleActions: 'play none none none',
+              once: true
+            }
+          });
+        }
+      }
+    }
+
+    if(window.gsap && window.ScrollTrigger){
+      init();
+    } else {
+      var gsapUrl = 'https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js';
+      var stUrl = 'https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js';
+      loadScript(gsapUrl).then(function(){ return loadScript(stUrl); }).then(init).catch(function(){});
+    }
+  }catch(e){}
+})();
+</script>
+
+{% schema %}
+{
+  "name": "Benefits",
+  "max_blocks": 4,
+  "blocks": [
+    {
+      "type": "benefit",
+      "name": "Benefit Item",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "icon",
+          "label": "Icon"
+        },
+        {
+          "type": "text",
+          "id": "icon_alt",
+          "label": "Icon alt text",
+          "default": "Benefit icon"
+        },
+        {
+          "type": "text",
+          "id": "benefit_title",
+          "label": "Title",
+          "default": "Benefit Title"
+        },
+        {
+          "type": "textarea",
+          "id": "benefit_text",
+          "label": "Description",
+          "default": "Add a short description of this benefit."
+        }
+      ]
+    }
+  ],
+  "settings": [
+    { "type": "header", "content": "Top Content" },
+    { "type": "text", "id": "eyebrow_text", "label": "Eyebrow (small heading)", "default": "MISSION" },
+    { "type": "text", "id": "title_text", "label": "Title", "default": "Your title here" },
+    { "type": "textarea", "id": "subtitle_text", "label": "Subtitle (description)", "default": "Add a short description that supports the headline." },
+    { "type": "range", "id": "eyebrow_size_mobile", "label": "Eyebrow size (mobile, px)", "min": 10, "max": 40, "step": 2, "default": 14 },
+    { "type": "range", "id": "eyebrow_size_desktop", "label": "Eyebrow size (desktop, px)", "min": 12, "max": 48, "step": 2, "default": 16 },
+    { "type": "range", "id": "title_size_mobile", "label": "Title size (mobile, px)", "min": 12, "max": 120, "step": 2, "default": 36 },
+    { "type": "range", "id": "title_size_desktop", "label": "Title size (desktop, px)", "min": 16, "max": 160, "step": 2, "default": 64 },
+    { "type": "range", "id": "subtitle_size_mobile", "label": "Subtitle size (mobile, px)", "min": 10, "max": 40, "step": 2, "default": 16 },
+    { "type": "range", "id": "subtitle_size_desktop", "label": "Subtitle size (desktop, px)", "min": 12, "max": 48, "step": 2, "default": 20 },
+
+    { "type": "header", "content": "Colors" },
+    { "type": "color", "id": "title_color", "label": "Title color", "default": "#212121" },
+    { "type": "color", "id": "subtitle_color", "label": "Subtitle color", "default": "#393939" },
+
+    { "type": "header", "content": "Media" },
+    { "type": "checkbox", "id": "media_enable", "label": "Show media below subtitle", "default": true },
+    { "type": "select", "id": "media_type", "label": "Media type", "default": "video", "options": [
+      { "value": "video", "label": "Video (MP4/WebM URL)" },
+      { "value": "image", "label": "Image/GIF" }
+    ] },
+    { "type": "text", "id": "media_source_url", "label": "Video file URL (MP4/WebM). Upload in Files and paste URL.", "default": "https://example.com/video.mp4" },
+    { "type": "image_picker", "id": "media_image", "label": "Image/GIF (optional)" },
+    { "type": "text", "id": "media_alt", "label": "Media alt text", "default": "Section media" },
+
+    { "type": "header", "content": "Benefits Typography" },
+    { "type": "range", "id": "benefit_title_size_mobile", "label": "Benefit title size (mobile, px)", "min": 12, "max": 32, "step": 1, "default": 16 },
+    { "type": "range", "id": "benefit_title_size_desktop", "label": "Benefit title size (desktop, px)", "min": 16, "max": 40, "step": 1, "default": 20 },
+    { "type": "range", "id": "benefit_text_size_mobile", "label": "Benefit text size (mobile, px)", "min": 12, "max": 24, "step": 1, "default": 14 },
+    { "type": "range", "id": "benefit_text_size_desktop", "label": "Benefit text size (desktop, px)", "min": 14, "max": 28, "step": 1, "default": 16 },
+
+    { "type": "header", "content": "Benefits Colors" },
+    { "type": "color", "id": "benefit_title_color", "label": "Benefit title color", "default": "#212121" },
+    { "type": "color", "id": "benefit_text_color", "label": "Benefit text color", "default": "#666666" }
+  ],
+  "presets": [
+    {
+      "name": "Benefits",
+      "blocks": [
+        {
+          "type": "benefit"
+        },
+        {
+          "type": "benefit"
+        },
+        {
+          "type": "benefit"
+        },
+        {
+          "type": "benefit"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}
+

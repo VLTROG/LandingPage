@@ -1,0 +1,798 @@
+{% comment %}
+  menu_alignment options:
+    - left
+    - left-center
+    - center-left
+    - center-split
+    - center
+    - right
+{% endcomment %}
+
+{%- liquid
+  assign main_menu = linklists[section.settings.main_menu_link_list]
+
+  assign menu_alignment = section.settings.main_menu_alignment
+  assign logo_alignment = 'left'
+  if menu_alignment == 'center-left' or menu_alignment == 'center-split' or menu_alignment == 'center'
+    assign logo_alignment = 'center'
+  endif
+  if menu_alignment == 'right'
+    assign logo_alignment = 'left-right'
+  endif
+
+  if main_menu == blank
+    assign logo_alignment = 'center'
+  endif
+
+  assign mobile_menu_style = 'thumb'
+
+  assign template_name = template | replace: '.', ' ' | truncatewords: 2, '' | handle
+
+  assign overlay_header = false
+  if template_name == 'index' and section.settings.sticky_index
+    assign overlay_header = true
+  endif
+  if template_name contains 'collection' and collection.image and section.settings.sticky_collection
+    assign overlay_header = true
+  endif
+-%}
+
+{%- render 'slide-nav',
+  section: section,
+  main_menu: main_menu,
+  mobile_menu_style: mobile_menu_style
+-%}
+{%- if settings.cart_type == 'sticky' -%}
+  {%- render 'sticky-cart', mobile_menu_style: mobile_menu_style -%}
+{%- endif -%}
+
+{%- style -%}
+  .slide-nav,
+  .slide-nav button {
+    font-size: {{ settings.type_navigation_size }}px;
+  }
+
+  {% if mobile_menu_style == 'thumb' %}
+    body {
+      {% comment %}
+        Thumb menu button height + padding + 40
+      {% endcomment %}
+      padding-bottom: 148px;
+    }
+  {% endif %}
+
+  {% if mobile_menu_style == 'top' %}
+    body.screen-layer-open {
+      {% comment %}
+        Space for the close modal button
+      {% endcomment %}
+      padding-bottom: 40px;
+    }
+  {% endif %}
+
+  {% if overlay_header %}
+    @media only screen and (min-width: 769px) {
+      .collection-hero__content .section-header--hero {
+        margin-top: 40px;
+      }
+    }
+  {% endif %}
+{%- endstyle -%}
+
+{%- style -%}
+  @media only screen and (min-width: 769px) {
+    /* Evita che elementi fixed (logo/menu) prendano come containing block l'header trasformato */
+    .site-header--sticky { transform: none !important; top: 0 !important; }
+    /* Evita flash dell'header pre-posizionato durante il load */
+    .js .site-navigation.small--hide,
+    .js .site-header .header-item--icons .site-nav.site-nav--icons { opacity: 0; }
+    /* Spazio a sinistra per non sovrapporre il logo fisso alla navbar */
+    .site-header .page-width {
+      padding-left: calc(40px + {{ section.settings.desktop_logo_width }}px + 20px);
+    }
+
+    /* Allineamento verticale armonico della navbar rispetto al logo */
+    .header-layout {
+      align-items: center;
+    }
+
+    /* Logo fisso in alto a sinistra con offset 10x10px (solo desktop) */
+    .site-header__logo {
+      position: fixed;
+      top: 10px;
+      left: 10px;
+      margin: 0;
+      z-index: 30;
+    }
+  }
+{%- endstyle -%}
+
+<div data-section-id="{{ section.id }}" data-section-type="header-section">
+  <div
+    data-header-style="{{ section.settings.header_style }}"
+    class="header-wrapper{% if overlay_header %} header-wrapper--overlay is-light{% endif %}">
+
+    {%- if section.settings.show_announcement -%}
+      {%- if section.settings.show_announcement_home_only -%}
+        {%- if template == 'index' -%}
+          {%- render 'announcement-bar', section: section -%}
+        {%- endif -%}
+      {%- else -%}
+        {%- render 'announcement-bar', section: section -%}
+      {%- endif -%}
+    {%- endif -%}
+
+    {% comment %}
+      Logo is used as a between-screen loader, so we only
+      show the mobile logo on the home page (setting to override)
+    {% endcomment %}
+    {%- assign mobile_logo_only = true -%}
+
+    <header
+      class="site-header{% if section.settings.logo_hide_mobile %}{% unless template_name == 'index' %} small--hide{% endunless %}{% endif %}"
+      data-overlay="{{ overlay_header }}">
+      <div class="page-width">
+        <div
+          class="header-layout header-layout--{{ menu_alignment }}{% if mobile_logo_only %} header-layout--mobile-logo-only{% endif %}"
+          data-logo-align="{{ logo_alignment }}">
+
+          {%- if logo_alignment == 'left' or logo_alignment == 'left-right' -%}
+            <div class="header-item header-item--logo">
+              {%- render 'header-logo-block', section: section -%}
+            </div>
+          {%- endif -%}
+
+          {%- if logo_alignment == 'left' -%}
+            <div role="navigation" aria-label="Primary"
+              class="header-item header-item--navigation{% if menu_alignment == 'left-center' %} text-center{% endif %} small--hide">
+              {%- render 'header-desktop-nav', main_menu: main_menu -%}
+            </div>
+          {%- endif -%}
+
+          {%- if logo_alignment == 'center' -%}
+            <div class="header-item header-item--left header-item--navigation small--hide" role="navigation" aria-label="Primary">
+              {%- if menu_alignment == 'center' or menu_alignment == 'center-split' -%}
+                {%- if section.settings.header_search_enable -%}
+                  <div class="site-nav">
+                    <a href="{{ routes.search_url }}" class="site-nav__link site-nav__link--icon js-modal-open-search-modal js-no-transition">
+                      <svg aria-hidden="true" focusable="false" role="presentation" class="icon icon-search" viewBox="0 0 64 64"><path d="M47.16 28.58A18.58 18.58 0 1 1 28.58 10a18.58 18.58 0 0 1 18.58 18.58zM54 54L41.94 42"/></svg>
+                      <span class="icon__fallback-text">{{ 'general.search.title' | t }}</span>
+                    </a>
+                  </div>
+                {%- endif -%}
+              {%- endif -%}
+
+              {%- if menu_alignment == 'center-left' -%}
+                {%- render 'header-desktop-nav', main_menu: main_menu -%}
+              {%- endif -%}
+            </div>
+
+            {%- if menu_alignment == 'center-split' -%}
+              {%- render 'header-split-nav', main_menu: main_menu, section: section -%}
+            {%- endif -%}
+
+            {%- if menu_alignment != 'center-split' -%}
+              <div class="header-item header-item--logo">
+                {%- render 'header-logo-block', section: section -%}
+              </div>
+            {%- endif -%}
+          {%- endif -%}
+
+          {%- if logo_alignment == 'left-right' -%}
+            <div
+              role="navigation" aria-label="Primary"
+              class="header-item header-item--navigation text-right small--hide">
+              {%- render 'header-desktop-nav', main_menu: main_menu -%}
+            </div>
+          {%- endif -%}
+
+          {% comment %}
+            Center mobile logo if icons are not visible
+          {% endcomment %}
+          <div class="header-item header-item--icons{% if mobile_logo_only %} small--hide{% endif %}">
+            {%- render 'header-icons', section: section, menu_alignment: menu_alignment -%}
+          </div>
+        </div>
+
+        {%- if menu_alignment == 'center' -%}
+          <div role="navigation" aria-label="Primary" class="text-center">
+            {%- render 'header-desktop-nav', main_menu: main_menu -%}
+          </div>
+        {%- endif -%}
+      </div>
+    </header>
+  </div>
+
+  {%- if mobile_menu_style == 'thumb' -%}
+    {%- if main_menu != blank -%}
+      <div class="site-nav__thumb-menu site-nav__thumb-menu--inactive">
+        <button
+          type="button"
+          class="btn site-nav__thumb-button js-toggle-slide-nav">
+          <svg aria-hidden="true" focusable="false" role="presentation" class="icon icon-hamburger" viewBox="0 0 64 64"><path d="M7 15h51M7 32h43M7 49h51"/></svg>
+          <svg aria-hidden="true" focusable="false" role="presentation" class="icon icon-close" viewBox="0 0 64 64"><path d="M19 17.61l27.12 27.13m0-27.12L19 44.74"/></svg>
+          <span class="icon-menu-label">{{ 'general.drawers.navigation' | t }}</span>
+        </button>
+
+        <a href="{{ routes.cart_url }}" class="site-nav__thumb-cart js-drawer-open-cart js-no-transition" aria-controls="CartDrawer" data-icon="{{ settings.cart_icon }}">
+          <span class="cart-link">
+            {%- if settings.cart_icon == 'cart' -%}
+              <svg aria-hidden="true" focusable="false" role="presentation" class="icon icon-cart" viewBox="0 0 64 64"><path d="M14 17.44h46.79l-7.94 25.61H20.96l-9.65-35.1H3"/><circle cx="27" cy="53" r="2"/><circle cx="47" cy="53" r="2"/></svg>
+            {%- else -%}
+              <svg aria-hidden="true" focusable="false" role="presentation" class="icon icon-bag" viewBox="0 0 64 64"><g fill="none" stroke="#000" stroke-width="2"><path d="M25 26c0-15.79 3.57-20 8-20s8 4.21 8 20"/><path d="M14.74 18h36.51l3.59 36.73h-43.7z"/></g></svg>
+            {%- endif -%}
+            <span class="icon__fallback-text">{{ 'layout.cart.title' | t }}</span>
+            <span class="cart-link__bubble{% if cart.item_count > 0 %} cart-link__bubble--visible{% endif %}">
+              <span class="cart-link__bubble-num" aria-hidden="true">
+                {{ cart.item_count }}
+              </span>
+            </span>
+          </span>
+        </a>
+      </div>
+    {%- endif -%}
+  {%- endif -%}
+</div>
+
+<script>
+  (function() {
+    function positionDesktopNavFixed() {
+      var isDesktop = window.matchMedia('(min-width: 769px)').matches;
+      var navs = document.querySelectorAll('.site-navigation.small--hide');
+      var iconNavs = document.querySelectorAll('.site-header .header-item--icons .site-nav.site-nav--icons');
+      if (!navs.length) return;
+
+      if (!isDesktop) {
+        navs.forEach(function(nav) {
+          nav.style.position = '';
+          nav.style.top = '';
+          nav.style.left = '';
+          nav.style.width = '';
+          nav.style.transform = '';
+          nav.style.willChange = '';
+          nav.style.zIndex = '';
+        });
+        iconNavs.forEach(function(iconNav) {
+          iconNav.style.position = '';
+          iconNav.style.top = '';
+          iconNav.style.left = '';
+          iconNav.style.width = '';
+          iconNav.style.transform = '';
+          iconNav.style.willChange = '';
+          iconNav.style.zIndex = '';
+        });
+        return;
+      }
+
+      var logoImg = document.querySelector('.site-header__logo img.small--hide') || document.querySelector('.site-header__logo img');
+      var logoEl = logoImg || document.querySelector('.site-header__logo');
+      if (!logoEl) return;
+
+      // Misura posizioni correnti prima di fissare il menu
+      var referenceTop = null;
+      navs.forEach(function(nav) {
+        // Reset trasformazioni per misurare correttamente
+        nav.style.transform = '';
+        var rect = nav.getBoundingClientRect();
+
+        var logoRect = logoEl.getBoundingClientRect();
+        var desiredTop = Math.round(logoRect.top + (logoRect.height / 2) - (rect.height / 2));
+        referenceTop = desiredTop;
+
+        // Posiziona il menu a 30px dal lato destro del logo
+        var gapToLogoRight = 30;
+        var desiredLeft = Math.round(logoRect.right + gapToLogoRight);
+
+        nav.style.position = 'fixed';
+        nav.style.top = desiredTop + 'px';
+        nav.style.left = desiredLeft + 'px';
+        nav.style.width = Math.round(rect.width) + 'px';
+        nav.style.willChange = 'top, left';
+        nav.style.zIndex = '25';
+        nav.style.opacity = '1';
+      });
+
+      // Applica la stessa top distance alle icone flottanti
+      if (referenceTop !== null && iconNavs.length) {
+        iconNavs.forEach(function(iconNav) {
+          // Misura posizione attuale per preservare left/width
+          iconNav.style.transform = '';
+          var irect = iconNav.getBoundingClientRect();
+          // Posiziona il menu icone a 20px dal bordo destro del viewport
+          var gapRight = 20;
+          var desiredLeftIcons = Math.round(window.innerWidth - gapRight - irect.width);
+
+          iconNav.style.position = 'fixed';
+          iconNav.style.top = referenceTop + 'px';
+          iconNav.style.left = desiredLeftIcons + 'px';
+          iconNav.style.width = Math.round(irect.width) + 'px';
+          iconNav.style.willChange = 'top, left';
+          iconNav.style.zIndex = '25';
+          iconNav.style.opacity = '1';
+        });
+      }
+    }
+
+    var throttleTimer;
+    function throttled() {
+      clearTimeout(throttleTimer);
+      throttleTimer = setTimeout(positionDesktopNavFixed, 80);
+    }
+
+    document.addEventListener('DOMContentLoaded', positionDesktopNavFixed);
+    window.addEventListener('load', positionDesktopNavFixed);
+    window.addEventListener('resize', throttled, { passive: true });
+    // Intenzionalmente non si ricalcola su scroll per mantenere gap fisso
+  })();
+</script>
+
+<script>
+  (function() {
+    var isDesktop = window.matchMedia('(min-width: 769px)');
+    var maxOffset = 2; // px
+
+    function bindMagnetic() {
+      if (!isDesktop.matches) return;
+      var links = document.querySelectorAll('.site-navigation > .site-nav__item > .site-nav__link');
+      var iconLinks = document.querySelectorAll('.site-nav.site-nav--icons .site-nav__link--icon .icon');
+      if (!links.length && !iconLinks.length) return;
+
+      function attachMagnetic(el, isIcon) {
+        var rect;
+        var rafId = null;
+
+        function onMove(e) {
+          if (!rect) rect = el.getBoundingClientRect();
+          var x = e.clientX - rect.left;
+          var y = e.clientY - rect.top;
+          var dx = (x - rect.width / 2) / (rect.width / 2);
+          var dy = (y - rect.height / 2) / (rect.height / 2);
+          var tx = Math.max(-1, Math.min(1, dx)) * maxOffset;
+          var ty = Math.max(-1, Math.min(1, dy)) * maxOffset;
+
+          if (rafId) cancelAnimationFrame(rafId);
+          rafId = requestAnimationFrame(function() {
+            el.style.transform = 'translate(' + tx + 'px,' + ty + 'px)';
+          });
+        }
+
+        function onLeave() {
+          if (rafId) cancelAnimationFrame(rafId);
+          el.style.transform = 'translate(0, 0)';
+          rect = null;
+        }
+
+        var hoverTarget = isIcon ? el.parentElement : el;
+        hoverTarget.addEventListener('mousemove', onMove);
+        hoverTarget.addEventListener('mouseleave', onLeave);
+
+        // Safety: reset on window blur/resize
+        window.addEventListener('blur', onLeave);
+        window.addEventListener('resize', onLeave, { passive: true });
+      }
+
+      links.forEach(function(link) { attachMagnetic(link, false); });
+      iconLinks.forEach(function(icon) { attachMagnetic(icon, true); });
+    }
+
+    function unbindMagnetic() {
+      var els = document.querySelectorAll('.site-navigation > .site-nav__item > .site-nav__link, .site-nav.site-nav--icons .site-nav__link--icon .icon');
+      els.forEach(function(el) { el.style.transform = ''; });
+    }
+
+    document.addEventListener('DOMContentLoaded', bindMagnetic);
+    isDesktop.addEventListener('change', function() {
+      unbindMagnetic();
+      bindMagnetic();
+    });
+  })();
+</script>
+
+{%- style -%}
+  @media only screen and (min-width: 769px) {
+    /* Mantieni dimensione logo uguale al load anche in stato sticky */
+    .site-header--sticky .site-header__logo a {
+      max-width: {{ section.settings.desktop_logo_width }}px !important;
+    }
+
+    /* Mantieni dimensione font del menu centrale uguale al load */
+    .site-header--sticky .site-nav {
+      font-size: calc(var(--typeBaseSize) * 1.22) !important;
+    }
+
+    /* Mantieni dimensioni icone del menu icone */
+    .site-header--sticky .site-nav__link--icon .icon {
+      width: 28px !important;
+      height: 28px !important;
+    }
+
+    /* Homepage (overlay header): evita che i transform degli antenati influenzino gli elementi fixed */
+    .header-wrapper--overlay { 
+      transform: none !important; 
+    }
+    .header-wrapper--overlay .site-header--sticky {
+      transform: none !important;
+      top: 0 !important;
+    }
+
+    /* Nascondi la scrollbar su desktop (scroll attivo ma invisibile) */
+    html, body {
+      scrollbar-width: none; /* Firefox */
+    }
+    html::-webkit-scrollbar, body::-webkit-scrollbar {
+      width: 0px;
+      height: 0px;
+    }
+
+    /* Effetto grayed-out elegante per il menu principale */
+    .site-navigation .site-nav__link {
+      transition: opacity 200ms ease, transform 215ms ease-out;
+      will-change: transform;
+    }
+    .site-navigation:hover .site-nav__link {
+      opacity: 0.45;
+    }
+    .site-navigation:hover .site-nav__item:hover > .site-nav__link {
+      opacity: 1;
+    }
+
+    /* Effetto grayed-out anche per i link del dropdown */
+    .site-navigation .site-nav__dropdown .site-nav__dropdown-link {
+      transition: opacity 200ms ease;
+    }
+    .site-navigation .site-nav__dropdown:hover .site-nav__dropdown-link {
+      opacity: 0.45;
+    }
+    .site-navigation .site-nav__dropdown:hover .site-nav__dropdown-link:hover {
+      opacity: 1;
+    }
+
+    /* rimosso override sul background del dropdown per usare lo stile originale del tema */
+
+    /* Effetto grayed-out per il menu icone */
+    .site-nav.site-nav--icons .site-nav__link--icon {
+      transition: opacity 200ms ease;
+    }
+    .site-nav.site-nav--icons:hover .site-nav__link--icon {
+      opacity: 0.45;
+    }
+    .site-nav.site-nav--icons:hover .site-nav__link--icon:hover {
+      opacity: 1;
+    }
+
+    /* Rimuovi sottolineature nere/animated underline nel menu principale */
+    [data-animate_underlines="true"] .site-navigation .site-nav__item > a:before,
+    [data-animate_underlines="true"] .site-navigation .site-nav--active > a:before,
+    [data-animate_underlines="true"] .site-navigation .site-nav__item.is-focused > a:before,
+    [data-animate_underlines="true"] .site-navigation .site-nav__item:hover > a:before {
+      content: none !important;
+      border: 0 !important;
+      border-bottom: 0 !important;
+    }
+
+    /* Aumenta gap verticale dei dropdown del menu principale (floating feel) */
+    .site-navigation .site-nav__dropdown {
+      margin-top: 10px !important;
+    }
+    /* Bridge hover per evitare chiusura mentre il mouse attraversa il gap */
+    .site-navigation .site-nav__dropdown::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: -10px; /* uguale al margin-top */
+      height: 10px; /* uguale al margin-top */
+      background: transparent;
+      pointer-events: auto;
+    }
+
+    /* Evita che le voci del menu vadano a capo su desktop */
+    .site-navigation {
+      display: flex;
+      flex-wrap: nowrap;
+      align-items: center;
+      white-space: nowrap;
+      padding-left: 24px;
+      padding-right: 24px;
+    }
+
+    /* Glassmorphism: stile allineato a sections/designbottone.liquid */
+    .site-navigation{
+      position: relative;
+      background: rgba(255, 255, 255, 0.08);
+      -webkit-backdrop-filter: blur(12px) saturate(180%);
+      backdrop-filter: blur(12px) saturate(180%);
+      border-radius: 50px;
+      border: none;
+      outline: none;
+      overflow: visible; /* consente ai dropdown di fuoriuscire correttamente */
+      transition: all 0.3s ease;
+      box-shadow: 2px 4px 4px rgba(0, 0, 0, 0.21);
+    }
+    .site-navigation::before{
+      content: '';
+      position: absolute;
+      top: -0.5px; left: -0.5px; right: -0.5px; bottom: -0.5px;
+      border-radius: 51px;
+      padding: 1.5px;
+      background: conic-gradient(
+        from 315deg at 35% 60%,
+        rgba(255,255,255,0.85) 0deg,
+        rgba(255,255,255,0.60) 30deg,
+        rgba(255,255,255,0.40) 60deg,
+        rgba(255,255,255,0.15) 90deg,
+        rgba(255,255,255,0.05) 120deg,
+        rgba(255,255,255,0.35) 150deg,
+        rgba(255,255,255,0.35) 180deg,
+        rgba(255,255,255,0.02) 210deg,
+        rgba(255,255,255,0.02) 240deg,
+        rgba(255,255,255,0.02) 270deg,
+        rgba(255,255,255,0.02) 300deg,
+        rgba(255,255,255,0.70) 330deg,
+        rgba(255,255,255,0.85) 360deg
+      );
+      mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+      mask-composite: xor;
+      -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+      -webkit-mask-composite: xor;
+      will-change: transform;
+      transform: translateZ(0);
+      pointer-events: none;
+    }
+    .site-navigation::after{
+      content: '';
+      position: absolute;
+      top: 1px; left: 1px; right: 1px; bottom: 1px;
+      background: rgba(255,255,255,0.06);
+      -webkit-backdrop-filter: blur(16px) saturate(160%) brightness(110%);
+      backdrop-filter: blur(16px) saturate(160%) brightness(110%);
+      border-radius: 48.5px;
+      z-index: -1;
+      transform: translateZ(0);
+      pointer-events: none;
+    }
+
+    /* Remove any inner shadows from the nav container (visual only) */
+    .site-navigation{ box-shadow: 2px 4px 4px rgba(0,0,0,0.21) !important; }
+    .site-navigation::before, .site-navigation::after{ box-shadow: none !important; }
+
+    /* Remove text shadows around nav links (desktop only) */
+    .site-navigation .site-nav__link,
+    .site-navigation .site-nav__dropdown-link,
+    .site-navigation .site-nav__dropdown .site-nav__dropdown-link--second-level{
+      text-shadow: none !important;
+    }
+    /* Tipografia menu: testo non in grassetto, colore nero */
+    .site-navigation .site-nav__link{
+      color: #000;
+      font-size: 16px;
+      font-weight: 400;
+      letter-spacing: 0.5px;
+    }
+    .site-navigation .site-nav__item {
+      flex: 0 0 auto;
+    }
+    .site-navigation .site-nav__link {
+      padding-left: 10px;
+      padding-right: 10px;
+    }
+
+    /* Icons mini-menu: glassmorphism identico a designbottone.liquid (desktop only) */
+    .site-header .header-item--icons .site-nav.site-nav--icons{
+      position: relative;
+      background: rgba(255, 255, 255, 0.08);
+      -webkit-backdrop-filter: blur(12px) saturate(180%);
+      backdrop-filter: blur(12px) saturate(180%);
+      border-radius: 50px;
+      border: none;
+      outline: none;
+      overflow: hidden; /* evita bleed dei layer interni oltre il bordo */
+      transition: all 0.3s ease;
+      box-shadow: 2px 4px 4px rgba(0, 0, 0, 0.21) !important;
+    }
+    .site-header .header-item--icons .site-nav.site-nav--icons::before{
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0; /* evita bleed esterno */
+      border-radius: inherit;
+      padding: 1px; /* spessore bordo, senza uscire all'esterno */
+      background: conic-gradient(
+        from 315deg at 35% 60%,
+        rgba(255, 255, 255, 0.85) 0deg,
+        rgba(255, 255, 255, 0.7) 30deg,
+        rgba(255, 255, 255, 0.4) 60deg,
+        rgba(255, 255, 255, 0.15) 90deg,
+        rgba(255, 255, 255, 0.05) 120deg,
+        rgba(255, 255, 255, 0.35) 150deg,
+        rgba(255, 255, 255, 0.35) 120deg,
+        rgba(255, 255, 255, 0.02) 210deg,
+        rgba(255, 255, 255, 0.02) 240deg,
+        rgba(255, 255, 255, 0.02) 270deg,
+        rgba(255, 255, 255, 0.02) 300deg,
+        rgba(255, 255, 255, 0.7) 330deg,
+        rgba(255, 255, 255, 0.85) 360deg
+      );
+      mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+      mask-composite: xor;
+      -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+      -webkit-mask-composite: xor;
+      will-change: transform;
+      transform: translateZ(0);
+      pointer-events: none;
+    }
+    .site-header .header-item--icons .site-nav.site-nav--icons::after{
+      content: '';
+      position: absolute;
+      top: 1px; left: 1px; right: 1px; bottom: 1px;
+      background: rgba(255, 255, 255, 0.04);
+      -webkit-backdrop-filter: blur(16px) saturate(160%) brightness(100%);
+      backdrop-filter: blur(16px) saturate(160%) brightness(100%);
+      border-radius: 48.5px;
+      z-index: -1;
+      transform: translateZ(0);
+      pointer-events: none;
+    }
+
+    /* Revert dropdown to tema base (rimozione restyle recente) */
+  }
+{%- endstyle -%}
+
+{%- if section.settings.header_search_enable -%}
+  {%- render 'search-modal' -%}
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "t:sections.header.name",
+  "settings": [
+    {
+      "type": "header",
+      "content": "t:sections.header.settings.header_layout"
+    },
+    {
+      "type": "select",
+      "id": "header_style",
+      "label": "t:sections.header.settings.header_style.label",
+      "default": "button",
+      "options": [
+        {
+          "value": "button",
+          "label": "t:sections.header.settings.header_style.options.button.label"
+        },
+        {
+          "value": "bar",
+          "label": "t:sections.header.settings.header_style.options.bar.label"
+        },
+        {
+          "value": "top",
+          "label": "t:sections.header.settings.header_style.options.top.label"
+        }
+      ]
+    },
+    {
+      "type": "select",
+      "id": "main_menu_alignment",
+      "label": "t:sections.header.settings.main_menu_alignment.label",
+      "default": "right",
+      "options": [
+        {
+          "value": "right",
+          "label": "t:sections.header.settings.main_menu_alignment.options.right.label"
+        },
+        {
+          "value": "left-center",
+          "label": "t:sections.header.settings.main_menu_alignment.options.left-center.label"
+        },
+        {
+          "value": "center-left",
+          "label": "t:sections.header.settings.main_menu_alignment.options.center-left.label"
+        },
+        {
+          "value": "center-split",
+          "label": "t:sections.header.settings.main_menu_alignment.options.center-split.label"
+        },
+        {
+          "value": "center",
+          "label": "t:sections.header.settings.main_menu_alignment.options.center.label"
+        }
+      ]
+    },
+    {
+      "type": "checkbox",
+      "id": "sticky_index",
+      "label": "t:sections.header.settings.sticky_index.label"
+    },
+    {
+      "type": "checkbox",
+      "id": "sticky_collection",
+      "label": "t:sections.header.settings.sticky_collection.label",
+      "info": "t:sections.header.settings.sticky_collection.info"
+    },
+    {
+      "type": "checkbox",
+      "id": "header_search_enable",
+      "label": "t:sections.header.settings.header_search_enable.label"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.header.settings.header_logo"
+    },
+    {
+      "type": "image_picker",
+      "id": "logo",
+      "label": "t:sections.header.settings.logo.label"
+    },
+    {
+      "type": "image_picker",
+      "id": "logo-inverted",
+      "label": "t:sections.header.settings.logo-inverted.label",
+      "info": "t:sections.header.settings.logo-inverted.info"
+    },
+    {
+      "type": "range",
+      "id": "desktop_logo_width",
+      "label": "t:sections.header.settings.desktop_logo_width.label",
+      "default": 200,
+      "min": 80,
+      "max": 400,
+      "step": 10,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "mobile_logo_width",
+      "label": "t:sections.header.settings.mobile_logo_width.label",
+      "default": 140,
+      "min": 50,
+      "max": 200,
+      "step": 10,
+      "unit": "px",
+      "info": "t:sections.header.settings.mobile_logo_width.info"
+    },
+    {
+      "type": "checkbox",
+      "id": "logo_hide_mobile",
+      "label": "t:sections.header.settings.logo_hide_mobile.label",
+      "default": true,
+      "info": "t:sections.header.settings.logo_hide_mobile.info"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.header.settings.header_navigation"
+    },
+    {
+      "type": "link_list",
+      "id": "main_menu_link_list",
+      "label": "t:sections.header.settings.main_menu_link_list.label",
+      "default": "main-menu"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.header.settings.header_announcement_bar"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_announcement",
+      "label": "t:sections.header.settings.show_announcement.label"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_announcement_home_only",
+      "label": "t:sections.header.settings.show_announcement_home_only.label"
+    },
+    {
+      "type": "text",
+      "id": "announcement_text",
+      "label": "t:sections.header.settings.announcement_text.label",
+      "default": "Free shipping and returns"
+    },
+    {
+      "type": "url",
+      "id": "announcement_link",
+      "label": "t:sections.header.settings.announcement_link.label"
+    }
+  ]
+}
+{% endschema %}
+ 
+ {% include 'alireviews_aggregateRating' %}

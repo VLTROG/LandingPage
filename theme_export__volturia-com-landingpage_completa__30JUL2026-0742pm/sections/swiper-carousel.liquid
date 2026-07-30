@@ -1,0 +1,563 @@
+<div class="index-section swiper-carousel-section swiper-carousel-{{ section.id }}">
+  <div class="page-width page-width--full">
+    {% style %}
+      /* Base section styles */
+      .swiper-carousel-{{ section.id }} {
+        padding-top: clamp(24px, 4vw, 72px);
+        padding-bottom: clamp(48px, 6vw, 96px);
+        /* Evita scrollbar orizzontale a livello pagina */
+        overflow-x: hidden;
+        overflow-x: clip;
+      }
+
+      /* Override page-width per full-width */
+      .swiper-carousel-{{ section.id }} .page-width--full {
+        max-width: 100% !important;
+        padding-left: 0 !important;
+        padding-right: 0 !important;
+        /* Evita overflow orizzontale dai contenuti interni */
+        overflow-x: hidden;
+        overflow-x: clip;
+      }
+
+      /* Container */
+      .swiper-carousel-{{ section.id }} .sc-container {
+        width: 100%;
+        position: relative;
+        will-change: opacity, transform;
+        opacity: 0;
+        transform: translateY(18px);
+        animation: scFadeUp-{{ section.id }} .55s ease forwards;
+        animation-delay: .1s;
+        /* Impedisci qualsiasi fuoriuscita orizzontale di slide/fade */
+        overflow-x: hidden;
+        overflow-x: clip;
+      }
+
+      /* Swiper wrapper */
+      .swiper-carousel-{{ section.id }} .swiper {
+        width: 100%;
+        overflow: visible;
+        padding: clamp(20px, 3vw, 40px) 0 clamp(50px, 5vw, 80px);
+      }
+
+      /* Swiper slides (cards) - aspect ratio 3:4 VERTICALE (più alta che larga) */
+      .swiper-carousel-{{ section.id }} .swiper-slide {
+        /* +30% dimensioni mantenendo rapporto 3:4 */
+        height: calc(clamp(400px, 50vh, 560px) * 1.3);
+        width: calc(clamp(400px, 50vh, 560px) * 1.3 * 0.75); /* width = height * 3/4 */
+        min-width: calc(clamp(400px, 50vh, 560px) * 1.3 * 0.75);
+        max-width: calc(clamp(400px, 50vh, 560px) * 1.3 * 0.75);
+        flex-shrink: 0;
+        position: relative;
+        /* Lasciare visibile per non tagliare la box-shadow della card */
+        overflow: visible;
+      }
+
+      /* Card base style - Glassmorphism come bento-box */
+      .swiper-carousel-{{ section.id }} .sc-card {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        border-radius: clamp(24px, 3vw, 40px);
+        overflow: hidden;
+        background: rgba(255, 255, 255, 0.2);
+        -webkit-backdrop-filter: blur(12px) saturate(180%);
+        backdrop-filter: blur(12px) saturate(180%);
+        box-shadow: 4px 8px 8px rgba(0, 0, 0, 0.18);
+        transition: transform .15s ease, box-shadow .15s ease;
+        display: flex;
+        flex-direction: column;
+        /* Anti-flicker su hover/animazioni */
+        will-change: transform;
+        backface-visibility: hidden;
+        -webkit-backface-visibility: hidden;
+        transform: translateZ(0);
+        -webkit-transform: translateZ(0);
+      }
+
+      .swiper-carousel-{{ section.id }} .sc-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 4px 12px 16px rgba(0, 0, 0, 0.22);
+      }
+
+      .swiper-carousel-{{ section.id }} .sc-card:active {
+        transform: translateY(0);
+        box-shadow: 2px 4px 4px rgba(0, 0, 0, 0.16);
+      }
+
+      /* Bordo lucido conic-gradient (come bento-box) */
+      .swiper-carousel-{{ section.id }} .sc-card::before {
+        content: '';
+        position: absolute;
+        top: -0.5px;
+        left: -0.5px;
+        right: -0.5px;
+        bottom: -0.5px;
+        border-radius: calc(clamp(24px, 3vw, 40px) + 1px);
+        padding: 1.5px;
+        background: conic-gradient(
+          from 315deg at 35% 60%,
+          rgba(255, 255, 255, 0.85) 0deg,
+          rgba(255, 255, 255, 0.7) 30deg,
+          rgba(255, 255, 255, 0.4) 60deg,
+          rgba(255, 255, 255, 0.15) 90deg,
+          rgba(255, 255, 255, 0.05) 120deg,
+          rgba(255, 255, 255, 0.35) 150deg,
+          rgba(255, 255, 255, 0.35) 180deg,
+          rgba(255, 255, 255, 0.02) 210deg,
+          rgba(255, 255, 255, 0.02) 240deg,
+          rgba(255, 255, 255, 0.02) 270deg,
+          rgba(255, 255, 255, 0.02) 300deg,
+          rgba(255, 255, 255, 0.7) 330deg,
+          rgba(255, 255, 255, 0.85) 360deg
+        );
+        mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+        mask-composite: xor;
+        -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+        -webkit-mask-composite: xor;
+        pointer-events: none;
+        z-index: 2;
+        /* Anti-flicker */
+        backface-visibility: hidden;
+        -webkit-backface-visibility: hidden;
+        transform: translateZ(0);
+        -webkit-transform: translateZ(0);
+      }
+
+      .swiper-carousel-{{ section.id }} .sc-card::after {
+        content: '';
+        position: absolute;
+        top: 1px;
+        left: 1px;
+        right: 1px;
+        bottom: 1px;
+        background: rgba(255, 255, 255, 0.06);
+        -webkit-backdrop-filter: blur(16px) saturate(160%) brightness(110%);
+        backdrop-filter: blur(16px) saturate(160%) brightness(110%);
+        border-radius: calc(clamp(24px, 3vw, 40px) - 1.5px);
+        z-index: -1;
+        pointer-events: none;
+        /* Anti-flicker */
+        backface-visibility: hidden;
+        -webkit-backface-visibility: hidden;
+        transform: translateZ(0);
+        -webkit-transform: translateZ(0);
+      }
+
+      /* Immagine di sfondo */
+      .swiper-carousel-{{ section.id }} .sc-card-bg {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        object-position: center;
+        z-index: 0;
+        pointer-events: none;
+      }
+
+      /* Rimozione fade interno alle cards */
+      .swiper-carousel-{{ section.id }} .sc-card-overlay {
+        display: none !important;
+      }
+
+      /* Contenuto testo (parte bassa) */
+      .swiper-carousel-{{ section.id }} .sc-card-content {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        padding: clamp(20px, 2.5vw, 32px);
+        z-index: 2;
+        text-align: left;
+      }
+
+      .swiper-carousel-{{ section.id }} .sc-card-title {
+        margin: 0 0 clamp(8px, 1vw, 12px);
+        font-family: 'PPNeueMontreal', sans-serif !important;
+        font-weight: 700 !important;
+        line-height: 1.2;
+        color: {{ section.settings.title_color | default: '#ffffff' }};
+        font-size: clamp({{ section.settings.title_size_mobile | default: 20 }}px, 2.2vw, {{ section.settings.title_size_desktop | default: 28 }}px);
+        letter-spacing: -0.02em;
+      }
+
+      .swiper-carousel-{{ section.id }} .sc-card-text {
+        margin: 0;
+        font-family: 'PPNeueMontreal', sans-serif !important;
+        color: {{ section.settings.text_color | default: '#d6d6d6' }};
+        font-size: clamp({{ section.settings.text_size_mobile | default: 14 }}px, 1.6vw, {{ section.settings.text_size_desktop | default: 16 }}px);
+        line-height: 1.5;
+        opacity: 0.95;
+      }
+
+      /* Navigation buttons (chevron) */
+      .swiper-carousel-{{ section.id }} .sc-nav-buttons {
+        position: absolute;
+        bottom: clamp(20px, 3vw, 32px);
+        right: clamp(20px, 3vw, 40px);
+        display: flex;
+        gap: 12px;
+        z-index: 20;
+      }
+
+      .swiper-carousel-{{ section.id }} .sc-nav-btn {
+        width: 48px;
+        height: 48px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.15);
+        backdrop-filter: blur(12px);
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        color: rgba(255, 255, 255, 0.9);
+      }
+
+      .swiper-carousel-{{ section.id }} .sc-nav-btn:hover {
+        background: rgba(255, 255, 255, 0.25);
+        border-color: rgba(255, 255, 255, 0.5);
+        transform: translateY(-2px);
+      }
+
+      .swiper-carousel-{{ section.id }} .sc-nav-btn:active {
+        transform: translateY(0);
+      }
+
+      .swiper-carousel-{{ section.id }} .sc-nav-btn svg {
+        width: 20px;
+        height: 20px;
+        stroke: currentColor;
+        stroke-width: 2.5;
+        fill: none;
+      }
+
+      /* Pagination bullets */
+      .swiper-carousel-{{ section.id }} .swiper-pagination {
+        position: relative;
+        margin-top: clamp(20px, 3vw, 32px);
+        text-align: center;
+      }
+
+      .swiper-carousel-{{ section.id }} .swiper-pagination-bullet {
+        width: 12px;
+        height: 12px;
+        background: rgba(255, 255, 255, 0.4);
+        opacity: 1;
+        margin: 0 6px;
+        transition: all 0.3s ease;
+        border-radius: 50%;
+      }
+
+      .swiper-carousel-{{ section.id }} .swiper-pagination-bullet-active {
+        background: rgba(255, 255, 255, 0.95);
+        width: 32px;
+        border-radius: 6px;
+      }
+
+      /* Keyframes */
+      @keyframes scFadeUp-{{ section.id }} {
+        0% {
+          opacity: 0;
+          transform: translateY(18px);
+        }
+        100% {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      /* Mobile */
+      @media (max-width: 768px) {
+        .swiper-carousel-{{ section.id }} .swiper-slide {
+          /* +30% anche su mobile */
+          height: calc(clamp(360px, 55vh, 480px) * 1.3);
+          width: calc(clamp(360px, 55vh, 480px) * 1.3 * 0.75); /* width = height * 3/4 per formato verticale */
+          min-width: calc(clamp(360px, 55vh, 480px) * 1.3 * 0.75);
+          max-width: calc(clamp(360px, 55vh, 480px) * 1.3 * 0.75);
+        }
+        .swiper-carousel-{{ section.id }} .sc-nav-buttons {
+          bottom: clamp(16px, 2vw, 24px);
+          right: clamp(16px, 2vw, 24px);
+          gap: 8px;
+        }
+        .swiper-carousel-{{ section.id }} .sc-nav-btn {
+          width: 40px;
+          height: 40px;
+        }
+        .swiper-carousel-{{ section.id }} .sc-nav-btn svg {
+          width: 16px;
+          height: 16px;
+        }
+      }
+    {% endstyle %}
+
+    <div class="sc-container">
+      <div class="swiper sc-swiper-{{ section.id }}">
+        <div class="swiper-wrapper">
+          {% for block in section.blocks %}
+            <div class="swiper-slide" {{ block.shopify_attributes }}>
+              <div class="sc-card">
+                {% if block.settings.background_image != blank %}
+                  {{ block.settings.background_image | image_url: width: 800 | image_tag: loading: 'lazy', decoding: 'async', alt: block.settings.image_alt, class: 'sc-card-bg' }}
+                {% endif %}
+                <div class="sc-card-overlay"></div>
+                <div class="sc-card-content">
+                  {% if block.settings.title != blank %}
+                    <h3 class="sc-card-title">{{ block.settings.title }}</h3>
+                  {% endif %}
+                  {% if block.settings.text != blank %}
+                    <p class="sc-card-text">{{ block.settings.text }}</p>
+                  {% endif %}
+                </div>
+              </div>
+            </div>
+          {% endfor %}
+        </div>
+        <div class="swiper-pagination"></div>
+      </div>
+      <!-- Navigation chevron buttons -->
+      <div class="sc-nav-buttons">
+        <button type="button" class="sc-nav-btn sc-nav-prev" aria-label="Previous slide">
+          <svg viewBox="0 0 24 24">
+            <polyline points="15 18 9 12 15 6"></polyline>
+          </svg>
+        </button>
+        <button type="button" class="sc-nav-btn sc-nav-next" aria-label="Next slide">
+          <svg viewBox="0 0 24 24">
+            <polyline points="9 18 15 12 9 6"></polyline>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Swiper CSS -->
+<link rel="stylesheet" href="{{ 'swiper-bundle.min.css' | asset_url }}">
+
+<!-- Swiper JS -->
+<script src="{{ 'swiper-bundle.min.js' | asset_url }}" defer></script>
+
+<script>
+(function(){
+  function initCarousel(){
+    var swiperEl = document.querySelector('.swiper-carousel-{{ section.id }} .sc-swiper-{{ section.id }}');
+    if(!swiperEl) return;
+
+    // Verifica che Swiper sia caricato
+    if(typeof Swiper === 'undefined'){
+      setTimeout(initCarousel, 50);
+      return;
+    }
+
+    var cardsGap = {{ section.settings.cards_gap | default: 30 }};
+
+    // Inizializza Swiper con navigation nativa - NO LOOP
+    var swiper = new Swiper(swiperEl, {
+      // Layout - prima card centrata
+      slidesPerView: 4,
+      spaceBetween: cardsGap,
+      centeredSlides: true,
+      initialSlide: 0,
+      
+      // NO loop - scorrimento lineare
+      loop: false,
+      
+      // Navigation nativa Swiper
+      navigation: {
+        nextEl: '.swiper-carousel-{{ section.id }} .sc-nav-next',
+        prevEl: '.swiper-carousel-{{ section.id }} .sc-nav-prev',
+      },
+      
+      // Pagination nativa Swiper
+      pagination: {
+        el: '.swiper-carousel-{{ section.id }} .swiper-pagination',
+        clickable: true,
+        type: 'bullets'
+      },
+      
+      // Performance
+      speed: 600,
+      
+      // Touch solo mobile
+      simulateTouch: false,
+      allowTouchMove: true,
+      
+      // Scorrimento slide per slide
+      slidesPerGroup: 1,
+      
+      // Responsive
+      breakpoints: {
+        320: {
+          slidesPerView: 1.2,
+          spaceBetween: 16,
+          centeredSlides: true
+        },
+        640: {
+          slidesPerView: 2,
+          spaceBetween: 20,
+          centeredSlides: true
+        },
+        1024: {
+          slidesPerView: 3,
+          spaceBetween: 24,
+          centeredSlides: true
+        },
+        1280: {
+          slidesPerView: 4,
+          spaceBetween: cardsGap,
+          centeredSlides: true
+        }
+      }
+    });
+  }
+
+  // Avvia inizializzazione
+  if(document.readyState === 'loading'){
+    document.addEventListener('DOMContentLoaded', initCarousel);
+  } else {
+    initCarousel();
+  }
+})();
+</script>
+
+{% schema %}
+{
+  "name": "Swiper Carousel",
+  "max_blocks": 8,
+  "blocks": [
+    {
+      "type": "swiper_card",
+      "name": "Card",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title",
+          "default": "Card Title"
+        },
+        {
+          "type": "textarea",
+          "id": "text",
+          "label": "Text",
+          "default": "Card description text goes here."
+        },
+        {
+          "type": "image_picker",
+          "id": "background_image",
+          "label": "Background Image"
+        },
+        {
+          "type": "text",
+          "id": "image_alt",
+          "label": "Image Alt Text",
+          "default": "Card background"
+        }
+      ]
+    }
+  ],
+  "settings": [
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "title_color",
+      "label": "Title Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text Color",
+      "default": "#d6d6d6"
+    },
+    {
+      "type": "header",
+      "content": "Typography"
+    },
+    {
+      "type": "range",
+      "id": "title_size_mobile",
+      "label": "Title Size Mobile (px)",
+      "min": 16,
+      "max": 32,
+      "step": 1,
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "title_size_desktop",
+      "label": "Title Size Desktop (px)",
+      "min": 20,
+      "max": 40,
+      "step": 1,
+      "default": 28
+    },
+    {
+      "type": "range",
+      "id": "text_size_mobile",
+      "label": "Text Size Mobile (px)",
+      "min": 12,
+      "max": 20,
+      "step": 1,
+      "default": 14
+    },
+    {
+      "type": "range",
+      "id": "text_size_desktop",
+      "label": "Text Size Desktop (px)",
+      "min": 14,
+      "max": 20,
+      "step": 1,
+      "default": 16
+    },
+    {
+      "type": "header",
+      "content": "Carousel Settings"
+    },
+    {
+      "type": "range",
+      "id": "autoplay_speed",
+      "label": "Autoplay Speed (ms)",
+      "min": 2000,
+      "max": 8000,
+      "step": 500,
+      "default": 3000
+    },
+    {
+      "type": "range",
+      "id": "cards_gap",
+      "label": "Cards Gap (px)",
+      "min": 12,
+      "max": 48,
+      "step": 2,
+      "default": 30
+    }
+  ],
+  "presets": [
+    {
+      "name": "Swiper Carousel",
+      "blocks": [
+        {
+          "type": "swiper_card"
+        },
+        {
+          "type": "swiper_card"
+        },
+        {
+          "type": "swiper_card"
+        },
+        {
+          "type": "swiper_card"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

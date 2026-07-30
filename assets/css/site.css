@@ -1,0 +1,38 @@
+/* Override minimi per la versione statica (senza theme.js Shopify) */
+
+/* Su Shopify questi stati erano gestiti da theme.js; qui sono sempre visibili */
+.page-container {
+  display: block !important;
+}
+
+.transition-body {
+  opacity: 1 !important;
+}
+
+/*
+ * theme.css nasconde [class*=appear-delay] quando data-animate_images=true,
+ * aspettando la libreria AOS in vendor-v6.js (non inclusa nel sito statico).
+ * La foto Carrie (.nl-card-wrap.appear-delay) restava quindi invisibile.
+ */
+body[data-animate_images="true"] [class*="appear-delay"] {
+  opacity: 1 !important;
+  transform: none !important;
+}
+
+/* Messaggio di stato del form newsletter (successo/errore) */
+.nl-form-status {
+  display: none;
+  margin: 12px 0 0;
+  font-size: 14px;
+  line-height: 1.5;
+  text-align: center;
+  color: #333333;
+}
+
+.nl-form-status.is-visible {
+  display: block;
+}
+
+.nl-form-status.is-error {
+  color: #b00020;
+}

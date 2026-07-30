@@ -1,0 +1,320 @@
+{% liquid
+  assign hero_title = section.settings.title
+  assign hero_subheading = section.settings.subheading
+
+  capture dh_target
+    echo section.settings.dh_year
+    echo '-'
+    echo section.settings.dh_month
+    echo '-'
+    echo section.settings.dh_day
+    echo ' '
+    echo section.settings.dh_hour
+    echo ':'
+    echo section.settings.dh_minute
+    echo ':00'
+  endcapture
+  assign dh_target_unix = dh_target | date: '%s'
+  assign dh_now_unix = 'now' | date: '%s'
+  assign is_live = false
+  if dh_now_unix >= dh_target_unix
+    assign is_live = true
+  endif
+%}
+
+<section id="HeroDropHub-{{ section.id }}" class="hero-drophub">
+  <div class="hdh-hero">
+    <div class="hdh-hero__media" data-interval="{{ section.settings.hero_interval | default: 3000 }}">
+      {%- for block in section.blocks -%}
+        {%- if block.type == 'image' -%}
+          {%- assign img = block.settings.image -%}
+          {%- if img != blank -%}
+            {%- assign img_url = img | img_url: '1x1' | replace: '_1x1.', '_{width}x.' -%}
+            <img class="hdh-slide{% if forloop.first %} is-active{% endif %} lazyload" src="" data-src="{{ img_url }}" data-aspectratio="{{ img.aspect_ratio }}" data-sizes="auto" data-parent-fit="cover" alt="{{ img.alt | escape }}">
+          {%- endif -%}
+        {%- endif -%}
+      {%- endfor -%}
+    </div>
+    {% if hero_title != blank or hero_subheading != blank or section.settings.link_text != blank %}
+      <div class="hdh-hero__content {{ section.settings.text_align }}">
+        {% if hero_title != blank %}<div class="hdh-title">{{ hero_title | newline_to_br }}</div>{% endif %}
+        {% if hero_subheading != blank %}<div class="hdh-subtitle">{{ hero_subheading }}</div>{% endif %}
+        {% if section.settings.link_text != blank and section.settings.link != blank %}
+          <a href="{{ section.settings.link }}" class="hdh-btn">{{ section.settings.link_text }}</a>
+        {% endif %}
+      </div>
+    {% endif %}
+  </div>
+
+  <div class="hdh-overlay hdh-overlay--{{ section.settings.window_align | default: 'center' }}">
+    <div class="dh-window">
+      <div class="dh-reflection dh-reflection--top" aria-hidden="true"></div>
+
+      <div class="dh-block dh-calendar" data-live="{{ is_live }}">
+        <header class="dh-cal__header">
+          {% if section.settings.dh_title != blank %}<h2 class="dh-title">{{ section.settings.dh_title | upcase }}</h2>{% endif %}
+          {% if section.settings.dh_subtitle != blank %}<p class="dh-subtitle">{{ section.settings.dh_subtitle }}</p>{% endif %}
+        </header>
+        {% if section.settings.dh_drop_name != blank %}
+        <div class="dh-status" data-status>
+          <span class="dot"></span>
+          <span class="label">DROP <span data-live-label>{% if is_live %}NOW LIVE{% else %}COMING SOON{% endif %}</span>: ‘{{ section.settings.dh_drop_name }}’</span>
+        </div>
+        {% endif %}
+        {% if section.settings.dh_description != blank %}<p class="dh-desc">{{ section.settings.dh_description }}</p>{% endif %}
+
+        <div class="dh-timer" data-timer
+          data-year="{{ section.settings.dh_year }}"
+          data-month="{{ section.settings.dh_month }}"
+          data-day="{{ section.settings.dh_day }}"
+          data-hour="{{ section.settings.dh_hour }}"
+          data-minute="{{ section.settings.dh_minute }}">
+          <div class="tblock"><div class="num" data-dd>00</div><div class="unit">DAYS</div></div>
+          <div class="tblock"><div class="num" data-hh>00</div><div class="unit">HOURS</div></div>
+          <div class="tblock"><div class="num" data-mm>00</div><div class="unit">MINUTES</div></div>
+          <div class="tblock"><div class="num" data-ss>00</div><div class="unit">SECONDS</div></div>
+        </div>
+
+        <div class="dh-cta dh-cta--{{ section.settings.dh_button_align | default: 'center' }}">
+          {% if is_live %}
+            <a class="btn btn--enter" href="{{ section.settings.dh_enter_url }}" data-enter-btn><span class="btn__label">Enter the Drop</span></a>
+          {% else %}
+            <a class="btn btn--enter is-locked" data-enter-btn><span class="btn__label">Enter the Drop</span></a>
+          {% endif %}
+        </div>
+      </div>
+
+      <div class="dh-sep" aria-hidden="true"></div>
+
+      <div class="dh-block dh-newsletter">
+        {% if section.settings.dh_nl_title != blank %}<h3 class="nl-title">{{ section.settings.dh_nl_title }}</h3>{% endif %}
+        {% if section.settings.dh_nl_text != blank %}<p class="nl-text">{{ section.settings.dh_nl_text }}</p>{% endif %}
+        <div class="nl-form">{%- render 'newsletter-form', section_id: section.id, snippet_context: 'section' -%}</div>
+        {% if section.settings.dh_nl_footnote != blank %}<p class="nl-footnote" style="color: {{ section.settings.dh_nl_footnote_color }}">{{ section.settings.dh_nl_footnote }}</p>{% endif %}
+      </div>
+
+      <div class="dh-reflection dh-reflection--bottom" aria-hidden="true"></div>
+    </div>
+  </div>
+
+  {% style %}
+    /* Hero base */
+    #HeroDropHub-{{ section.id }}{ position:relative; margin-top: var(--hdh-header-height, 0px); }
+    #HeroDropHub-{{ section.id }} .hdh-hero{ position:relative; min-height: 100vh; overflow:hidden; }
+    #HeroDropHub-{{ section.id }} .hdh-hero__media{ position:sticky; top:0; height:100vh; }
+    #HeroDropHub-{{ section.id }} .hdh-slide{ position:absolute; inset:0; opacity:0; transition:opacity .9s ease-in-out; object-fit:cover; width:100%; height:100%; }
+    #HeroDropHub-{{ section.id }} .hdh-slide.is-active{ opacity:1; }
+    #HeroDropHub-{{ section.id }} .hdh-hero__content{ position:relative; z-index:1; max-width: min(1100px, 92vw); margin: 0 auto; padding: clamp(20px, 5vw, 60px) 16px; }
+    #HeroDropHub-{{ section.id }} .hdh-title{ font-size: clamp(28px, 6vw, 56px); font-weight:800; margin:0 0 8px; }
+    #HeroDropHub-{{ section.id }} .hdh-subtitle{ opacity:.9; font-size: clamp(14px, 2.6vw, 20px); margin:0; }
+    #HeroDropHub-{{ section.id }} .hdh-btn{ display:inline-flex; align-items:center; justify-content:center; padding:12px 20px; border-radius:16px; background: rgba(255,255,255,.85); color:#000; font-weight:700; text-transform:uppercase; letter-spacing:.06em; margin-top:14px; }
+    #HeroDropHub-{{ section.id }} .vertical-center{ text-align:center; }
+    #HeroDropHub-{{ section.id }} .vertical-bottom{ text-align:center; position:absolute; left:0; right:0; bottom: clamp(20px, 5vw, 60px); }
+
+    /* Overlay card alignment */
+    #HeroDropHub-{{ section.id }} .hdh-overlay{
+      position:absolute; inset:0; z-index:2; width:100%; margin:0 auto;
+      /* Aumenta la distanza top/bottom dalla section per evitare stretching verticale */
+      padding: clamp(60px, 12vh, 160px) 0;
+      display:grid; align-content:center;
+    }
+    @media only screen and (min-width: 769px) {
+      #HeroDropHub-{{ section.id }} .hdh-overlay--center{ display:grid; grid-template-columns: 1fr; justify-items:center; }
+      #HeroDropHub-{{ section.id }} .hdh-overlay--left{ display:grid; grid-template-columns: 1fr 1fr; }
+      #HeroDropHub-{{ section.id }} .hdh-overlay--left .dh-window{ grid-column:1; justify-self:center; }
+      #HeroDropHub-{{ section.id }} .hdh-overlay--right{ display:grid; grid-template-columns: 1fr 1fr; }
+      #HeroDropHub-{{ section.id }} .hdh-overlay--right .dh-window{ grid-column:2; justify-self:center; }
+
+      /* Drop-hub card styling (matched to drop-hub.liquid) */
+      #HeroDropHub-{{ section.id }} .dh-window{
+        position:relative; width: min(36.8vw, 576px); margin:0; padding:34px; border-radius:50px; overflow:hidden;
+        /* Scala intera floating window e contenuto del 30% */
+        transform: scale(1.3);
+        transform-origin: center center;
+        will-change: transform;
+        /* padding verticale uguale top/bottom */
+        --dhv-pad: clamp(20px, 5vw, 40px);
+        padding-top: var(--dhv-pad);
+        padding-bottom: var(--dhv-pad);
+        background:rgba(255,255,255,.08);
+        backdrop-filter:blur(36px);
+        border:none;
+        /* solo ombra esterna morbida */
+        /* Ombra concentrata orientata verso bottom-right */
+        box-shadow: 14px 20px 32px rgba(0,0,0,.28), 6px 10px 14px rgba(0,0,0,.22);
+        display:flex; flex-direction:column; justify-content:center;
+      }
+      /* Bordo in stile designbottone.liquid */
+      #HeroDropHub-{{ section.id }} .dh-window::before{
+        content:'';
+        position:absolute; top:-0.5px; left:-0.5px; right:-0.5px; bottom:-0.5px;
+        border-radius:51px; padding:1.5px;
+        background: conic-gradient(
+          from 315deg at 35% 60%,
+          rgba(255, 255, 255, 0.85) 0deg,
+          rgba(255, 255, 255, 0.7) 30deg,
+          rgba(255, 255, 255, 0.4) 60deg,
+          rgba(255, 255, 255, 0.15) 90deg,
+          rgba(255, 255, 255, 0.05) 120deg,
+          rgba(255, 255, 255, 0.35) 150deg,
+          rgba(255, 255, 255, 0.35) 180deg,
+          rgba(255, 255, 255, 0.02) 210deg,
+          rgba(255, 255, 255, 0.02) 240deg,
+          rgba(255, 255, 255, 0.02) 270deg,
+          rgba(255, 255, 255, 0.02) 300deg,
+          rgba(255, 255, 255, 0.70) 330deg,
+          rgba(255, 255, 255, 0.85) 360deg
+        );
+        mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+        mask-composite: xor;
+        -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+        -webkit-mask-composite: xor;
+        will-change: transform;
+        transform: translateZ(0);
+        pointer-events:none;
+      }
+      #HeroDropHub-{{ section.id }} .dh-window::after{
+        content:'';
+        position:absolute; top:1px; left:1px; right:1px; bottom:1px;
+        background: rgba(255,255,255,0.06);
+        -webkit-backdrop-filter: blur(16px) saturate(160%) brightness(110%);
+        backdrop-filter: blur(36px) saturate(160%) brightness(110%);
+        border-radius:48.5px; z-index:-1; pointer-events:none;
+        transform: translateZ(0);
+      }
+    }
+    #HeroDropHub-{{ section.id }} .dh-reflection{ position:absolute; left:0; right:0; height:18px; pointer-events:none; }
+    #HeroDropHub-{{ section.id }} .dh-block + .dh-sep{ margin:36px 0; }
+    #HeroDropHub-{{ section.id }} .dh-sep{ height:2px; background:linear-gradient(90deg, rgba(255,255,255,0), #fff, rgba(255,255,255,0)); opacity:.8; }
+    #HeroDropHub-{{ section.id }} .dh-title{ text-align:center; margin:0 0 10px; font-weight:800; letter-spacing:.06em; }
+    #HeroDropHub-{{ section.id }} .dh-subtitle{ text-align:center; margin:0 0 16px; color:#9aa0a6; }
+    #HeroDropHub-{{ section.id }} .dh-desc{ text-align:center; margin:10px 0 22px; opacity:.9; }
+    #HeroDropHub-{{ section.id }} .dh-calendar, #HeroDropHub-{{ section.id }} .dh-newsletter { display:flex; flex-direction:column; align-items:center; }
+    #HeroDropHub-{{ section.id }} .dh-status{ display:flex; align-items:center; justify-content:center; gap:8px; margin:10px 0; }
+    #HeroDropHub-{{ section.id }} .dh-status .dot{ width:10px; height:10px; border-radius:50%; background:#00e5ff; box-shadow:0 0 8px rgba(0,229,255,.6); }
+    #HeroDropHub-{{ section.id }} .dh-status .label{ font-weight:700; letter-spacing:.04em; }
+    #HeroDropHub-{{ section.id }} .dh-timer{ display:flex; justify-content:center; gap:14px; flex-wrap:wrap; margin:16px 0 26px; }
+    #HeroDropHub-{{ section.id }} .tblock{ min-width:110px; border-radius:16px; border:1px solid rgba(255,255,255,.7); padding:14px 16px; text-align:center; backdrop-filter:blur(8px); background:rgba(255,255,255,.08); }
+    #HeroDropHub-{{ section.id }} .tblock .num{ font-size:28px; font-weight:800; transition:transform .2s ease, opacity .2s ease; }
+    #HeroDropHub-{{ section.id }} .tblock .unit{ font-size:12px; letter-spacing:.12em; opacity:.8; }
+    #HeroDropHub-{{ section.id }} .dh-cta{ display:flex; }
+    #HeroDropHub-{{ section.id }} .dh-cta--left{ justify-content:flex-start; }
+    #HeroDropHub-{{ section.id }} .dh-cta--center{ justify-content:center; }
+    #HeroDropHub-{{ section.id }} .dh-cta--right{ justify-content:flex-end; }
+    #HeroDropHub-{{ section.id }} .btn.btn--enter{ display:inline-flex; align-items:center; justify-content:center; gap:8px; padding:12px 20px; border-radius:16px; background:rgba(255,218,185,.4); color:#000; font-weight:700; text-transform:uppercase; letter-spacing:.06em; transition:transform .12s ease, opacity .2s ease, background .2s ease, box-shadow .2s ease, border-color .2s ease; border:1px solid rgba(255,218,185,.7); backdrop-filter:blur(10px); box-shadow:8px 10px 13px rgba(0,0,0,.18), inset 0 1px 0 rgba(255,255,255,.35); }
+    #HeroDropHub-{{ section.id }} .btn.btn--enter:active{ transform:scale(.97); }
+    #HeroDropHub-{{ section.id }} .btn.btn--enter.is-locked{ cursor:not-allowed; position:relative; }
+    #HeroDropHub-{{ section.id }} .btn.btn--enter.is-locked .btn__label{ transition:opacity .2s ease; }
+    #HeroDropHub-{{ section.id }} .btn.btn--enter.is-locked:hover .btn__label{ opacity:0; }
+    #HeroDropHub-{{ section.id }} .btn.btn--enter.is-locked::after{ content:'locked'; position:absolute; left:50%; top:50%; transform:translate(-50%,-50%); opacity:0; transition:opacity .2s ease; font-size:12px; letter-spacing:.06em; }
+    #HeroDropHub-{{ section.id }} .btn.btn--enter.is-locked:hover::after{ opacity:1; }
+    #HeroDropHub-{{ section.id }} .nl-title{ text-align:center; margin:0 0 8px; font-weight:800; letter-spacing:.04em; }
+    #HeroDropHub-{{ section.id }} .nl-text{ text-align:center; margin:0 0 12px; opacity:.9; }
+    #HeroDropHub-{{ section.id }} .nl-form{ display:flex; justify-content:center; }
+    #HeroDropHub-{{ section.id }} .nl-form form{ display:flex; gap:10px; width:100%; max-width:1500px; margin:0 auto; }
+    #HeroDropHub-{{ section.id }} .nl-form form .newsletter-form-group{ display:flex; gap:10px; width:100%; position:relative; }
+    #HeroDropHub-{{ section.id }} .nl-form form .newsletter-form-group__input,
+    #HeroDropHub-{{ section.id }} .nl-form form input[type="email"]{ flex:1 1 0%; width:100%; min-width:0; border-radius:14px; border:1px solid rgba(255,255,255,.6); background:rgba(255,255,255,.1); color:inherit; padding:10px 12px; }
+    #HeroDropHub-{{ section.id }} .nl-form form .newsletter-form-group__submit{ position:absolute; right:10px; top:50%; transform:translateY(-50%); width:28px; height:28px; padding:0; background:transparent; border:0; box-shadow:none; pointer-events:none; display:flex; align-items:center; justify-content:center; }
+    #HeroDropHub-{{ section.id }} .nl-form form .newsletter-form-group__submit .icon{ width:22px; height:22px; }
+    #HeroDropHub-{{ section.id }} .nl-form .btn:active{ transform:scale(.97); }
+    #HeroDropHub-{{ section.id }} .nl-footnote{ text-align:center; margin-top:8px; margin-bottom:0; font-size:13px; opacity:.9; }
+  {% endstyle %}
+
+  <script>
+    (function(){
+      var root = document.getElementById('HeroDropHub-{{ section.id }}');
+      if(!root) return;
+      // Hero slideshow
+      var media = root.querySelector('.hdh-hero__media');
+      if(media){
+        var slides = media.querySelectorAll('.hdh-slide');
+        if(slides.length > 1){
+          var idx = 0; var iv = parseInt(media.getAttribute('data-interval'),10)||3000; setInterval(function(){
+            slides[idx].classList.remove('is-active'); idx=(idx+1)%slides.length; slides[idx].classList.add('is-active');
+          }, iv);
+        }
+      }
+
+      // Drop-hub countdown lock
+      var timer = root.querySelector('[data-timer]');
+      var btn = root.querySelector('[data-enter-btn]');
+      var liveLabel = root.querySelector('[data-live-label]');
+      if(timer){
+        var Y = parseInt(timer.getAttribute('data-year'),10);
+        var Mo = parseInt(timer.getAttribute('data-month'),10)-1;
+        var D = parseInt(timer.getAttribute('data-day'),10);
+        var H = parseInt(timer.getAttribute('data-hour'),10);
+        var Mi = parseInt(timer.getAttribute('data-minute'),10);
+        var target = new Date(Y,Mo,D,H,Mi,0).getTime();
+        function setNums(d,h,m,s){ root.querySelector('[data-dd]').textContent = (d<10? ('0'+d): d); root.querySelector('[data-hh]').textContent = ('0'+h).slice(-2); root.querySelector('[data-mm]').textContent = ('0'+m).slice(-2); root.querySelector('[data-ss]').textContent = ('0'+s).slice(-2); }
+        setNums(0,0,0,0);
+        function unlock(){ if(btn && btn.classList.contains('is-locked')){ btn.classList.remove('is-locked'); btn.setAttribute('href', {{ section.settings.dh_enter_url | json }}); if(liveLabel){ liveLabel.textContent = 'NOW LIVE'; } } }
+        var live = Date.now() >= target;
+        if(live){ unlock(); }
+        else{
+          var iv = setInterval(function(){ var now = Date.now(); var diff = Math.max(0, target - now); var d = Math.floor(diff/86400000); var h = Math.floor((diff%86400000)/3600000); var m = Math.floor((diff%3600000)/60000); var s = Math.floor((diff%60000)/1000); setNums(d,h,m,s); if(diff<=0){ clearInterval(iv); setNums(0,0,0,0); unlock(); } }, 1000);
+        }
+      }
+    })();
+  </script>
+</section>
+
+{% schema %}
+{
+  "name": "Hero Drop Hub",
+  "settings": [
+    { "type": "textarea", "id": "title", "label": "Hero title" },
+    { "type": "text", "id": "subheading", "label": "Hero subtitle" },
+    { "type": "url", "id": "link", "label": "Hero link" },
+    { "type": "text", "id": "link_text", "label": "Hero button label" },
+    { "type": "range", "id": "hero_interval", "label": "Hero slide interval (ms)", "min": 1000, "max": 8000, "step": 500, "default": 3000 },
+    { "type": "select", "id": "text_align", "label": "Hero text alignment", "default": "vertical-center", "options": [
+      {"value":"vertical-center","label":"Center"}, {"value":"vertical-bottom","label":"Bottom"}
+    ]},
+    { "type": "select", "id": "window_align", "label": "Overlay alignment (desktop)", "default": "center", "options": [
+      {"value":"left","label":"Left half"}, {"value":"center","label":"Center"}, {"value":"right","label":"Right half"}
+    ]},
+
+    { "type": "header", "content": "Drop Hub (overlay)" },
+    { "type": "text", "id": "dh_title", "label": "Drop title", "default": "DROPS CALENDAR" },
+    { "type": "text", "id": "dh_subtitle", "label": "Drop subtitle", "default": "Upcoming releases and priority access" },
+    { "type": "text", "id": "dh_drop_name", "label": "Drop name", "default": "MIDNIGHT" },
+    { "type": "text", "id": "dh_description", "label": "Description", "default": "The collection is available for a limited time" },
+    { "type": "url", "id": "dh_enter_url", "label": "Enter drop URL" },
+    { "type": "select", "id": "dh_button_align", "label": "Button alignment", "default": "center", "options": [
+      {"value":"left","label":"Left"}, {"value":"center","label":"Center"}, {"value":"right","label":"Right"}
+    ] },
+    { "type": "header", "content": "End date/time" },
+    { "type": "select", "id": "dh_year", "label": "Year", "default": "2025", "options": [ {"value":"2025","label":"2025"}, {"value":"2026","label":"2026"} ] },
+    { "type": "select", "id": "dh_month", "label": "Month", "default": "01", "options": [
+      {"value":"01","label":"01"},{"value":"02","label":"02"},{"value":"03","label":"03"},{"value":"04","label":"04"},{"value":"05","label":"05"},{"value":"06","label":"06"},{"value":"07","label":"07"},{"value":"08","label":"08"},{"value":"09","label":"09"},{"value":"10","label":"10"},{"value":"11","label":"11"},{"value":"12","label":"12"}
+    ] },
+    { "type": "select", "id": "dh_day", "label": "Day", "default": "1", "options": [
+      {"value":"1","label":"1"},{"value":"2","label":"2"},{"value":"3","label":"3"},{"value":"4","label":"4"},{"value":"5","label":"5"},{"value":"6","label":"6"},{"value":"7","label":"7"},{"value":"8","label":"8"},{"value":"9","label":"9"},{"value":"10","label":"10"},{"value":"11","label":"11"},{"value":"12","label":"12"},{"value":"13","label":"13"},{"value":"14","label":"14"},{"value":"15","label":"15"},{"value":"16","label":"16"},{"value":"17","label":"17"},{"value":"18","label":"18"},{"value":"19","label":"19"},{"value":"20","label":"20"},{"value":"21","label":"21"},{"value":"22","label":"22"},{"value":"23","label":"23"},{"value":"24","label":"24"},{"value":"25","label":"25"},{"value":"26","label":"26"},{"value":"27","label":"27"},{"value":"28","label":"28"},{"value":"29","label":"29"},{"value":"30","label":"30"},{"value":"31","label":"31"}
+    ] },
+    { "type": "select", "id": "dh_hour", "label": "Hour (24h)", "default": "00", "options": [
+      {"value":"00","label":"00"},{"value":"01","label":"01"},{"value":"02","label":"02"},{"value":"03","label":"03"},{"value":"04","label":"04"},{"value":"05","label":"05"},{"value":"06","label":"06"},{"value":"07","label":"07"},{"value":"08","label":"08"},{"value":"09","label":"09"},{"value":"10","label":"10"},{"value":"11","label":"11"},{"value":"12","label":"12"},{"value":"13","label":"13"},{"value":"14","label":"14"},{"value":"15","label":"15"},{"value":"16","label":"16"},{"value":"17","label":"17"},{"value":"18","label":"18"},{"value":"19","label":"19"},{"value":"20","label":"20"},{"value":"21","label":"21"},{"value":"22","label":"22"},{"value":"23","label":"23"}
+    ] },
+    { "type": "select", "id": "dh_minute", "label": "Minute", "default": "00", "options": [
+      {"value":"00","label":"00"},{"value":"01","label":"01"},{"value":"02","label":"02"},{"value":"03","label":"03"},{"value":"04","label":"04"},{"value":"05","label":"05"},{"value":"06","label":"06"},{"value":"07","label":"07"},{"value":"08","label":"08"},{"value":"09","label":"09"},{"value":"10","label":"10"},{"value":"11","label":"11"},{"value":"12","label":"12"},{"value":"13","label":"13"},{"value":"14","label":"14"},{"value":"15","label":"15"},{"value":"16","label":"16"},{"value":"17","label":"17"},{"value":"18","label":"18"},{"value":"19","label":"19"},{"value":"20","label":"20"},{"value":"21","label":"21"},{"value":"22","label":"22"},{"value":"23","label":"23"},{"value":"24","label":"24"},{"value":"25","label":"25"},{"value":"26","label":"26"},{"value":"27","label":"27"},{"value":"28","label":"28"},{"value":"29","label":"29"},{"value":"30","label":"30"},{"value":"31","label":"31"},{"value":"32","label":"32"},{"value":"33","label":"33"},{"value":"34","label":"34"},{"value":"35","label":"35"},{"value":"36","label":"36"},{"value":"37","label":"37"},{"value":"38","label":"38"},{"value":"39","label":"39"},{"value":"40","label":"40"},{"value":"41","label":"41"},{"value":"42","label":"42"},{"value":"43","label":"43"},{"value":"44","label":"44"},{"value":"45","label":"45"},{"value":"46","label":"46"},{"value":"47","label":"47"},{"value":"48","label":"48"},{"value":"49","label":"49"},{"value":"50","label":"50"},{"value":"51","label":"51"},{"value":"52","label":"52"},{"value":"53","label":"53"},{"value":"54","label":"54"},{"value":"55","label":"55"},{"value":"56","label":"56"},{"value":"57","label":"57"},{"value":"58","label":"58"},{"value":"59","label":"59"}
+    ] },
+    { "type":"text", "id":"dh_nl_title", "label":"Newsletter title", "default":"Sign up and save" },
+    { "type":"textarea", "id":"dh_nl_text", "label":"Newsletter text", "default":"Let customers know about the key benefits of joining your newsletter." },
+    { "type":"text", "id":"dh_nl_footnote", "label":"Newsletter footnote", "default":"We never spam. Unsubscribe anytime." },
+    { "type":"color", "id":"dh_nl_footnote_color", "label":"Footnote color", "default":"#cccccc" }
+  ],
+  "blocks": [
+    {
+      "type": "image",
+      "name": "Hero image",
+      "settings": [
+        { "type": "image_picker", "id": "image", "label": "Image" }
+      ]
+    }
+  ],
+  "presets": [ { "name": "Hero Drop Hub" } ]
+}
+{% endschema %}
+
+

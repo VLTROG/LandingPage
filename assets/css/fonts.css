@@ -1,0 +1,59 @@
+/* Font locali Volturia (sostituiscono CDN Shopify + app AZ Google Fonts) */
+
+@font-face {
+  font-family: 'PPNeueMontreal';
+  src: url('../../media/fonts/ppneuemontreal-book.woff2') format('woff2');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'PPNeueMontrealTitoli';
+  src: url('../../media/fonts/ppneuemontreal-regular.woff2') format('woff2');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* Alias usato nei custom CSS delle sezioni (password.json) */
+@font-face {
+  font-family: 'PPNeueMontrealTitles';
+  src: url('../../media/fonts/ppneuemontreal-regular.woff2') format('woff2');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'VOLTURIARegular';
+  src: url('../../media/fonts/VOLTURIARegular.woff2') format('woff2'),
+       url('../../media/fonts/VOLTURIARegular.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* Variabili tipografiche del tema (erano in css-variables.liquid),
+   con font del theme sostituiti dai PPNeueMontreal locali */
+:root {
+  --typeHeaderPrimary: 'PPNeueMontrealTitoli';
+  --typeHeaderFallback: sans-serif;
+  --typeHeaderSize: 37px;
+  --typeHeaderStyle: normal;
+  --typeHeaderWeight: 400;
+  --typeHeaderLineHeight: 1.2;
+  --typeHeaderSpacing: 0.025em;
+
+  --typeBasePrimary: 'PPNeueMontreal';
+  --typeBaseFallback: sans-serif;
+  --typeBaseSize: 16px;
+  --typeBaseWeight: 300;
+  --typeBaseStyle: normal;
+  --typeBaseSpacing: 0.05em;
+  --typeBaseLineHeight: 1.5;
+
+  --buttonRadius: 35px;
+  --iconWeight: 4px;
+  --iconLinecaps: miter;
+}

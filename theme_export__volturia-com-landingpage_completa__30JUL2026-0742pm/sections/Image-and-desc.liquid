@@ -1,0 +1,625 @@
+<div class="index-section image-and-desc-section image-and-desc-{{ section.id }}">
+  <div class="page-width">
+    {% style %}
+      /* ========================================
+         Layout & base styles (desktop first)
+         ======================================== */
+      .image-and-desc-{{ section.id }}{
+        padding-top: clamp(6px, 1.5vw, 14px);
+        padding-bottom: clamp(6px, 1.5vw, 14px);
+      }
+
+      .image-and-desc-{{ section.id }} .page-width{
+        max-width: min(1640px, 90vw);
+        margin: 0 auto;
+      }
+
+      .image-and-desc-{{ section.id }} .iad-box{
+        position: relative;
+        width: 100%;
+        max-width: 100%;
+        margin: 0 auto;
+        padding: 14px 0 clamp(48px, 4vw, 70px);
+        border-radius: 0;
+        overflow: visible;
+        background: transparent;
+        -webkit-backdrop-filter: none;
+        backdrop-filter: none;
+        box-shadow: none;
+        will-change: opacity, transform;
+        opacity: 0;
+        transform: translateY(18px);
+        animation: iadFadeUp-{{ section.id }} .55s ease forwards;
+        animation-delay: .06s;
+        font-family: 'PPNeueMontreal', sans-serif !important;
+      }
+
+      .image-and-desc-{{ section.id }} .iad-grid{
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        grid-template-areas: "content media";
+        gap: clamp(45px, 6vw, 90px);
+        align-items: center;
+        margin: 0 auto;
+        width: 100%;
+      }
+
+      /* Swap layout based on setting (desktop) */
+      .image-and-desc-{{ section.id }} .iad-grid.iad-layout-media-left{
+        grid-template-areas: "media content";
+      }
+      .image-and-desc-{{ section.id }} .iad-grid.iad-layout-media-right{
+        grid-template-areas: "content media";
+      }
+
+      .image-and-desc-{{ section.id }} .iad-content{
+        grid-area: content;
+        min-width: 0;
+        max-width: 100%;
+      }
+
+      .image-and-desc-{{ section.id }} .iad-media{
+        grid-area: media;
+        min-width: 0;
+        max-width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      /* Media card (same stile newsletter) */
+      .image-and-desc-{{ section.id }} .iad-media .iad-card-wrap{
+        width: 85%;
+        max-width: 85%;
+        margin-left:auto;
+        margin-right:auto;
+        position:relative;
+        transform-style: preserve-3d;
+        cursor: default;
+      }
+      /* Fallback per browser che non supportano aspect-ratio (es. alcuni mobile) */
+      .image-and-desc-{{ section.id }} .iad-media .iad-card-wrap::before{
+        content:'';
+        display:block;
+        padding-top: calc(4 / 3 * 100%); /* aspect 3:4 (verticale) */
+      }
+      .image-and-desc-{{ section.id }} .iad-media .iad-card{
+        position:absolute;
+        top:0;
+        left:0;
+        right:0;
+        bottom:0;
+        width:100%;
+        height:100%;
+        background-color:#333;
+        overflow:hidden;
+        border-radius:50px;
+        box-shadow: rgba(0, 0, 0, 0.33) 0 15px 30px 0;
+      }
+      .image-and-desc-{{ section.id }} .iad-media .iad-card-bg{
+        opacity:1;
+        position:absolute;
+        top:-40px;
+        left:-40px;
+        right:-40px;
+        bottom:-40px;
+        width:auto;
+        height:auto;
+        background-repeat:no-repeat;
+        background-position:center;
+        background-size:cover;
+        pointer-events:none;
+      }
+
+      .image-and-desc-{{ section.id }} .iad-media .iad-card-video,
+      .image-and-desc-{{ section.id }} .iad-media .iad-card-img{
+        position:absolute;
+        top:0;
+        left:0;
+        right:0;
+        bottom:0;
+        width:100%;
+        height:100%;
+        object-fit:cover;
+        object-position:center;
+      }
+
+      /* Header elements (eyebrow, title, subtitle) - same as bento-box */
+      .image-and-desc-{{ section.id }} .iad-eyebrow{
+        text-align:center;
+        margin:0 0 8px;
+        opacity:.8;
+        font-family: 'PPNeueMontreal', sans-serif !important;
+        letter-spacing:.06em;
+        will-change: opacity, transform;
+        opacity: 0;
+        transform: translateY(18px);
+        animation: iadFadeUp-{{ section.id }} .55s ease forwards;
+        animation-delay: .06s;
+      }
+
+      .image-and-desc-{{ section.id }} .iad-header-title{
+        text-align:center;
+        margin:0;
+        line-height:1.1;
+        font-family: 'PPNeueMontrealTitoli', sans-serif !important;
+        font-weight: 0 !important;
+        letter-spacing: -0.05rem;
+        color: {{ section.settings.header_title_color | default: '#212121' }};
+        will-change: opacity, transform;
+        opacity: 0;
+        transform: translateY(18px);
+        animation: iadFadeUp-{{ section.id }} .55s ease forwards;
+        animation-delay: .08s;
+      }
+
+      .image-and-desc-{{ section.id }} .iad-subtitle{
+        text-align:center;
+        margin:10px auto 0;
+        opacity:.8;
+        font-family: 'PPNeueMontreal', sans-serif !important;
+        max-width: 90ch;
+        will-change: opacity, transform;
+        opacity: 0;
+        transform: translateY(18px);
+        animation: iadFadeUp-{{ section.id }} .55s ease forwards;
+        animation-delay: .1s;
+      }
+
+      /* Typography – desktop */
+      .image-and-desc-{{ section.id }} .iad-text{
+        text-align:left;
+        margin:0 0 clamp(20px, 3vw, 32px);
+        opacity:.9;
+        font-size: clamp({{ section.settings.text_size_mobile | default: 18 }}px, 2.2vw, {{ section.settings.text_size_desktop | default: 28 }}px);
+        line-height: 1.5;
+        opacity:0;
+        transform: translateY(18px);
+        animation: iadFadeUp-{{ section.id }} .55s ease forwards;
+        animation-delay: .12s;
+        word-wrap: break-word;
+        overflow-wrap: break-word;
+      }
+
+
+      /* Mobile layout */
+      @media (max-width: 768px) {
+        .image-and-desc-{{ section.id }}{
+          padding-top: clamp(24px, 6vw, 72px);
+          padding-bottom: clamp(0px, 6vw, 0px);
+        }
+
+        .image-and-desc-{{ section.id }} .page-width{
+          max-width: 100% !important;
+          padding-left: 30px !important;
+          padding-right: 30px !important;
+        }
+
+        .image-and-desc-{{ section.id }} .iad-box{
+          width:100%;
+          max-width:100%;
+          margin-left:auto;
+          margin-right:auto;
+          padding-top: 14px;
+          padding-bottom: clamp(20px, 7vw, 36px);
+          padding-left: 0;
+          padding-right: 0;
+          border-radius:0;
+          position:relative;
+          overflow:visible;
+          background:transparent;
+          -webkit-backdrop-filter:none;
+          backdrop-filter:none;
+          box-shadow:none;
+          will-change: opacity, transform;
+          opacity: 0;
+          transform: translateY(18px);
+          animation: iadFadeUp-{{ section.id }} .55s ease forwards;
+          animation-delay: .06s;
+          font-family: 'PPNeueMontreal', sans-serif !important;
+        }
+
+        .image-and-desc-{{ section.id }} .iad-grid{
+          display:flex;
+          flex-direction:column;
+          gap: clamp(14px, 4vw, 22px);
+        }
+
+        .image-and-desc-{{ section.id }} .iad-content{
+          order: 2;
+        }
+        .image-and-desc-{{ section.id }} .iad-media{
+          order: 1;
+          width: 100%;
+          min-height: 400px;
+        }
+
+        /* Forza visibilità del media container su mobile */
+        .image-and-desc-{{ section.id }} .iad-media .iad-card-wrap{
+          display: block;
+          width: 100%;
+          max-width: 100%;
+        }
+        .image-and-desc-{{ section.id }} .iad-media .iad-card-wrap::before{
+          content: '';
+          display: block;
+          padding-top: 133.33%; /* 3:4 aspect ratio */
+        }
+        .image-and-desc-{{ section.id }} .iad-media .iad-card{
+          position: absolute;
+          top: 0;
+          left: 0;
+          right: 0;
+          bottom: 0;
+          width: 100%;
+          height: 100%;
+        }
+
+        /* Mobile typography for header elements */
+        .image-and-desc-{{ section.id }} .iad-eyebrow{
+          font-size: {{ section.settings.eyebrow_size_mobile | default: 14 }}px;
+        }
+        .image-and-desc-{{ section.id }} .iad-header-title{
+          font-size: {{ section.settings.header_title_size_mobile | default: 36 }}px;
+        }
+        .image-and-desc-{{ section.id }} .iad-subtitle{
+          font-size: {{ section.settings.subtitle_size_mobile | default: 16 }}px;
+          line-height: 1.5;
+        }
+
+        /* Mobile typography */
+        .image-and-desc-{{ section.id }} .iad-text{
+          text-align:center;
+          margin:8px auto 8px;
+          opacity:.9;
+          font-size: {{ section.settings.text_size_mobile | default: 16 }}px;
+          opacity:0;
+          transform: translateY(18px);
+          animation: iadFadeUp-{{ section.id }} .55s ease forwards;
+          animation-delay: .12s;
+          padding-left: 0;
+          padding-right: 0;
+        }
+
+      }
+
+      /* Desktop sizes for header elements */
+      @media (min-width: 769px) {
+        .image-and-desc-{{ section.id }} .iad-eyebrow{
+          font-size: {{ section.settings.eyebrow_size_desktop | default: 16 }}px;
+        }
+        .image-and-desc-{{ section.id }} .iad-header-title{
+          font-size: {{ section.settings.header_title_size_desktop | default: 64 }}px;
+        }
+        .image-and-desc-{{ section.id }} .iad-subtitle{
+          font-size: {{ section.settings.subtitle_size_desktop | default: 20 }}px;
+          line-height: 1.6;
+        }
+      }
+
+      /* Simple fade-up keyframe */
+      @keyframes iadFadeUp-{{ section.id }} {
+        0% { opacity: 0; transform: translateY(18px); }
+        100% { opacity: 1; transform: translateY(0); }
+      }
+
+      /* GSAP helpers (same stile newsletter) */
+      .image-and-desc-{{ section.id }}.gsap-enabled .iad-eyebrow,
+      .image-and-desc-{{ section.id }}.gsap-enabled .iad-header-title,
+      .image-and-desc-{{ section.id }}.gsap-enabled .iad-subtitle,
+      .image-and-desc-{{ section.id }}.gsap-enabled .iad-text,
+      .image-and-desc-{{ section.id }}.gsap-enabled .iad-media{ animation: none !important; }
+
+      .image-and-desc-{{ section.id }} .gsap-reveal{
+        filter: blur(10px);
+        opacity: 0.9;
+        transform: translateY(18px);
+        will-change: opacity, transform, filter;
+      }
+    {% endstyle %}
+
+    {% if section.settings.eyebrow_text != blank %}
+      <div class="iad-eyebrow">{{ section.settings.eyebrow_text }}</div>
+    {% endif %}
+    {% if section.settings.header_title_text != blank %}
+      <h2 class="iad-header-title">{{ section.settings.header_title_text }}</h2>
+    {% endif %}
+    {% if section.settings.subtitle_text != blank %}
+      <p class="iad-subtitle">{{ section.settings.subtitle_text }}</p>
+    {% endif %}
+
+    <div class="iad-box">
+      <div class="iad-grid iad-layout-{% if section.settings.media_position == 'left' %}media-left{% else %}media-right{% endif %}">
+        <div class="iad-content">
+          {% if section.settings.text != blank %}
+            <div class="iad-text rte">
+              {{ section.settings.text }}
+            </div>
+          {% endif %}
+        </div>
+
+        <div class="iad-media">
+          <div class="iad-card-wrap">
+            <div class="iad-card">
+              {% assign iad_video_url = section.settings.media_video_url %}
+              {% if iad_video_url != blank and iad_video_url != 'https://example.com/video.mp4' %}
+                <video
+                  class="iad-card-video"
+                  src="{{ iad_video_url }}"
+                  autoplay
+                  muted
+                  loop
+                  playsinline
+                ></video>
+              {% elsif section.settings.media_image != blank %}
+                {{
+                  section.settings.media_image
+                  | image_url: width: 1200
+                  | image_tag:
+                    loading: 'lazy',
+                    decoding: 'async',
+                    alt: section.settings.media_image_alt,
+                    class: 'iad-card-img'
+                }}
+              {% endif %}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      (function () {
+        try {
+          var root = document.querySelector('.image-and-desc-{{ section.id }}');
+          if (!root) return;
+
+          var prefersReduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+          function loadScript(src) {
+            return new Promise(function (resolve, reject) {
+              var s = document.createElement('script');
+              s.src = src;
+              s.async = true;
+              s.onload = resolve;
+              s.onerror = reject;
+              document.head.appendChild(s);
+            });
+          }
+
+          function init() {
+            if (!window.gsap || !window.ScrollTrigger) return;
+            gsap.registerPlugin(ScrollTrigger);
+
+            root.classList.add('gsap-enabled');
+
+            // Header elements: eyebrow, title, subtitle
+            var headerEls = [
+              root.querySelector('.iad-eyebrow'),
+              root.querySelector('.iad-header-title'),
+              root.querySelector('.iad-subtitle'),
+            ].filter(Boolean);
+
+            // Content elements: text and media
+            var textEl = root.querySelector('.iad-text');
+            var mediaEl = root.querySelector('.iad-media');
+
+            if (prefersReduced) {
+              headerEls.forEach(function (el) {
+                el.style.filter = 'none';
+                el.style.opacity = '1';
+                el.style.transform = 'none';
+              });
+              if (textEl) {
+                textEl.style.filter = 'none';
+                textEl.style.opacity = '1';
+                textEl.style.transform = 'none';
+              }
+              if (mediaEl) {
+                mediaEl.style.filter = 'none';
+                mediaEl.style.opacity = '1';
+                mediaEl.style.transform = 'none';
+              }
+              return;
+            }
+
+            // Animate header elements on scroll into view
+            headerEls.forEach(function (el) {
+              el.classList.add('gsap-reveal');
+              el.style.animation = 'none';
+            });
+            headerEls.forEach(function (el) {
+              gsap.to(el, {
+                opacity: 1,
+                filter: 'blur(0px)',
+                y: 0,
+                duration: 1.6,
+                delay: 0,
+                ease: 'power2.out',
+                scrollTrigger: {
+                  trigger: el,
+                  start: 'top 75%',
+                  toggleActions: 'play none none none',
+                  once: true,
+                },
+              });
+            });
+
+            // Animate content (text + media) together when box enters viewport
+            var boxEl = root.querySelector('.iad-box');
+            var contentEls = [textEl, mediaEl].filter(Boolean);
+
+            if (contentEls.length && boxEl) {
+              contentEls.forEach(function (el) {
+                el.classList.add('gsap-reveal');
+                el.style.animation = 'none';
+              });
+              gsap.to(contentEls, {
+                opacity: 1,
+                filter: 'blur(0px)',
+                y: 0,
+                duration: 1.6,
+                delay: 0,
+                ease: 'power2.out',
+                scrollTrigger: {
+                  trigger: boxEl,
+                  start: 'top 75%',
+                  toggleActions: 'play none none none',
+                  once: true,
+                },
+              });
+            }
+          }
+
+          if (window.gsap && window.ScrollTrigger) {
+            init();
+          } else {
+            var gsapUrl = 'https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js';
+            var stUrl = 'https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js';
+            loadScript(gsapUrl)
+              .then(function () {
+                return loadScript(stUrl);
+              })
+              .then(init)
+              .catch(function () {});
+          }
+        } catch (e) {}
+      })();
+    </script>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Image & Description",
+  "settings": [
+    {
+      "type": "paragraph",
+      "content": "Two-column layout with optional header, description and media (image or looping video)."
+    },
+
+    { "type": "header", "content": "Header Section" },
+    { "type": "text", "id": "eyebrow_text", "label": "Eyebrow (small heading)", "default": "SECTION" },
+    { "type": "text", "id": "header_title_text", "label": "Header Title", "default": "Your header title" },
+    {
+      "type": "textarea",
+      "id": "subtitle_text",
+      "label": "Subtitle (description)",
+      "default": "Add a short description for this section."
+    },
+    {
+      "type": "range",
+      "id": "eyebrow_size_mobile",
+      "label": "Eyebrow size (mobile, px)",
+      "min": 10,
+      "max": 40,
+      "step": 2,
+      "default": 14
+    },
+    {
+      "type": "range",
+      "id": "eyebrow_size_desktop",
+      "label": "Eyebrow size (desktop, px)",
+      "min": 12,
+      "max": 48,
+      "step": 2,
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "header_title_size_mobile",
+      "label": "Header title size (mobile, px)",
+      "min": 12,
+      "max": 120,
+      "step": 2,
+      "default": 36
+    },
+    {
+      "type": "range",
+      "id": "header_title_size_desktop",
+      "label": "Header title size (desktop, px)",
+      "min": 16,
+      "max": 160,
+      "step": 2,
+      "default": 64
+    },
+    {
+      "type": "range",
+      "id": "subtitle_size_mobile",
+      "label": "Subtitle size (mobile, px)",
+      "min": 10,
+      "max": 40,
+      "step": 2,
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "subtitle_size_desktop",
+      "label": "Subtitle size (desktop, px)",
+      "min": 12,
+      "max": 48,
+      "step": 2,
+      "default": 20
+    },
+
+    { "type": "header", "content": "Header Colors" },
+    { "type": "color", "id": "header_title_color", "label": "Header title color", "default": "#212121" },
+    { "type": "color", "id": "subtitle_color", "label": "Subtitle color", "default": "#393939" },
+
+    { "type": "header", "content": "Text – typography" },
+    {
+      "type": "range",
+      "id": "text_size_mobile",
+      "label": "Text size mobile (px)",
+      "min": 12,
+      "max": 24,
+      "step": 1,
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "text_size_desktop",
+      "label": "Text size desktop (px)",
+      "min": 14,
+      "max": 32,
+      "step": 1,
+      "default": 28
+    },
+
+    { "type": "header", "content": "Content" },
+    {
+      "type": "richtext",
+      "id": "text",
+      "label": "Description",
+      "default": "<p>Use this section to highlight a key message supported by a strong visual. Perfect for feature callouts, launches, or brand storytelling.</p>"
+    },
+
+    { "type": "header", "content": "Media" },
+    { "type": "image_picker", "id": "media_image", "label": "Media image (PNG/JPG/GIF)" },
+    { "type": "text", "id": "media_image_alt", "label": "Media image alt text", "default": "Section image" },
+    {
+      "type": "text",
+      "id": "media_video_url",
+      "label": "Media video URL (MP4/WebM) – overrides image when filled",
+      "default": "https://example.com/video.mp4"
+    },
+
+    { "type": "header", "content": "Layout" },
+    {
+      "type": "select",
+      "id": "media_position",
+      "label": "Media position on desktop",
+      "default": "right",
+      "options": [
+        { "value": "left", "label": "Media on the left, text on the right" },
+        { "value": "right", "label": "Media on the right, text on the left" }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Image & Description"
+    }
+  ]
+}
+{% endschema %}

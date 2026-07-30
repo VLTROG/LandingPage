@@ -1,0 +1,127 @@
+/* --- CONFIGURAZIONE FONT --- */
+@font-face {
+    font-family: 'VOLTURIARegular';
+    src: url('https://cdn.shopify.com/s/files/1/0234/8777/4816/files/VOLTURIARegular.woff2?v=1679841576') format('woff2'),
+        url('https://cdn.shopify.com/s/files/1/0234/8777/4816/files/VOLTURIARegular.ttf?v=1679839693') format("truetype");
+    font-weight: normal;
+    font-style: normal;
+}
+
+html {
+    background: transparent;
+    min-height: 100%;
+}
+
+body {
+    min-height: 100%;
+}
+
+/* --- CONTENITORE --- */
+.volturia-title-psw2 {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 130px;
+    /* Altezza minima della sezione */
+    overflow: hidden;
+}
+
+/* --- STILE TESTO --- */
+.loader {
+    display: block;
+    text-align: center;
+    width: 100%;
+    line-height: 1;
+    margin: 0;
+    white-space: nowrap;
+    /* Impedisce al testo di andare a capo */
+
+    /* IMPOSTAZIONI RICHIESTE */
+    font-family: 'VOLTURIARegular', sans-serif;
+    font-size: 4.6875em;
+    /* Grandezza Font */
+    letter-spacing: 0.2em;
+    /* Spaziatura Lettere */
+    text-transform: uppercase;
+
+    /* FIX HD: Colore quasi invisibile per forzare l'anti-aliasing */
+    color: rgba(255, 255, 255, 0.01);
+
+    /* Lisciatura Font per bordi nitidi */
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+h1.loader {
+    letter-spacing: 0.2em;
+    margin: 0.67em 0;
+}
+
+.loader span {
+    display: inline-block;
+
+    /* ANIMAZIONE */
+    /* Velocità loop: 1.9s */
+    animation: loading 1.9s ease-in-out infinite alternate;
+
+    /* CALCOLO RITARDO (Stagger) */
+    /* Ritardo lettere: 0.15s * indice della lettera */
+    animation-delay: calc(var(--char-index) * 0.15s);
+
+    /* OMBRE INIZIALI (Stato "Vicino") */
+    text-shadow:
+        /* 1. Sharpening (Bordo nitido) */
+        0 0 1px rgba(204, 208, 212, 0.9),
+
+        /* 2. Ombra Principale Scura (Opacità 0.65) */
+        0 15px 25px rgba(0, 0, 0, 0.65),
+
+        /* 3. Piccola ombra negativa */
+        0 -2px 3px rgba(0, 0, 0, 0.1),
+
+        /* 4. Luce Bordo Superiore (Opacità 0.6) */
+        0 -5px 10px rgba(255, 255, 255, 0.6),
+
+        /* 5. Altre luci ambientali */
+        0 5px 10px rgba(0, 0, 0, 0.3),
+        0 3px 4px rgba(255, 255, 255, 0.2),
+        0 0 20px rgba(255, 255, 255, 0.45);
+}
+
+/* --- KEYFRAMES ANIMAZIONE --- */
+@keyframes loading {
+    to {
+        /* Stato "Lontano" (Spento) */
+        opacity: 0.3;
+        text-shadow:
+            0 0 1px rgba(204, 208, 212, 0.2),
+            0 0 3px rgba(0, 0, 0, 0.02),
+            0 0 0 rgba(0, 0, 0, 0),
+            0 0 0 rgba(255, 255, 255, 0),
+            0 0 0 rgba(0, 0, 0, 0),
+            0 0 0 rgba(255, 255, 255, 0),
+            0 0 0 rgba(255, 255, 255, 0);
+    }
+}
+
+/* --- RESPONSIVE MOBILE --- */
+@media (max-width: 768px) {
+    .loader {
+        font-size: 4.5em;
+        /* Font-size mobile (~72px) */
+        letter-spacing: 0.05em;
+        /* Letter-spacing ridotto per mobile */
+    }
+
+    .volturia-title-psw2 {
+        padding: 0;
+        /* Rimuovo padding per centratura perfetta */
+        overflow-x: visible;
+        /* Permette al testo di essere visibile anche se più largo */
+    }
+
+    h1.loader {
+        margin: 0;
+        /* Rimuove margini su mobile per centratura perfetta */
+    }
+}

@@ -1,0 +1,588 @@
+<div class="index-section bento-section bento-{{ section.id }}">
+  <div class="page-width">
+    {% style %}
+      .bento-{{ section.id }}{ padding-top: clamp(6px, 1.5vw, 14px); padding-bottom: clamp(6px, 1.5vw, 14px); }
+      .bento-{{ section.id }} .to-eyebrow{ text-align:center; margin:0 0 8px; opacity:.8; font-family: 'PPNeueMontreal', sans-serif !important; letter-spacing:.06em; will-change: opacity, transform; opacity: 0; transform: translateY(18px); animation: bbFadeUp-{{ section.id }} .55s ease forwards; animation-delay: .06s; }
+      .bento-{{ section.id }} .to-title{ text-align:center; margin:0; line-height:1.1; font-family: 'PPNeueMontrealTitoli', sans-serif !important; font-weight: 0 !important; letter-spacing: -0.05rem; color: {{ section.settings.title_color | default: '#212121' }}; will-change: opacity, transform; opacity: 0; transform: translateY(18px); animation: bbFadeUp-{{ section.id }} .55s ease forwards; animation-delay: .08s; }
+      .bento-{{ section.id }} .to-subtitle{ text-align:center; margin:10px auto 0; opacity:.8; font-family: 'PPNeueMontreal', sans-serif !important; max-width: 90ch; will-change: opacity, transform; opacity: 0; transform: translateY(18px); animation: bbFadeUp-{{ section.id }} .55s ease forwards; animation-delay: .1s; }
+      .bento-{{ section.id }} .bento-container{ margin: 14px auto 0; }
+
+      .bento-{{ section.id }} .bento{ font-weight: 500; display: grid; grid-template-columns: repeat(11, 1fr); grid-template-rows: repeat(6, 100px); gap: 1rem; margin: 0 auto; will-change: opacity, transform; opacity: 0; transform: translateY(18px); animation: bbFadeUp-{{ section.id }} .55s ease forwards; animation-delay: .12s; }
+
+      @media (min-width: 993px){
+        .bento-{{ section.id }} .bento{ grid-template-rows: repeat(6, 100px); max-width: 87vw; }
+      }
+      .bento-{{ section.id }} .bento .box{ width: 100%; padding: 2rem; padding-top: 1.365rem; border-radius: 2.5rem; display: flex; position: relative; overflow: hidden; transition: transform .15s ease, box-shadow .15s ease; background: rgba(255, 255, 255, 0.2); -webkit-backdrop-filter: blur(12px) saturate(180%); backdrop-filter: blur(12px) saturate(180%); border: none; box-shadow: 4px 8px 8px rgba(0, 0, 0, 0.18); }
+
+      .bento-{{ section.id }} .bento .box::before{ content: ''; position: absolute; top: -0.5px; left: -0.5px; right: -0.5px; bottom: -0.5px; border-radius: calc(2.5rem + 1px); padding: 1.5px; background: conic-gradient( from 315deg at 35% 60%, rgba(255, 255, 255, 0.85) 0deg, rgba(255, 255, 255, 0.7) 30deg, rgba(255, 255, 255, 0.4) 60deg, rgba(255, 255, 255, 0.15) 90deg, rgba(255, 255, 255, 0.05) 120deg, rgba(255, 255, 255, 0.35) 150deg, rgba(255, 255, 255, 0.35) 180deg, rgba(255, 255, 255, 0.02) 210deg, rgba(255, 255, 255, 0.02) 240deg, rgba(255, 255, 255, 0.02) 270deg, rgba(255, 255, 255, 0.02) 300deg, rgba(255, 255, 255, 0.7) 330deg, rgba(255, 255, 255, 0.85) 360deg ); mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0); mask-composite: xor; -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0); -webkit-mask-composite: xor; pointer-events: none; }
+      .bento-{{ section.id }} .bento .box::after{ content: ''; position: absolute; top: 1px; left: 1px; right: 1px; bottom: 1px; background: rgba(255, 255, 255, 0.06); -webkit-backdrop-filter: blur(16px) saturate(160%) brightness(110%); backdrop-filter: blur(16px) saturate(160%) brightness(110%); border-radius: calc(2.5rem - 1.5px); z-index: -1; pointer-events: none; }
+
+      .bento-{{ section.id }} .bento .box-01{ grid-column: 1/5; grid-row: 1/7; background: rgba(255, 255, 255, 0.2); }
+      .bento-{{ section.id }} .bento .box-01 img,
+      .bento-{{ section.id }} .bento .box-01 video{
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        object-position: center;
+        pointer-events: none;
+        z-index: 0;
+      }
+
+      .bento-{{ section.id }} .bento .box-02{ grid-column: 5/12; grid-row: 1/4; background: rgba(255, 255, 255, 0.2); }
+      .bento-{{ section.id }} .bento .box-02 .bento-content{ width: 775px; position: relative; z-index: 2; }
+      .bento-{{ section.id }} .bento .box-02 img{ position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center; z-index: 0; pointer-events: none; }
+
+      .bento-{{ section.id }} .bento .box-03{ grid-column: 5/9; grid-row: 4/7; background: rgba(255, 255, 255, 0.2); }
+      .bento-{{ section.id }} .bento .box-03 img,
+      .bento-{{ section.id }} .bento .box-03 video{
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        object-position: center;
+        pointer-events: none;
+        z-index: 0;
+      }
+
+      .bento-{{ section.id }} .bento .box-04{ grid-column: 9/12; grid-row: 4/7; background: rgba(255, 255, 255, 0.2); }
+      .bento-{{ section.id }} .bento .box-04 img{ position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center; pointer-events: none; z-index: 0; }
+
+      .bento-{{ section.id }} .bento-content{ position: relative; z-index: 2; }
+      .bento-{{ section.id }} .bento-content h2{ font-size: 1.85rem; line-height: 1.15; margin: 0 0 .25rem; color: {{ section.settings.bento_title_color | default: '#212121' }}; letter-spacing: -0.05rem; font-weight: 600; font-family: 'PPNeueMontreal', sans-serif !important; }
+      .bento-{{ section.id }} .bento-content p{ color: {{ section.settings.bento_text_color | default: '#666666' }}; margin: .35rem 0 0; font-family: 'PPNeueMontreal', sans-serif !important; font-size: 18px; line-height: 1.6; }
+      .bento-{{ section.id }} .bento .box-03, .bento-{{ section.id }} .bento .box-04{ padding-top: 1.365rem; }
+      .bento-{{ section.id }} .bento .box-03 .bento-content, .bento-{{ section.id }} .bento .box-04 .bento-content{ width: 100%; }
+
+      @media (max-width: 992px){
+        .bento-{{ section.id }} .bento-container {
+          width: 100vw;
+          margin-left: calc(-50vw + 50%);
+          overflow-x: auto;
+          overflow-y: visible;
+          -webkit-overflow-scrolling: touch;
+          scroll-snap-type: x mandatory;
+          scrollbar-width: none;
+          -ms-overflow-style: none;
+          padding-bottom: 15px; /*clamp(15px, 5vw, 40px);*/
+        }
+
+        .bento-{{ section.id }} .bento-container::-webkit-scrollbar {
+          display: none;
+        }
+
+        .bento-{{ section.id }} .bento {
+          display: flex;
+          flex-direction: row;
+          gap: 1rem;
+          padding: 0 clamp(16px, 4vw, 24px);
+          width: max-content;
+        }
+
+        .bento-{{ section.id }} .bento .box {
+          flex-shrink: 0;
+          width: 85vw;
+          max-width: 400px;
+          height: clamp(420px, 60vh, 500px);
+          scroll-snap-align: center;
+          margin-bottom: 0;
+        }
+        .bento-{{ section.id }} .bento .box-01 img,
+        .bento-{{ section.id }} .bento .box-01 video,
+        .bento-{{ section.id }} .bento .box-02 img,
+        .bento-{{ section.id }} .bento .box-03 img,
+        .bento-{{ section.id }} .bento .box-03 video,
+        .bento-{{ section.id }} .bento .box-04 img {
+          inset: 0;
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+          object-position: center;
+        }
+
+        .bento-{{ section.id }} .bento .bento-content {
+          width: 100% !important;
+          max-width: 100% !important;
+          padding-right: 0 !important;
+        }
+      }
+
+      @media (max-width: 768px){
+        .bento-{{ section.id }} .to-eyebrow{ font-size: {{ section.settings.eyebrow_size_mobile | default: 14 }}px; }
+        .bento-{{ section.id }} .to-title{ font-size: {{ section.settings.title_size_mobile | default: 36 }}px; }
+        .bento-{{ section.id }} .to-subtitle{ font-size: {{ section.settings.subtitle_size_mobile | default: 16 }}px; line-height: 1.5; }
+      }
+      @media (min-width: 769px){
+        .bento-{{ section.id }} .to-eyebrow{ font-size: {{ section.settings.eyebrow_size_desktop | default: 16 }}px; }
+        .bento-{{ section.id }} .to-title{ font-size: {{ section.settings.title_size_desktop | default: 64 }}px; }
+        .bento-{{ section.id }} .to-subtitle{ font-size: {{ section.settings.subtitle_size_desktop | default: 20 }}px; line-height: 1.6; }
+        .bento-{{ section.id }} .bento .box:hover{ transform: translateY(-2px); box-shadow: 4px 12px 16px rgba(0, 0, 0, 0.22); }
+        .bento-{{ section.id }} .bento .box:active{ transform: translateY(0); box-shadow: 2px 4px 4px rgba(0, 0, 0, 0.16); }
+      }
+
+      @keyframes bbFadeUp-{{ section.id }}{ 0%{opacity:0; transform: translateY(18px);} 100%{opacity:1; transform: translateY(0);} }
+
+      .bento-{{ section.id }}.gsap-enabled .to-eyebrow,
+      .bento-{{ section.id }}.gsap-enabled .to-title,
+      .bento-{{ section.id }}.gsap-enabled .to-subtitle,
+      .bento-{{ section.id }}.gsap-enabled .bento { animation: none !important; }
+      .bento-{{ section.id }}.gsap-enabled .bento { opacity: 1 !important; transform: none !important; }
+      .bento-{{ section.id }} .gsap-reveal{
+        filter: blur(10px);
+        opacity: 0.9;
+        transform: translateY(18px);
+        will-change: opacity, transform, filter;
+      }
+    {% endstyle %}
+
+    {% if section.settings.eyebrow_text != blank %}
+      <div class="to-eyebrow">{{ section.settings.eyebrow_text }}</div>
+    {% endif %}
+    {% if section.settings.title_text != blank %}
+      <h2 class="to-title">{{ section.settings.title_text }}</h2>
+    {% endif %}
+    {% if section.settings.subtitle_text != blank %}
+      <p class="to-subtitle">{{ section.settings.subtitle_text }}</p>
+    {% endif %}
+
+    <div class="bento-container">
+      <div class="bento">
+        <div class="box box-01">
+          <div class="bento-content">
+            {% if section.settings.b1_title != blank %}
+              <h2>{{ section.settings.b1_title }}</h2>
+            {% endif %}
+            {% if section.settings.b1_text != blank %}
+              <p>{{ section.settings.b1_text }}</p>
+            {% endif %}
+          </div>
+          {% if section.settings.b1_video_url != blank %}
+            <video
+              src="{{ section.settings.b1_video_url }}"
+              autoplay
+              muted
+              loop
+              playsinline
+            ></video>
+          {% elsif section.settings.b1_image != blank %}
+            {{
+              section.settings.b1_image
+              | image_url: width: 1400
+              | image_tag: loading: 'lazy', decoding: 'async', alt: section.settings.b1_image_alt
+            }}
+          {% endif %}
+        </div>
+
+        <div class="box box-02">
+          <div class="bento-content">
+            {% if section.settings.b2_title != blank %}
+              <h2>{{ section.settings.b2_title }}</h2>
+            {% endif %}
+            {% if section.settings.b2_text != blank %}
+              <p>{{ section.settings.b2_text }}</p>
+            {% endif %}
+          </div>
+          {% if section.settings.b2_image != blank %}
+            {{
+              section.settings.b2_image
+              | image_url: width: 1600
+              | image_tag: loading: 'lazy', decoding: 'async', alt: section.settings.b2_image_alt
+            }}
+          {% endif %}
+        </div>
+
+        <div class="box box-03">
+          {% if section.settings.b3_video_url != blank %}
+            <video
+              src="{{ section.settings.b3_video_url }}"
+              autoplay
+              muted
+              loop
+              playsinline
+            ></video>
+          {% elsif section.settings.b3_image != blank %}
+            {{
+              section.settings.b3_image
+              | image_url: width: 1200
+              | image_tag: loading: 'lazy', decoding: 'async', alt: section.settings.b3_image_alt
+            }}
+          {% endif %}
+          <div class="bento-content">
+            {% if section.settings.b3_title != blank %}
+              <h2>{{ section.settings.b3_title }}</h2>
+            {% endif %}
+            {% if section.settings.b3_text != blank %}
+              <p>{{ section.settings.b3_text }}</p>
+            {% endif %}
+          </div>
+        </div>
+
+        <div class="box box-04">
+          {% if section.settings.b4_image != blank %}
+            {{
+              section.settings.b4_image
+              | image_url: width: 1200
+              | image_tag: loading: 'lazy', decoding: 'async', alt: section.settings.b4_image_alt
+            }}
+          {% endif %}
+          <div class="bento-content">
+            {% if section.settings.b4_title != blank %}
+              <h2>{{ section.settings.b4_title }}</h2>
+            {% endif %}
+            {% if section.settings.b4_text != blank %}
+              <p>{{ section.settings.b4_text }}</p>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  (function () {
+    try {
+      var root = document.querySelector('.bento-{{ section.id }}');
+      if (!root) return;
+
+      var prefersReduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+      function loadScript(src) {
+        return new Promise(function (resolve, reject) {
+          var s = document.createElement('script');
+          s.src = src;
+          s.async = true;
+          s.onload = resolve;
+          s.onerror = reject;
+          document.head.appendChild(s);
+        });
+      }
+
+      function init() {
+        if (!window.gsap || !window.ScrollTrigger) return;
+        gsap.registerPlugin(ScrollTrigger);
+
+        root.classList.add('gsap-enabled');
+
+        var headerEls = [
+          root.querySelector('.to-eyebrow'),
+          root.querySelector('.to-title'),
+          root.querySelector('.to-subtitle'),
+        ].filter(Boolean);
+
+        if (prefersReduced) {
+          headerEls.forEach(function (el) {
+            el.style.filter = 'none';
+            el.style.opacity = '1';
+            el.style.transform = 'none';
+          });
+        } else {
+          headerEls.forEach(function (el) {
+            el.classList.add('gsap-reveal');
+            el.style.animation = 'none';
+          });
+          headerEls.forEach(function (el) {
+            gsap.to(el, {
+              opacity: 1,
+              filter: 'blur(0px)',
+              y: 0,
+              duration: 1.6,
+              delay: 0,
+              ease: 'power2.out',
+              scrollTrigger: {
+                trigger: el,
+                start: 'top 75%',
+                toggleActions: 'play none none none',
+                once: true,
+              },
+            });
+          });
+        }
+
+        var isDesktop = window.matchMedia && window.matchMedia('(min-width: 769px)').matches;
+        var allBoxes = Array.prototype.slice.call(root.querySelectorAll('.bento .box'));
+
+        if (isDesktop) {
+          var box1 = root.querySelector('.bento .box-01');
+          var box3 = root.querySelector('.bento .box-03');
+          var box4 = root.querySelector('.bento .box-04');
+          var groupedBoxes = [box1, box3, box4].filter(Boolean);
+
+          if (groupedBoxes.length) {
+            var groupedTexts = [];
+            groupedBoxes.forEach(function (b) {
+              groupedTexts = groupedTexts.concat(
+                Array.prototype.slice.call(b.querySelectorAll('.bento-content h2, .bento-content p'))
+              );
+            });
+
+            if (prefersReduced) {
+              groupedBoxes.concat(groupedTexts).forEach(function (el) {
+                el.style.filter = 'none';
+                el.style.opacity = '1';
+                el.style.transform = 'none';
+              });
+            } else {
+              gsap.fromTo(
+                groupedBoxes,
+                { opacity: 0, y: 12 },
+                {
+                  opacity: 1,
+                  y: 0,
+                  duration: 1.1,
+                  ease: 'power2.out',
+                  delay: 0,
+                  scrollTrigger: {
+                    trigger: box1 || groupedBoxes[0],
+                    start: 'top 75%',
+                    toggleActions: 'play none none none',
+                    once: true,
+                  },
+                  onComplete: function () {
+                    groupedBoxes.forEach(function (b) {
+                      b.style.transform = '';
+                    });
+                  },
+                }
+              );
+
+              groupedTexts.forEach(function (el) {
+                el.classList.add('gsap-reveal');
+                el.style.animation = 'none';
+              });
+              gsap.to(groupedTexts, {
+                opacity: 1,
+                filter: 'blur(0px)',
+                y: 0,
+                duration: 1.2,
+                delay: 0,
+                ease: 'power2.out',
+                scrollTrigger: {
+                  trigger: box1 || groupedBoxes[0],
+                  start: 'top 75%',
+                  toggleActions: 'play none none none',
+                  once: true,
+                },
+                onComplete: function () {
+                  groupedTexts.forEach(function (el) {
+                    el.classList.remove('gsap-reveal');
+                    el.style.filter = '';
+                    el.style.transform = '';
+                    el.style.opacity = '';
+                  });
+                },
+              });
+            }
+
+            allBoxes = allBoxes.filter(function (b) {
+              return !(
+                b.classList.contains('box-01') ||
+                b.classList.contains('box-03') ||
+                b.classList.contains('box-04')
+              );
+            });
+          }
+        }
+
+        allBoxes.forEach(function (box) {
+          var innerTexts = Array.prototype.slice.call(box.querySelectorAll('.bento-content h2, .bento-content p'));
+          if (prefersReduced) {
+            [box].concat(innerTexts).forEach(function (el) {
+              el.style.filter = 'none';
+              el.style.opacity = '1';
+              el.style.transform = 'none';
+            });
+            return;
+          }
+
+          gsap.fromTo(
+            box,
+            { opacity: 0, y: 12 },
+            {
+              opacity: 1,
+              y: 0,
+              duration: 1.1,
+              ease: 'power2.out',
+              delay: 0,
+              scrollTrigger: {
+                trigger: box,
+                start: 'top 75%',
+                toggleActions: 'play none none none',
+                once: true,
+              },
+              onComplete: function () {
+                box.style.transform = '';
+              },
+            }
+          );
+
+          innerTexts.forEach(function (el) {
+            el.classList.add('gsap-reveal');
+            el.style.animation = 'none';
+          });
+          gsap.to(innerTexts, {
+            opacity: 1,
+            filter: 'blur(0px)',
+            y: 0,
+            duration: 1.2,
+            delay: 0,
+            ease: 'power2.out',
+            scrollTrigger: {
+              trigger: box,
+              start: 'top 75%',
+              toggleActions: 'play none none none',
+              once: true,
+            },
+            onComplete: function () {
+              innerTexts.forEach(function (el) {
+                el.classList.remove('gsap-reveal');
+                el.style.filter = '';
+                el.style.transform = '';
+                el.style.opacity = '';
+              });
+            },
+          });
+        });
+      }
+
+      if (window.gsap && window.ScrollTrigger) {
+        init();
+      } else {
+        var gsapUrl = 'https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js';
+        var stUrl = 'https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js';
+        loadScript(gsapUrl)
+          .then(function () {
+            return loadScript(stUrl);
+          })
+          .then(init)
+          .catch(function () {});
+      }
+    } catch (e) {}
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Bento box",
+  "settings": [
+    { "type": "text", "id": "eyebrow_text", "label": "Eyebrow (small heading)", "default": "MISSION" },
+    { "type": "text", "id": "title_text", "label": "Title", "default": "It's time to bring back buttons." },
+    {
+      "type": "textarea",
+      "id": "subtitle_text",
+      "label": "Subtitle (description)",
+      "default": "Add a short description that supports the headline."
+    },
+
+    {
+      "type": "range",
+      "id": "eyebrow_size_mobile",
+      "label": "Eyebrow size (mobile, px)",
+      "min": 10,
+      "max": 40,
+      "step": 2,
+      "default": 14
+    },
+    {
+      "type": "range",
+      "id": "eyebrow_size_desktop",
+      "label": "Eyebrow size (desktop, px)",
+      "min": 12,
+      "max": 48,
+      "step": 2,
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "title_size_mobile",
+      "label": "Title size (mobile, px)",
+      "min": 12,
+      "max": 120,
+      "step": 2,
+      "default": 36
+    },
+    {
+      "type": "range",
+      "id": "title_size_desktop",
+      "label": "Title size (desktop, px)",
+      "min": 16,
+      "max": 160,
+      "step": 2,
+      "default": 64
+    },
+    {
+      "type": "range",
+      "id": "subtitle_size_mobile",
+      "label": "Subtitle size (mobile, px)",
+      "min": 10,
+      "max": 40,
+      "step": 2,
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "subtitle_size_desktop",
+      "label": "Subtitle size (desktop, px)",
+      "min": 12,
+      "max": 48,
+      "step": 2,
+      "default": 20
+    },
+
+    { "type": "header", "content": "Colors" },
+    { "type": "color", "id": "title_color", "label": "Title color", "default": "#212121" },
+    { "type": "color", "id": "bento_title_color", "label": "Bento title color", "default": "#212121" },
+    { "type": "color", "id": "bento_text_color", "label": "Bento text color", "default": "#666666" },
+
+    { "type": "header", "content": "Box 1" },
+    { "type": "text", "id": "b1_title", "label": "Box 1 title", "default": "Stay On Track With Your Progress." },
+    {
+      "type": "textarea",
+      "id": "b1_text",
+      "label": "Box 1 text",
+      "default": "We send you daily updates to make sure that you meet your nutrition goals."
+    },
+    { "type": "image_picker", "id": "b1_image", "label": "Box 1 image" },
+    { "type": "text", "id": "b1_image_alt", "label": "Box 1 image alt", "default": "Box 1 image" },
+    {
+      "type": "text",
+      "id": "b1_video_url",
+      "label": "Box 1 video URL (MP4/WebM)",
+      "default": "https://example.com/video.mp4"
+    },
+
+    { "type": "header", "content": "Box 2" },
+    { "type": "text", "id": "b2_title", "label": "Box 2 title", "default": "Never Think About What To Eat Again." },
+    {
+      "type": "textarea",
+      "id": "b2_text",
+      "label": "Box 2 text",
+      "default": "Push notifications are sent directly to your phone with new meal plans every day."
+    },
+
+    { "type": "image_picker", "id": "b2_image", "label": "Box 2 image" },
+    { "type": "text", "id": "b2_image_alt", "label": "Box 2 image alt", "default": "Box 2 image" },
+
+    { "type": "header", "content": "Box 3" },
+    { "type": "text", "id": "b3_title", "label": "Box 3 title", "default": "Guided Health Plans." },
+    { "type": "textarea", "id": "b3_text", "label": "Box 3 text", "default": "Add supporting copy for box 3." },
+    { "type": "image_picker", "id": "b3_image", "label": "Box 3 image" },
+    { "type": "text", "id": "b3_image_alt", "label": "Box 3 image alt", "default": "Box 3 image" },
+    {
+      "type": "text",
+      "id": "b3_video_url",
+      "label": "Box 3 video URL (MP4/WebM)",
+      "default": "https://example.com/video.mp4"
+    },
+
+    { "type": "header", "content": "Box 4" },
+    { "type": "text", "id": "b4_title", "label": "Box 4 title", "default": "Real-Time Chat." },
+    { "type": "textarea", "id": "b4_text", "label": "Box 4 text", "default": "Add supporting copy for box 4." },
+    { "type": "image_picker", "id": "b4_image", "label": "Box 4 image" },
+    { "type": "text", "id": "b4_image_alt", "label": "Box 4 image alt", "default": "Box 4 image" }
+  ],
+  "presets": [{ "name": "Bento box" }]
+}
+{% endschema %}

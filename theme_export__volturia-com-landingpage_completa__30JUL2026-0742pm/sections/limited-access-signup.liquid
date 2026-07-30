@@ -1,0 +1,63 @@
+{% liquid
+  assign headline = section.settings.headline | default: 'LIMITED TO 125 PIECES PER ITEM'
+  assign copy = section.settings.copy | default: 'Access is protected by password. Inner Circle members receive early access.'
+  assign tag1 = section.settings.tag1 | default: 'Members First'
+  assign tag2 = section.settings.tag2 | default: 'High Demand'
+  assign footnote = section.settings.footnote | default: 'Enter your email or phone to receive the password when the drop opens.'
+%}
+
+<section id="LimitedAccess-{{ section.id }}" class="limited-access">
+  <div class="la-box">
+    <h2 class="la-title">{{ headline }}</h2>
+    <p class="la-copy">{{ copy }}</p>
+
+    <div class="la-tags">
+      <span class="tag tag--primary">{{ tag1 }}</span>
+      <span class="tag tag--warning">{{ tag2 }}</span>
+    </div>
+
+    <div class="la-form">
+      {% form 'customer', class: 'la-form__inner' %}
+        <input type="hidden" name="contact[tags]" value="limited-access" />
+        <input type="email" name="contact[email]" class="la-input" placeholder="Email" required>
+        <button type="submit" class="la-btn" aria-label="Submit">
+          <span>&#10132;</span>
+        </button>
+      {% endform %}
+    </div>
+
+    <p class="la-footnote">{{ footnote }}</p>
+  </div>
+
+  {% style %}
+    #LimitedAccess-{{ section.id }} .la-box{ max-width:980px; margin:18px auto 0; padding:24px; border-radius:24px; border:1px solid #fff; background:rgba(255,255,255,.06); backdrop-filter:blur(8px); }
+    #LimitedAccess-{{ section.id }} .la-title{ text-align:center; margin:0 0 8px; font-weight:800; letter-spacing:.04em; }
+    #LimitedAccess-{{ section.id }} .la-copy{ text-align:center; margin:0 0 12px; opacity:.9; }
+    #LimitedAccess-{{ section.id }} .la-tags{ display:flex; gap:8px; justify-content:center; margin-bottom:14px; }
+    #LimitedAccess-{{ section.id }} .tag{ display:inline-block; padding:6px 10px; border-radius:999px; font-size:12px; letter-spacing:.04em; }
+    #LimitedAccess-{{ section.id }} .tag--primary{ background:#111; color:#fff; border:1px solid #333; }
+    #LimitedAccess-{{ section.id }} .tag--warning{ background:#ffe082; color:#222; border:1px solid #e0c060; }
+    #LimitedAccess-{{ section.id }} .la-form{ display:flex; justify-content:center; }
+    #LimitedAccess-{{ section.id }} .la-form__inner{ display:flex; gap:10px; width:100%; max-width:520px; }
+    #LimitedAccess-{{ section.id }} .la-input{ flex:1 1 auto; border-radius:14px; border:1px solid rgba(255,255,255,.6); background:rgba(255,255,255,.1); color:inherit; padding:10px 12px; }
+    #LimitedAccess-{{ section.id }} .la-btn{ flex:0 0 48px; height:42px; border-radius:14px; border:1px solid rgba(255,255,255,.6); background:#fff; color:#000; font-weight:700; cursor:pointer; transition:transform .12s ease; }
+    #LimitedAccess-{{ section.id }} .la-btn:active{ transform:scale(.97); }
+    #LimitedAccess-{{ section.id }} .la-footnote{ text-align:center; margin:10px 0 0; opacity:.8; font-size:14px; }
+  {% endstyle %}
+</section>
+
+{% schema %}
+{
+  "name": "Limited Access Signup",
+  "settings": [
+    { "type":"text", "id":"headline", "label":"Headline", "default":"LIMITED TO 125 PIECES PER ITEM" },
+    { "type":"textarea", "id":"copy", "label":"Copy", "default":"Access is protected by password. Inner Circle members receive early access." },
+    { "type":"text", "id":"tag1", "label":"Tag 1", "default":"Members First" },
+    { "type":"text", "id":"tag2", "label":"Tag 2", "default":"High Demand" },
+    { "type":"textarea", "id":"footnote", "label":"Footnote", "default":"Enter your email or phone to receive the password when the drop opens." }
+  ],
+  "presets":[{"name":"Limited Access Signup"}]
+}
+{% endschema %}
+
+

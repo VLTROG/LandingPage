@@ -1,0 +1,45 @@
+{
+  "source": "https://volturia.com/password",
+  "scrapedAt": "2026-07-30",
+  "method": "HTML live + CDN URLs (Puppeteer navigate + curl download)",
+  "videos": {
+    "background.mp4": "Background fullscreen (layout/password.liquid)",
+    "mission.webm": "Sezione Mission (title-only)",
+    "bento-1.webm": "Bento box 1",
+    "bento-3.mp4": "Bento box 3",
+    "nfc-blockchain.mp4": "Sezione NFC / Blockchain (Image-and-desc)",
+    "virtual-try-on.webm": "Sezione Virtual Try-On (title-only)",
+    "benefits.mp4": "Sezione Benefits Vertical"
+  },
+  "images": {
+    "carrie_croptop_AIV2_cropped.jpg": "Newsletter hero image",
+    "eco.png": "Benefit icon",
+    "italy.png": "Benefit icon",
+    "sewing-machine.png": "Benefit icon",
+    "group-users.png": "Benefit icon",
+    "logoV.svg": "Favicon / logo",
+    "volturia_social_web.png": "Open Graph / social preview"
+  },
+  "fonts": {
+    "ppneuemontreal-book.woff2": "Body text (PPNeueMontreal)",
+    "ppneuemontreal-regular.woff2": "Titles (PPNeueMontrealTitoli)",
+    "VOLTURIARegular.woff2": "Animazione titolo VOLTURIA",
+    "VOLTURIARegular.ttf": "Animazione titolo VOLTURIA (fallback)",
+    "movingtext.css": "Stili animazione titolo (contiene @font-face CDN — da localizzare in migrazione)"
+  },
+  "alreadyInThemeAssets": [
+    "instagramicon.svg",
+    "linkedinicon.svg",
+    "facebookicon.svg",
+    "tiktokicon.svg",
+    "discordicon.svg",
+    "theme.css",
+    "theme.js",
+    "VolturiaTitleAnimation.css"
+  ],
+  "excludedNotUsedOnPasswordPage": [
+    "force_black.png",
+    "noloop.gif",
+    "Theme fonts josefin_sans / chivo (default Streamline, overridden by PPNeueMontreal app)"
+  ]
+}

@@ -1,0 +1,274 @@
+{% liquid
+  assign title_text = section.settings.title
+  assign subtitle_text = section.settings.subtitle
+%}
+
+<section id="WindowCTA-{{ section.id }}" class="wcta-section">
+  <div class="wcta-wrap wcta-wrap--{{ section.settings.window_align | default: 'center' }}">
+    <div class="wcta-window">
+      {% if section.settings.show_collection_slideshow and section.settings.collection != blank %}
+        <div class="wcta-bg" data-wcta-slideshow data-interval="{{ section.settings.slideshow_interval | default: 2000 }}">
+          {% assign c = collections[section.settings.collection] %}
+          {% if c and c.products_count > 0 %}
+            {% for product in c.products limit: 20 %}
+              {% assign img = product.featured_media | default: product.images.first %}
+              {% if img != blank %}
+                <div class="wcta-slide{% if forloop.first %} is-active{% endif %}">
+                  <img src="{{ img | img_url: '1x1' | replace: '_1x1.', '_1280x.' }}" alt="{{ product.title | escape }}" />
+                </div>
+              {% endif %}
+            {% endfor %}
+          {% endif %}
+        </div>
+      {% endif %}
+      <div class="wcta-pblur" aria-hidden="true">
+        <div class="pb pb-1"></div>
+        <div class="pb pb-2"></div>
+        <div class="pb pb-3"></div>
+        <div class="pb pb-4"></div>
+        <div class="pb pb-5"></div>
+        <div class="pb pb-6"></div>
+        <div class="pb pb-7"></div>
+        <div class="pb pb-8"></div>
+      </div>
+      <div class="wcta-content">
+        {% if title_text != blank %}
+          <h2 class="wcta-title align-{{ section.settings.align_title | default: 'center' }}">{{ title_text }}</h2>
+        {% endif %}
+        {% if subtitle_text != blank %}
+          <p class="wcta-subtitle align-{{ section.settings.align_subtitle | default: 'center' }}">{{ subtitle_text }}</p>
+        {% endif %}
+
+        {% if section.settings.button_label != blank %}
+          <div class="wcta-cta wcta-cta--{{ section.settings.align_button | default: 'center' }}">
+            {% if section.settings.button_url != blank %}
+              <a class="glass-button wcta-btn" href="{{ section.settings.button_url }}">
+                <span class="btn__label">{{ section.settings.button_label }}</span>
+              </a>
+            {% else %}
+              <a class="glass-button wcta-btn">
+                <span class="btn__label">{{ section.settings.button_label }}</span>
+              </a>
+            {% endif %}
+          </div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+
+  {% style %}
+    /* Base layout */
+    .wcta-section { padding: clamp(20px, 5vw, 60px) 16px; }
+    .wcta-wrap { max-width: min(1100px, 92vw); margin: 0 auto; }
+    .wcta-window {
+      position: relative;
+      border-radius: 50px; /* floating window radius */
+      background: rgba(255, 255, 255, 0.08);
+      -webkit-backdrop-filter: blur(12px) saturate(180%);
+      backdrop-filter: blur(12px) saturate(180%);
+      box-shadow: 2px 4px 4px rgba(0, 0, 0, 0.21);
+      overflow: hidden;
+      aspect-ratio: 3 / 4; /* portrait 3:4 to show images full height without top/bottom cut */
+    }
+    /* Slideshow background full-cover */
+    .wcta-bg{ position:absolute; inset:0; z-index:0; }
+    .wcta-slide{ position:absolute; inset:0; opacity:0; transition: opacity .8s ease-in-out; }
+    .wcta-slide.is-active{ opacity:1; }
+    .wcta-slide img{ width:100%; height:100%; object-fit:cover; object-position:center; display:block; }
+    /* Progressive bottom blur stack between bg and content (confined inside card) */
+    .wcta-pblur{ position:absolute; left:0; right:0; bottom:-20%; top:auto; height: calc(103.333% + 20%); z-index:1; pointer-events:none; }
+    .wcta-pblur .pb{ position:absolute; inset:0; background: transparent; }
+    /* Each step increases blur and shifts masks upward to create a smooth fade bottom->top */
+    .wcta-pblur .pb-1{ filter: blur(2.4px); -webkit-backdrop-filter: blur(2.4px); backdrop-filter: blur(2.4px); -webkit-mask-image: linear-gradient(to bottom, rgba(0,0,0,0) 51%, rgba(0,0,0,1) 57.125%, rgba(0,0,0,1) 63.25%, rgba(0,0,0,0) 69.375%); mask-image: linear-gradient(to bottom, rgba(0,0,0,0) 51%, rgba(0,0,0,1) 57.125%, rgba(0,0,0,1) 63.25%, rgba(0,0,0,0) 69.375%); }
+    .wcta-pblur .pb-2{ filter: blur(4.8px); -webkit-backdrop-filter: blur(4.8px); backdrop-filter: blur(4.8px); -webkit-mask-image: linear-gradient(to bottom, rgba(0,0,0,0) 57.125%, rgba(0,0,0,1) 63.25%, rgba(0,0,0,1) 69.375%, rgba(0,0,0,0) 75.5%); mask-image: linear-gradient(to bottom, rgba(0,0,0,0) 57.125%, rgba(0,0,0,1) 63.25%, rgba(0,0,0,1) 69.375%, rgba(0,0,0,0) 75.5%); }
+    .wcta-pblur .pb-3{ filter: blur(9.6px); -webkit-backdrop-filter: blur(9.6px); backdrop-filter: blur(9.6px); -webkit-mask-image: linear-gradient(to bottom, rgba(0,0,0,0) 63.25%, rgba(0,0,0,1) 69.375%, rgba(0,0,0,1) 75.5%, rgba(0,0,0,0) 81.625%); mask-image: linear-gradient(to bottom, rgba(0,0,0,0) 63.25%, rgba(0,0,0,1) 69.375%, rgba(0,0,0,1) 75.5%, rgba(0,0,0,0) 81.625%); }
+    .wcta-pblur .pb-4{ filter: blur(14.4px); -webkit-backdrop-filter: blur(14.4px); backdrop-filter: blur(14.4px); -webkit-mask-image: linear-gradient(to bottom, rgba(0,0,0,0) 69.375%, rgba(0,0,0,1) 75.5%, rgba(0,0,0,1) 81.625%, rgba(0,0,0,0) 87.75%); mask-image: linear-gradient(to bottom, rgba(0,0,0,0) 69.375%, rgba(0,0,0,1) 75.5%, rgba(0,0,0,1) 81.625%, rgba(0,0,0,0) 87.75%); }
+    .wcta-pblur .pb-5{ filter: blur(28.8px); -webkit-backdrop-filter: blur(28.8px); backdrop-filter: blur(28.8px); -webkit-mask-image: linear-gradient(to bottom, rgba(0,0,0,0) 75.5%, rgba(0,0,0,1) 81.625%, rgba(0,0,0,1) 87.75%, rgba(0,0,0,0) 93.875%); mask-image: linear-gradient(to bottom, rgba(0,0,0,0) 75.5%, rgba(0,0,0,1) 81.625%, rgba(0,0,0,1) 87.75%, rgba(0,0,0,0) 93.875%); }
+    .wcta-pblur .pb-6{ filter: blur(57.6px); -webkit-backdrop-filter: blur(57.6px); backdrop-filter: blur(57.6px); -webkit-mask-image: linear-gradient(to bottom, rgba(0,0,0,0) 81.625%, rgba(0,0,0,1) 87.75%, rgba(0,0,0,1) 93.875%, rgba(0,0,0,0) 100%); mask-image: linear-gradient(to bottom, rgba(0,0,0,0) 81.625%, rgba(0,0,0,1) 87.75%, rgba(0,0,0,1) 93.875%, rgba(0,0,0,0) 100%); }
+    .wcta-pblur .pb-7{ filter: blur(115.2px); -webkit-backdrop-filter: blur(115.2px); backdrop-filter: blur(115.2px); -webkit-mask-image: linear-gradient(to bottom, rgba(0,0,0,0) 87.75%, rgba(0,0,0,1) 93.875%, rgba(0,0,0,1) 100%); mask-image: linear-gradient(to bottom, rgba(0,0,0,0) 87.75%, rgba(0,0,0,1) 93.875%, rgba(0,0,0,1) 100%); }
+    .wcta-pblur .pb-8{ filter: blur(230.4px); -webkit-backdrop-filter: blur(230.4px); backdrop-filter: blur(230.4px); -webkit-mask-image: linear-gradient(to bottom, rgba(0,0,0,0) 93.875%, rgba(0,0,0,1) 100%); mask-image: linear-gradient(to bottom, rgba(0,0,0,0) 93.875%, rgba(0,0,0,1) 100%); }
+    .wcta-window::before{
+      content: '';
+      position: absolute; top: -0.5px; left: -0.5px; right: -0.5px; bottom: -0.5px;
+      border-radius: 51px; padding: 1.5px;
+      background: conic-gradient(
+        from 315deg at 35% 60%,
+        rgba(255, 255, 255, 0.85) 0deg,
+        rgba(255, 255, 255, 0.7) 30deg,
+        rgba(255, 255, 255, 0.4) 60deg,
+        rgba(255, 255, 255, 0.15) 90deg,
+        rgba(255, 255, 255, 0.05) 120deg,
+        rgba(255, 255, 255, 0.35) 150deg,
+        rgba(255, 255, 255, 0.35) 180deg,
+        rgba(255, 255, 255, 0.02) 210deg,
+        rgba(255, 255, 255, 0.02) 240deg,
+        rgba(255, 255, 255, 0.02) 270deg,
+        rgba(255, 255, 255, 0.02) 300deg,
+        rgba(255, 255, 255, 0.7) 330deg,
+        rgba(255, 255, 255, 0.85) 360deg
+      );
+      mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+      mask-composite: xor;
+      -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+      -webkit-mask-composite: xor;
+      pointer-events: none;
+    }
+    .wcta-window::after{
+      content: '';
+      position: absolute; top: 1px; left: 1px; right: 1px; bottom: 1px;
+      background: rgba(255, 255, 255, 0.06);
+      -webkit-backdrop-filter: blur(16px) saturate(160%) brightness(110%);
+      backdrop-filter: blur(16px) saturate(160%) brightness(110%);
+      border-radius: 48.5px; z-index: -1; pointer-events: none;
+    }
+
+    .wcta-content { position: absolute; left:0; right:0; bottom:0; z-index: 2; padding: clamp(20px, 5vw, 40px); display:flex; flex-direction:column; gap: clamp(10px, 2.5vw, 20px); }
+
+    /* Typography scaling */
+    .wcta-title { margin: 0; color: {{ section.settings.text_color | default: '#000000' }}; font-weight: 800; line-height: 1.1; font-size: clamp(28px, 6vw, 56px); }
+    .wcta-subtitle { margin: 0; color: {{ section.settings.text_color | default: '#000000' }}; opacity: .95; line-height: 1.35; font-size: clamp(14px, 2.6vw, 20px); }
+
+    /* Alignment utilities for text */
+    .align-left { text-align: left; }
+    .align-center { text-align: center; }
+    .align-right { text-align: right; }
+
+    /* CTA alignment row */
+    .wcta-cta { width: 100%; display: flex; }
+    .wcta-cta--left { justify-content: flex-start; }
+    .wcta-cta--center { justify-content: center; }
+    .wcta-cta--right { justify-content: flex-end; }
+
+    /* glass-button from @designbottone.liquid */
+    .glass-button {
+      position: relative;
+      padding: 16px 40px;
+      background: rgba(255, 255, 255, 0.08);
+      -webkit-backdrop-filter: blur(12px) saturate(180%);
+      backdrop-filter: blur(12px) saturate(180%);
+      border-radius: 50px;
+      border: none;
+      outline: none;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      overflow: hidden;
+      box-shadow: 2px 4px 4px rgba(0, 0, 0, 0.21), inset 0 0 8px rgba(0, 0, 0, 0.175);
+      color: {{ section.settings.text_color | default: '#000000' }};
+      font-size: clamp(14px, 2vw, 16px);
+      font-weight: 500;
+      letter-spacing: 0.5px;
+      text-decoration: none;
+      display: inline-flex; align-items: center; justify-content: center;
+    }
+    .glass-button::before {
+      content: '';
+      position: absolute;
+      top: -0.5px; left: -0.5px; right: -0.5px; bottom: -0.5px;
+      border-radius: 51px;
+      padding: 1.5px;
+      background: conic-gradient(
+        from 315deg at 35% 60%,
+        rgba(255, 255, 255, 0.85) 0deg,
+        rgba(255, 255, 255, 0.7) 30deg,
+        rgba(255, 255, 255, 0.4) 60deg,
+        rgba(255, 255, 255, 0.15) 90deg,
+        rgba(255, 255, 255, 0.05) 120deg,
+        rgba(255, 255, 255, 0.35) 150deg,
+        rgba(255, 255, 255, 0.35) 120deg,
+        rgba(255, 255, 255, 0.02) 210deg,
+        rgba(255, 255, 255, 0.02) 240deg,
+        rgba(255, 255, 255, 0.02) 270deg,
+        rgba(255, 255, 255, 0.02) 300deg,
+        rgba(255, 255, 255, 0.7) 330deg,
+        rgba(255, 255, 255, 0.85) 360deg
+      );
+      mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+      mask-composite: xor;
+      -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+      -webkit-mask-composite: xor;
+      will-change: transform;
+      transform: translateZ(0);
+    }
+    .glass-button::after {
+      content: '';
+      position: absolute;
+      top: 1px; left: 1px; right: 1px; bottom: 1px;
+      background: rgba(255, 255, 255, 0.06);
+      -webkit-backdrop-filter: blur(16px) saturate(160%) brightness(110%);
+      backdrop-filter: blur(16px) saturate(160%) brightness(110%);
+      border-radius: 48.5px;
+      z-index: -1;
+      transform: translateZ(0);
+    }
+    .glass-button:active { transform: scale(.97); }
+
+    /* Desktop two-column alignment like drop-hub */
+    @media only screen and (min-width: 769px) {
+      #WindowCTA-{{ section.id }} .wcta-wrap{ display:grid; grid-template-columns: 1fr 1fr; width:100%; max-width:100%; }
+      #WindowCTA-{{ section.id }} .wcta-wrap--center{ grid-template-columns: 1fr; justify-items: center; }
+      #WindowCTA-{{ section.id }} .wcta-wrap--left .wcta-window{ grid-column: 1; justify-self: center; }
+      #WindowCTA-{{ section.id }} .wcta-wrap--right .wcta-window{ grid-column: 2; justify-self: center; }
+      #WindowCTA-{{ section.id }} .wcta-window{ width: min(46vw, 720px); margin: 0; }
+    }
+
+    /* Mobile tweaks */
+    @media (max-width: 768px) {
+      .wcta-window { border-radius: 30px; }
+      .glass-button { padding: 14px 32px; }
+    }
+  {% endstyle %}
+
+  <script>
+    (function(){
+      var root = document.getElementById('WindowCTA-{{ section.id }}');
+      if(!root) return;
+      var slider = root.querySelector('[data-wcta-slideshow]');
+      if(!slider) return;
+      var slides = slider.querySelectorAll('.wcta-slide');
+      if(!slides || slides.length <= 1) return;
+      var idx = 0; var interval = parseInt(slider.getAttribute('data-interval'), 10) || 2000; var timer;
+      function next(){
+        slides[idx].classList.remove('is-active');
+        idx = (idx + 1) % slides.length;
+        slides[idx].classList.add('is-active');
+      }
+      function start(){ if(timer) return; timer = setInterval(next, interval); }
+      function stop(){ if(!timer) return; clearInterval(timer); timer = null; }
+      // start on load for desktop/mobile
+      start();
+      // pause on visibility change
+      document.addEventListener('visibilitychange', function(){ if(document.hidden) stop(); else start(); });
+    })();
+  </script>
+
+  {% schema %}
+  {
+    "name": "Window CTA",
+    "settings": [
+      { "type": "textarea", "id": "title", "label": "Title", "default": "Big announcement" },
+      { "type": "textarea", "id": "subtitle", "label": "Subtitle", "default": "Describe your offer or message here." },
+      { "type": "color", "id": "text_color", "label": "Text color", "default": "#000000" },
+      { "type": "select", "id": "align_title", "label": "Title alignment", "default": "center", "options": [
+        {"value":"left","label":"Left"}, {"value":"center","label":"Center"}, {"value":"right","label":"Right"}
+      ]},
+      { "type": "select", "id": "align_subtitle", "label": "Subtitle alignment", "default": "center", "options": [
+        {"value":"left","label":"Left"}, {"value":"center","label":"Center"}, {"value":"right","label":"Right"}
+      ]},
+      { "type": "text", "id": "button_label", "label": "Button label", "default": "Learn more" },
+      { "type": "url", "id": "button_url", "label": "Button URL" },
+      { "type": "select", "id": "align_button", "label": "Button alignment", "default": "center", "options": [
+        {"value":"left","label":"Left"}, {"value":"center","label":"Center"}, {"value":"right","label":"Right"}
+      ]},
+      { "type": "select", "id": "window_align", "label": "Window alignment (desktop)", "default": "center", "options": [
+        {"value":"left","label":"Left half"}, {"value":"center","label":"Center"}, {"value":"right","label":"Right half"}
+      ]},
+      { "type": "header", "content": "Collection slideshow" },
+      { "type": "checkbox", "id": "show_collection_slideshow", "label": "Show collection slideshow as background", "default": true },
+      { "type": "collection", "id": "collection", "label": "Collection" },
+      { "type": "range", "id": "slideshow_interval", "label": "Slide interval (ms)", "min": 800, "max": 6000, "step": 200, "default": 2000 }
+    ],
+    "presets": [ { "name": "Window CTA" } ]
+  }
+  {% endschema %}
+
+

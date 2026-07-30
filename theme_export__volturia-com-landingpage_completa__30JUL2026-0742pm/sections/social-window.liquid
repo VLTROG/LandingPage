@@ -1,0 +1,272 @@
+{% liquid
+  assign sw_title = section.settings.title
+  assign icon_color = section.settings.icon_color | default: '#111111'
+%}
+
+<section id="SocialWindow-{{ section.id }}" class="sw-section">
+  <div class="sw-wrap sw-wrap--center">
+    <div class="sw-window" style="--sw-icon-color: {{ icon_color }};">
+      <div class="sw-content">
+      {% if sw_title != blank %}
+        <h2 class="sw-title">{{ sw_title }}</h2>
+      {% endif %}
+
+      <ul class="sw-icons" role="list">
+        {% if section.settings.url_instagram != blank %}
+          <li>
+            <a href="{{ section.settings.url_instagram }}" class="sw-icon" data-sw-link aria-label="Instagram" target="_blank" rel="noopener noreferrer">
+              <span class="sw-ico sw-ico--instagram" aria-hidden="true"></span>
+            </a>
+          </li>
+        {% endif %}
+        {% if section.settings.url_tiktok != blank %}
+          <li>
+            <a href="{{ section.settings.url_tiktok }}" class="sw-icon" data-sw-link aria-label="TikTok" target="_blank" rel="noopener noreferrer">
+              <span class="sw-ico sw-ico--tiktok" aria-hidden="true"></span>
+            </a>
+          </li>
+        {% endif %}
+        {% if section.settings.url_discord != blank %}
+          <li>
+            <a href="{{ section.settings.url_discord }}" class="sw-icon" data-sw-link aria-label="Discord" target="_blank" rel="noopener noreferrer">
+              <span class="sw-ico sw-ico--discord" aria-hidden="true"></span>
+            </a>
+          </li>
+        {% endif %}
+        {% if section.settings.url_linkedin != blank %}
+          <li>
+            <a href="{{ section.settings.url_linkedin }}" class="sw-icon" data-sw-link aria-label="LinkedIn" target="_blank" rel="noopener noreferrer">
+              <span class="sw-ico sw-ico--linkedin" aria-hidden="true"></span>
+            </a>
+          </li>
+        {% endif %}
+        {% if section.settings.url_facebook != blank %}
+          <li>
+            <a href="{{ section.settings.url_facebook }}" class="sw-icon" data-sw-link aria-label="Facebook" target="_blank" rel="noopener noreferrer">
+              <span class="sw-ico sw-ico--facebook" aria-hidden="true"></span>
+            </a>
+          </li>
+        {% endif %}
+      </ul>
+      </div>
+    </div>
+  </div>
+
+  {% style %}
+    /* Base */
+    #SocialWindow-{{ section.id }} .sw-wrap{ max-width: min(1100px, 92vw); margin: 0 auto; }
+    /* Reset tipografico locale: nessuna variazione sul font */
+    #SocialWindow-{{ section.id }} .sw-window,
+    #SocialWindow-{{ section.id }} .sw-window *{
+      font-family: inherit;
+      font-weight: inherit;
+      letter-spacing: normal;
+      font-stretch: normal;
+      font-kerning: auto;
+      font-variant-ligatures: normal;
+      font-feature-settings: normal;
+      text-transform: none;
+    }
+
+    /* GSAP helpers */
+    #SocialWindow-{{ section.id }}.gsap-enabled .sw-window,
+    #SocialWindow-{{ section.id }}.gsap-enabled .sw-title,
+    #SocialWindow-{{ section.id }}.gsap-enabled .sw-icons{ animation: none !important; }
+    #SocialWindow-{{ section.id }} .gsap-reveal{
+      filter: blur(10px);
+      opacity: 0.9;
+      transform: translateY(18px);
+      will-change: opacity, transform, filter;
+    }
+
+    /* Mobile */
+    @media (max-width: 768px) {
+      #SocialWindow-{{ section.id }}{ padding-top: clamp(16px, 4vw, 48px); padding-bottom: clamp(16px, 4vw, 48px); }
+      #SocialWindow-{{ section.id }} .sw-wrap{ padding-left: 16px; padding-right: 16px; }
+      #SocialWindow-{{ section.id }} .sw-window{
+        width: 100%; max-width: 640px; margin-left: auto; margin-right: auto;
+        border-radius: 50px; position: relative; overflow: hidden;
+        background: rgba(255,255,255,0.2);
+        -webkit-backdrop-filter: blur(36px) saturate(160%);
+        backdrop-filter: blur(36px) saturate(160%);
+        box-shadow: 4px 8px 8px rgba(0, 0, 0, 0.18);
+        padding: clamp(11px, 4.2vw, 20px) clamp(16px, 6vw, 28px);
+        will-change: opacity, transform; opacity:0; transform: translateY(18px);
+        animation: swFadeUp-{{ section.id }} .55s ease forwards; animation-delay: .06s;
+      }
+      #SocialWindow-{{ section.id }} .sw-content{ transform: scale(.8); transform-origin: center center; align-self: center; }
+      #SocialWindow-{{ section.id }} .sw-window::before{
+        content: ''; position: absolute; top:-0.5px; left:-0.5px; right:-0.5px; bottom:-0.5px;
+        border-radius: 51px; padding: 1.5px;
+        background: conic-gradient(
+          from 315deg at 35% 60%,
+          rgba(255,255,255,.85) 0deg, rgba(255,255,255,.7) 30deg,
+          rgba(255,255,255,.4) 60deg, rgba(255,255,255,.15) 90deg,
+          rgba(255,255,255,.05) 120deg, rgba(255,255,255,.35) 150deg,
+          rgba(255,255,255,.35) 180deg, rgba(255,255,255,.02) 210deg,
+          rgba(255,255,255,.02) 240deg, rgba(255,255,255,.02) 270deg,
+          rgba(255,255,255,.02) 300deg, rgba(255,255,255,.7) 330deg,
+          rgba(255,255,255,.85) 360deg
+        );
+        mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+        mask-composite: xor; -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+        -webkit-mask-composite: xor; pointer-events: none;
+      }
+      #SocialWindow-{{ section.id }} .sw-window::after{
+        content: ''; position: absolute; top:1px; left:1px; right:1px; bottom:1px;
+        background: rgba(255,255,255,.06);
+        -webkit-backdrop-filter: blur(16px) saturate(160%) brightness(110%);
+        backdrop-filter: blur(36px) saturate(160%) brightness(110%);
+        border-radius: 48.5px; z-index:-1; pointer-events:none;
+      }
+      #SocialWindow-{{ section.id }} .sw-title{ margin:0 0 8px; text-align:center; font-size: clamp(20px, 6vw, 28px); opacity:0; transform: translateY(18px); animation: swFadeUp-{{ section.id }} .55s ease forwards; animation-delay: .1s; margin-top: calc(-0.6 * clamp(11px, 4.2vw, 20px)); }
+      #SocialWindow-{{ section.id }} .sw-icons{ list-style:none; padding:0; margin:0; display:flex; justify-content:center; column-gap: clamp(21px, 6.75vw, 33px); opacity:0; transform: translateY(18px); animation: swFadeUp-{{ section.id }} .55s ease forwards; animation-delay: .12s; margin-bottom: calc(-0.6 * clamp(11px, 4.2vw, 20px)); }
+      #SocialWindow-{{ section.id }} .sw-icons > li:first-child{ margin-left: 0; }
+      #SocialWindow-{{ section.id }} .sw-icons > li:last-child{ margin-right: 0; }
+      #SocialWindow-{{ section.id }} .sw-icon{ display:inline-flex; align-items:center; justify-content:center; transition: transform .2s ease, filter .2s ease; }
+      #SocialWindow-{{ section.id }} .sw-icon:hover{ transform: scale(1.06); filter: brightness(105%); }
+      #SocialWindow-{{ section.id }} .sw-icon:active{ transform: scale(.97); }
+      #SocialWindow-{{ section.id }} .sw-ico{ width: clamp(28px, 8vw, 40px); height: clamp(28px, 8vw, 40px); background: var(--sw-icon-color); display:inline-block; }
+      #SocialWindow-{{ section.id }} .sw-ico--instagram{ -webkit-mask: url('{{ 'instagramicon.svg' | asset_url }}') no-repeat center / contain; mask: url('{{ 'instagramicon.svg' | asset_url }}') no-repeat center / contain; }
+      #SocialWindow-{{ section.id }} .sw-ico--tiktok{ -webkit-mask: url('{{ 'tiktokicon.svg' | asset_url }}') no-repeat center / contain; mask: url('{{ 'tiktokicon.svg' | asset_url }}') no-repeat center / contain; }
+      #SocialWindow-{{ section.id }} .sw-ico--discord{ -webkit-mask: url('{{ 'discordicon.svg' | asset_url }}') no-repeat center / contain; mask: url('{{ 'discordicon.svg' | asset_url }}') no-repeat center / contain; }
+      #SocialWindow-{{ section.id }} .sw-ico--linkedin{ -webkit-mask: url('{{ 'linkedinicon.svg' | asset_url }}') no-repeat center / contain; mask: url('{{ 'linkedinicon.svg' | asset_url }}') no-repeat center / contain; }
+      #SocialWindow-{{ section.id }} .sw-ico--facebook{ -webkit-mask: url('{{ 'facebookicon.svg' | asset_url }}') no-repeat center / contain; mask: url('{{ 'facebookicon.svg' | asset_url }}') no-repeat center / contain; }
+
+      @keyframes swFadeUp-{{ section.id }} {
+        0% { opacity:0; transform: translateY(18px); }
+        100% { opacity:1; transform: translateY(0); }
+      }
+    }
+
+    /* Desktop */
+    @media only screen and (min-width: 769px) {
+      #SocialWindow-{{ section.id }}{ padding-top: clamp(8px, 2vw, 24px); padding-bottom: clamp(8px, 2vw, 24px); }
+      #SocialWindow-{{ section.id }} .sw-wrap{ display:grid; grid-template-columns: 1fr; justify-items:center; }
+      #SocialWindow-{{ section.id }} .sw-window{
+        width: min(36.8vw, 576px);
+        border-radius: 50px; position: relative; overflow: hidden;
+        background: rgba(255,255,255,0.2);
+        -webkit-backdrop-filter: blur(36px);
+        backdrop-filter: blur(36px);
+        box-shadow: 4px 8px 8px rgba(0, 0, 0, 0.18);
+        padding: clamp(14px, 3.5vw, 28px) clamp(18px, 4vw, 34px);
+        display:flex; flex-direction:column; justify-content:center;
+        will-change: opacity, transform; opacity:0; transform: translateY(18px);
+        animation: swDFadeUp-{{ section.id }} .55s ease forwards; animation-delay: .06s;
+      }
+      #SocialWindow-{{ section.id }} .sw-content{ transform: scale(.8); transform-origin: center center; align-self: center; }
+      #SocialWindow-{{ section.id }} .sw-window::before{ content:''; position:absolute; top:-0.5px; left:-0.5px; right:-0.5px; bottom:-0.5px; border-radius:51px; padding:1.5px; background: conic-gradient(from 315deg at 35% 60%, rgba(255,255,255,.85) 0deg, rgba(255,255,255,.7) 30deg, rgba(255,255,255,.4) 60deg, rgba(255,255,255,.15) 90deg, rgba(255,255,255,.05) 120deg, rgba(255,255,255,.35) 150deg, rgba(255,255,255,.35) 180deg, rgba(255,255,255,.02) 210deg, rgba(255,255,255,.02) 240deg, rgba(255,255,255,.02) 270deg, rgba(255,255,255,.02) 300deg, rgba(255,255,255,.7) 330deg, rgba(255,255,255,.85) 360deg); mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0); mask-composite: xor; -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0); -webkit-mask-composite: xor; pointer-events:none; }
+      #SocialWindow-{{ section.id }} .sw-window::after{ content:''; position:absolute; top:1px; left:1px; right:1px; bottom:1px; background: rgba(255,255,255,.06); -webkit-backdrop-filter: blur(16px) saturate(160%) brightness(110%); backdrop-filter: blur(36px) saturate(160%) brightness(110%); border-radius:48.5px; z-index:-1; pointer-events:none; }
+      #SocialWindow-{{ section.id }} .sw-title{ margin:0 0 10px; text-align:center; font-size: clamp(22px, 3.2vw, 36px); opacity:0; transform: translateY(18px); animation: swDFadeUp-{{ section.id }} .55s ease forwards; animation-delay: .1s; margin-top: calc(-0.6 * clamp(14px, 3.5vw, 28px)); }
+      #SocialWindow-{{ section.id }} .sw-icons{ list-style:none; padding:0; margin:0; display:flex; justify-content:center; gap: clamp(24px, 4.2vw, 36px); opacity:0; transform: translateY(18px); animation: swDFadeUp-{{ section.id }} .55s ease forwards; animation-delay: .12s; margin-bottom: calc(-0.6 * clamp(14px, 3.5vw, 28px)); }
+      #SocialWindow-{{ section.id }} .sw-icon{ display:inline-flex; align-items:center; justify-content:center; transition: transform .2s ease, filter .2s ease; }
+      #SocialWindow-{{ section.id }} .sw-icon:hover{ transform: scale(1.06); filter: brightness(105%); }
+      #SocialWindow-{{ section.id }} .sw-icon:active{ transform: scale(.97); }
+      #SocialWindow-{{ section.id }} .sw-ico{ width:45px; height:45px; background: var(--sw-icon-color); display:inline-block; }
+      #SocialWindow-{{ section.id }} .sw-ico--instagram{ -webkit-mask: url('{{ 'instagramicon.svg' | asset_url }}') no-repeat center / contain; mask: url('{{ 'instagramicon.svg' | asset_url }}') no-repeat center / contain; }
+      #SocialWindow-{{ section.id }} .sw-ico--tiktok{ -webkit-mask: url('{{ 'tiktokicon.svg' | asset_url }}') no-repeat center / contain; mask: url('{{ 'tiktokicon.svg' | asset_url }}') no-repeat center / contain; }
+      #SocialWindow-{{ section.id }} .sw-ico--discord{ -webkit-mask: url('{{ 'discordicon.svg' | asset_url }}') no-repeat center / contain; mask: url('{{ 'discordicon.svg' | asset_url }}') no-repeat center / contain; }
+      #SocialWindow-{{ section.id }} .sw-ico--linkedin{ -webkit-mask: url('{{ 'linkedinicon.svg' | asset_url }}') no-repeat center / contain; mask: url('{{ 'linkedinicon.svg' | asset_url }}') no-repeat center / contain; }
+      #SocialWindow-{{ section.id }} .sw-ico--facebook{ -webkit-mask: url('{{ 'facebookicon.svg' | asset_url }}') no-repeat center / contain; mask: url('{{ 'facebookicon.svg' | asset_url }}') no-repeat center / contain; }
+
+      @keyframes swDFadeUp-{{ section.id }} {
+        0% { opacity:0; transform: translateY(18px); }
+        100% { opacity:1; transform: translateY(0); }
+      }
+    }
+  {% endstyle %}
+
+  <script>
+  (function(){
+    try{
+      var root = document.getElementById('SocialWindow-{{ section.id }}');
+      if(!root) return;
+
+      var prefersReduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+      function loadScript(src){
+        return new Promise(function(resolve, reject){
+          var s = document.createElement('script');
+          s.src = src; s.async = true; s.onload = resolve; s.onerror = reject;
+          document.head.appendChild(s);
+        });
+      }
+
+      function init(){
+        if(!window.gsap || !window.ScrollTrigger) return;
+        gsap.registerPlugin(ScrollTrigger);
+
+        root.classList.add('gsap-enabled');
+
+        var targets = [
+          root.querySelector('.sw-window'),
+          root.querySelector('.sw-title'),
+          root.querySelector('.sw-icons')
+        ].filter(Boolean);
+
+        if(prefersReduced){
+          targets.forEach(function(el){ el.style.filter='none'; el.style.opacity='1'; el.style.transform='none'; });
+          return;
+        }
+
+        targets.forEach(function(el){
+          el.classList.add('gsap-reveal');
+          el.style.animation = 'none';
+          // Imposta stato iniziale inline per vincere la specificità dei CSS responsive
+          el.style.opacity = '0.9';
+          el.style.filter = 'blur(10px)';
+          el.style.transform = 'translateY(18px)';
+        });
+
+        targets.forEach(function(el){
+          gsap.to(el, {
+            opacity: 1,
+            filter: 'blur(0px)',
+            y: 0,
+            duration: 1.6,
+            delay: 0,
+            ease: 'power2.out',
+            scrollTrigger: {
+              trigger: el,
+              // Trigger più permissivo per elementi vicini al fondo pagina
+              start: 'top bottom',
+              toggleActions: 'play none none none',
+              once: true
+            }
+          });
+        });
+
+        // Assicura il calcolo iniziale anche se la pagina è corta
+        requestAnimationFrame(function(){ ScrollTrigger.refresh(); });
+      }
+
+      if(window.gsap && window.ScrollTrigger){
+        init();
+      } else {
+        var gsapUrl = 'https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js';
+        var stUrl = 'https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js';
+        loadScript(gsapUrl).then(function(){ return loadScript(stUrl); }).then(init).catch(function(){});
+      }
+    }catch(e){}
+  })();
+  </script>
+
+  {% schema %}
+  {
+    "name": "Social Window",
+    "settings": [
+      { "type": "text", "id": "title", "label": "Title", "default": "FOLLOW US" },
+      { "type": "color", "id": "icon_color", "label": "Icon color", "default": "#111111" },
+      { "type": "url", "id": "url_instagram", "label": "Instagram URL" },
+      { "type": "url", "id": "url_facebook", "label": "Facebook URL" },
+      { "type": "url", "id": "url_tiktok", "label": "TikTok URL" },
+      { "type": "url", "id": "url_linkedin", "label": "LinkedIn URL" },
+      { "type": "url", "id": "url_discord", "label": "Discord URL" }
+    ],
+    "presets": [ { "name": "Social Window" } ]
+  }
+  {% endschema %}
+</section>
+
+

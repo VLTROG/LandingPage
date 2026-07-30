@@ -1,0 +1,269 @@
+<div class="index-section faqs-section faqs-{{ section.id }}">
+  <div class="page-width">
+    {% style %}
+      .faqs-{{ section.id }}{ padding-top: clamp(6px, 1.5vw, 14px); padding-bottom: clamp(6px, 1.5vw, 14px); }
+      .faqs-{{ section.id }} .faqs-header{ text-align:center; margin: 0 0 18px; }
+      /* Header typography — mirrored from bento-box */
+      .faqs-{{ section.id }} .to-eyebrow{ text-align:center; margin:0 0 8px; opacity:.8; font-family: 'PPNeueMontreal', sans-serif !important; letter-spacing:.06em; will-change: opacity, transform; opacity: 0; transform: translateY(18px); animation: fqFadeUp-{{ section.id }} .55s ease forwards; animation-delay: .06s; }
+      .faqs-{{ section.id }} .to-title{ text-align:center; margin:0; line-height:1.1; font-family: 'PPNeueMontrealTitoli', sans-serif !important; font-weight: 0 !important; letter-spacing: -0.05rem; color: {{ section.settings.title_color | default: '#212121' }}; will-change: opacity, transform; opacity: 0; transform: translateY(18px); animation: fqFadeUp-{{ section.id }} .55s ease forwards; animation-delay: .08s; }
+      .faqs-{{ section.id }} .to-subtitle{ text-align:center; margin:10px auto 18px; opacity:.8; font-family: 'PPNeueMontreal', sans-serif !important; max-width: 90ch; color: {{ section.settings.subtitle_color | default: '#393939' }}; will-change: opacity, transform; opacity: 0; transform: translateY(18px); animation: fqFadeUp-{{ section.id }} .55s ease forwards; animation-delay: .1s; }
+
+      .faqs-{{ section.id }} .faqs-list{ max-width: 1100px; margin: 18px auto 0; display: grid; gap: 12px; }
+
+      /* Accordion item with glassmorphism like bento boxes */
+      .faqs-{{ section.id }} .faq-item{ position: relative; border-radius: 2.5rem; overflow: hidden; background: rgba(255, 255, 255, 0.2); -webkit-backdrop-filter: blur(12px) saturate(180%); backdrop-filter: blur(12px) saturate(180%); border: none; box-shadow: 4px 8px 8px rgba(0,0,0,0.18); transition: transform .2s ease, box-shadow .2s ease; }
+      .faqs-{{ section.id }} .faq-item:hover{ transform: translateY(-2px); box-shadow: 4px 12px 16px rgba(0,0,0,0.22); }
+      .faqs-{{ section.id }} .faq-item:active{ transform: translateY(0); box-shadow: 2px 4px 4px rgba(0,0,0,0.16); }
+      .faqs-{{ section.id }} .faq-item::before{ content: ''; position: absolute; top: -0.5px; left: -0.5px; right: -0.5px; bottom: -0.5px; border-radius: calc(2.5rem + 1px); padding: 1.5px; background: conic-gradient( from 315deg at 35% 60%, rgba(255, 255, 255, 0.85) 0deg, rgba(255, 255, 255, 0.7) 30deg, rgba(255, 255, 255, 0.4) 60deg, rgba(255, 255, 255, 0.15) 90deg, rgba(255, 255, 255, 0.05) 120deg, rgba(255, 255, 255, 0.35) 150deg, rgba(255, 255, 255, 0.35) 180deg, rgba(255, 255, 255, 0.02) 210deg, rgba(255, 255, 255, 0.02) 240deg, rgba(255, 255, 255, 0.02) 270deg, rgba(255, 255, 255, 0.02) 300deg, rgba(255, 255, 255, 0.7) 330deg, rgba(255, 255, 255, 0.85) 360deg ); mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0); -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0); -webkit-mask-composite: xor; mask-composite: exclude; pointer-events: none; }
+      .faqs-{{ section.id }} .faq-item::after{ content: ''; position: absolute; top: 1px; left: 1px; right: 1px; bottom: 1px; background: rgba(255,255,255,0.06); -webkit-backdrop-filter: blur(16px) saturate(160%) brightness(110%); backdrop-filter: blur(16px) saturate(160%) brightness(110%); border-radius: calc(2.5rem - 1.5px); z-index: -1; pointer-events: none; }
+
+      .faqs-{{ section.id }} .faq-button{ width: 100%; text-align: left; display: flex; align-items: center; gap: 12px; padding: 18px 22px; font-family: 'PPNeueMontreal', sans-serif !important; font-weight: 600; background: transparent; border: none; color: {{ section.settings.question_color | default: '#ffffff' }}; font-size: clamp(16px, 2.2vw, 20px); line-height: 1.35; cursor: pointer; position: relative; z-index: 2; }
+      .faqs-{{ section.id }} .faq-button > span:first-child{ flex: 1; display: flex; align-items: center; min-height: 1.35em; }
+      .faqs-{{ section.id }} .faq-icon{ margin-left: auto; width: 22px; height: 22px; min-width: 22px; min-height: 22px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: {{ section.settings.question_color | default: '#ffffff' }}; opacity:.9; transition: transform .2s ease; flex-shrink: 0; line-height: 1; font-size: 20px; }
+      .faqs-{{ section.id }} .faq-item[aria-expanded="true"] .faq-icon{ transform: rotate(45deg); }
+
+      .faqs-{{ section.id }} .faq-panel{ height: 0; overflow: hidden; transition: height .28s ease; }
+      .faqs-{{ section.id }} .faq-panel-inner{ padding: 0 22px 18px; color: {{ section.settings.answer_color | default: '#d6d6d6' }}; font-size: clamp(14px, 2vw, 16px); line-height: 1.65; font-family: 'PPNeueMontreal', sans-serif !important; }
+
+      /* Responsive font sizes copied from bento settings */
+      @media (max-width: 768px){
+        .faqs-{{ section.id }} .to-eyebrow{ font-size: {{ section.settings.eyebrow_size_mobile | default: 14 }}px; }
+        .faqs-{{ section.id }} .to-title{ font-size: {{ section.settings.title_size_mobile | default: 36 }}px; }
+        .faqs-{{ section.id }} .to-subtitle{ font-size: {{ section.settings.subtitle_size_mobile | default: 16 }}px; line-height: 1.5; }
+      }
+      @media (min-width: 769px){
+        .faqs-{{ section.id }} .to-eyebrow{ font-size: {{ section.settings.eyebrow_size_desktop | default: 16 }}px; }
+        .faqs-{{ section.id }} .to-title{ font-size: {{ section.settings.title_size_desktop | default: 64 }}px; }
+        .faqs-{{ section.id }} .to-subtitle{ font-size: {{ section.settings.subtitle_size_desktop | default: 20 }}px; line-height: 1.6; }
+      }
+
+      @media (max-width: 1024px){
+        .faqs-{{ section.id }} .faqs-list{ gap: 10px; }
+        .faqs-{{ section.id }} .faq-button{ padding: 16px 18px; font-size: clamp(16px, 4.2vw, 18px); }
+        .faqs-{{ section.id }} .faq-panel-inner{ padding: 0 18px 16px; font-size: clamp(14px, 3.8vw, 16px); }
+      }
+
+      @keyframes fqFadeUp-{{ section.id }}{ 0%{opacity:0; transform: translateY(18px);} 100%{opacity:1; transform: translateY(0);} }
+      
+      /* GSAP helpers: disattiva eventuali animazioni CSS quando GSAP è attivo */
+      .faqs-{{ section.id }}.gsap-enabled .to-eyebrow,
+      .faqs-{{ section.id }}.gsap-enabled .to-title,
+      .faqs-{{ section.id }}.gsap-enabled .to-subtitle { animation: none !important; }
+
+      /* Stato iniziale blur-to-focus per elementi controllati da GSAP */
+      .faqs-{{ section.id }} .gsap-reveal{
+        filter: blur(10px);
+        opacity: 0.9;
+        transform: translateY(18px);
+        will-change: opacity, transform, filter;
+      }
+    {% endstyle %}
+
+    <div class="faqs-header">
+      {% if section.settings.eyebrow_text != blank %}
+        <div class="to-eyebrow">{{ section.settings.eyebrow_text }}</div>
+      {% endif %}
+      {% if section.settings.title_text != blank %}
+        <h2 class="to-title">{{ section.settings.title_text }}</h2>
+      {% endif %}
+      {% if section.settings.subtitle_text != blank %}
+        <p class="to-subtitle">{{ section.settings.subtitle_text }}</p>
+      {% endif %}
+    </div>
+
+    <div class="faqs-list" id="faqs-list-{{ section.id }}">
+      {% for block in section.blocks %}
+        <div class="faq-item" {{ block.shopify_attributes }} aria-expanded="false">
+          <button class="faq-button" type="button" aria-controls="faq-panel-{{ block.id }}" aria-expanded="false">
+            <span>{{ block.settings.question }}</span>
+            <span class="faq-icon" aria-hidden="true">+</span>
+          </button>
+          <div class="faq-panel" id="faq-panel-{{ block.id }}">
+            <div class="faq-panel-inner">{{ block.settings.answer }}</div>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+  try{
+    var root = document.querySelector('.faqs-{{ section.id }}');
+    if(!root) return;
+
+    var prefersReduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    function loadScript(src){
+      return new Promise(function(resolve, reject){
+        var s = document.createElement('script');
+        s.src = src; s.async = true; s.onload = resolve; s.onerror = reject;
+        document.head.appendChild(s);
+      });
+    }
+
+    function init(){
+      if(!window.gsap || !window.ScrollTrigger) return;
+      gsap.registerPlugin(ScrollTrigger);
+
+      root.classList.add('gsap-enabled');
+
+      // Header elements
+      var headerEls = [
+        root.querySelector('.to-eyebrow'),
+        root.querySelector('.to-title'),
+        root.querySelector('.to-subtitle')
+      ].filter(Boolean);
+
+      if(prefersReduced){
+        headerEls.forEach(function(el){ el.style.filter='none'; el.style.opacity='1'; el.style.transform='none'; });
+      } else {
+        headerEls.forEach(function(el){ el.classList.add('gsap-reveal'); el.style.animation='none'; });
+        headerEls.forEach(function(el){
+          gsap.to(el, {
+            opacity: 1,
+            filter: 'blur(0px)',
+            y: 0,
+            duration: 1.6,
+            delay: 0,
+            ease: 'power2.out',
+            scrollTrigger: {
+              trigger: el,
+              start: 'top 75%',
+              toggleActions: 'play none none none',
+              once: true
+            }
+          });
+        });
+      }
+
+      // FAQ list + items: stesso timing per contenitore e singoli item
+      var list = root.querySelector('.faqs-list');
+      if(list){
+        var items = Array.prototype.slice.call(list.querySelectorAll('.faq-item'));
+        var group = [list].concat(items);
+
+        if(prefersReduced){
+          group.forEach(function(el){ el.style.filter='none'; el.style.opacity='1'; el.style.transform='none'; });
+        } else {
+          group.forEach(function(el){ el.classList.add('gsap-reveal'); });
+          gsap.to(group, {
+            opacity: 1,
+            filter: 'blur(0px)',
+            y: 0,
+            duration: 1.6,
+            delay: 0,
+            ease: 'power2.out',
+            scrollTrigger: {
+              trigger: list,
+              start: 'top 75%',
+              toggleActions: 'play none none none',
+              once: true
+            }
+          });
+        }
+      }
+    }
+
+    if(window.gsap && window.ScrollTrigger){
+      init();
+    } else {
+      var gsapUrl = 'https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js';
+      var stUrl = 'https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js';
+      loadScript(gsapUrl).then(function(){ return loadScript(stUrl); }).then(init).catch(function(){});
+    }
+  }catch(e){}
+})();
+</script>
+
+<script>
+(function(){
+  var root = document.querySelector('.faqs-{{ section.id }}');
+  if(!root) return;
+  var items = root.querySelectorAll('.faq-item');
+  items.forEach(function(item){
+    var btn = item.querySelector('.faq-button');
+    var panel = item.querySelector('.faq-panel');
+    if(!btn || !panel) return;
+    var inner = panel.querySelector('.faq-panel-inner');
+    function setHeight(open){
+      if(open){
+        var h = inner ? inner.offsetHeight : 0;
+        panel.style.height = h + 'px';
+      } else {
+        panel.style.height = '0px';
+      }
+    }
+    btn.addEventListener('click', function(){
+      var expanded = item.getAttribute('aria-expanded') === 'true';
+      // Close others for accordion behavior
+      items.forEach(function(other){
+        if(other !== item){
+          other.setAttribute('aria-expanded','false');
+          var op = other.querySelector('.faq-panel');
+          var ob = other.querySelector('.faq-button');
+          if(op){ op.style.height = '0px'; }
+          if(ob){ ob.setAttribute('aria-expanded','false'); }
+        }
+      });
+      item.setAttribute('aria-expanded', expanded ? 'false' : 'true');
+      btn.setAttribute('aria-expanded', expanded ? 'false' : 'true');
+      setHeight(!expanded);
+    });
+    // Ensure correct height on resize for open item
+    window.addEventListener('resize', function(){
+      if(item.getAttribute('aria-expanded') === 'true'){
+        setHeight(true);
+      }
+    });
+  });
+})();
+</script>
+
+{% schema %}
+{
+  "name": "FAQs (Accordion)",
+  "settings": [
+    { "type": "text", "id": "eyebrow_text", "label": "Eyebrow (small heading)", "default": "MISSION" },
+    { "type": "text", "id": "title_text", "label": "Title", "default": "Frequently Asked Questions" },
+    { "type": "textarea", "id": "subtitle_text", "label": "Subtitle (description)", "default": "If we missed yours, contact us or write us on Reddit." },
+
+    { "type": "range", "id": "eyebrow_size_mobile", "label": "Eyebrow size (mobile, px)", "min": 10, "max": 40, "step": 2, "default": 14 },
+    { "type": "range", "id": "eyebrow_size_desktop", "label": "Eyebrow size (desktop, px)", "min": 12, "max": 48, "step": 2, "default": 16 },
+    { "type": "range", "id": "title_size_mobile", "label": "Title size (mobile, px)", "min": 12, "max": 120, "step": 2, "default": 36 },
+    { "type": "range", "id": "title_size_desktop", "label": "Title size (desktop, px)", "min": 16, "max": 160, "step": 2, "default": 64 },
+    { "type": "range", "id": "subtitle_size_mobile", "label": "Subtitle size (mobile, px)", "min": 10, "max": 40, "step": 2, "default": 16 },
+    { "type": "range", "id": "subtitle_size_desktop", "label": "Subtitle size (desktop, px)", "min": 12, "max": 48, "step": 2, "default": 20 },
+
+    { "type": "header", "content": "Colors" },
+    { "type": "color", "id": "title_color", "label": "Title color", "default": "#212121" },
+    { "type": "color", "id": "subtitle_color", "label": "Subtitle color", "default": "#393939" },
+    { "type": "color", "id": "question_color", "label": "Question text color", "default": "#ffffff" },
+    { "type": "color", "id": "answer_color", "label": "Answer text color", "default": "#d6d6d6" }
+  ],
+  "blocks": [
+    {
+      "type": "faq",
+      "name": "FAQ item",
+      "settings": [
+        { "type": "text", "id": "question", "label": "Question", "default": "What is Sidephone?" },
+        { "type": "richtext", "id": "answer", "label": "Answer", "default": "<p>A distraction-free phone designed to protect you from harmful technology. It can be used standalone or with your smartphone.</p>" }
+      ]
+    }
+  ],
+  "max_blocks": 20,
+  "presets": [
+    {
+      "name": "FAQs (Accordion)",
+      "blocks": [
+        { "type": "faq" },
+        { "type": "faq" },
+        { "type": "faq" }
+      ]
+    }
+  ]
+}
+{% endschema %}
+
+

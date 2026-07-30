@@ -1,0 +1,188 @@
+{% liquid
+  assign title_text = section.settings.title | default: ''
+  assign subtitle_text = section.settings.subtitle | default: ''
+  assign image = section.settings.image
+%}
+
+<section id="HeroVolt-{{ section.id }}" class="index-section index-section--hero hv">
+  <div class="hv-wrap" data-align="{{ section.settings.text_align }}">
+    {% if image %}
+      <div class="hv-bg" style="background-image:url('{{ image | img_url: '2000x' }}');"></div>
+    {% endif %}
+
+    <div class="hv-content">
+      {% if title_text != blank %}
+        <h1 class="hv-title">{{ title_text | newline_to_br }}</h1>
+      {% endif %}
+      {% if subtitle_text != blank %}
+        <p class="hv-subtitle">{{ subtitle_text }}</p>
+      {% endif %}
+
+      {% if section.settings.show_button %}
+        <div class="hv-cta hv-cta--{{ section.settings.button_align }}">
+          {% if section.settings.button_url != blank %}
+            <a class="hv-btn" href="{{ section.settings.button_url }}">
+              <span class="btn__label">{{ section.settings.button_label | default: 'Learn more' }}</span>
+            </a>
+          {% else %}
+            <a class="hv-btn">
+              <span class="btn__label">{{ section.settings.button_label | default: 'Learn more' }}</span>
+            </a>
+          {% endif %}
+        </div>
+      {% endif %}
+    </div>
+  </div>
+
+  {% style %}
+    /* Desktop only: il resto del sito resta invariato su mobile */
+    @media only screen and (min-width: 1025px) {
+      /* Sezione a tutta altezza, sovrapposta all'header tramite margin-top negativo calcolato via JS */
+      #HeroVolt-{{ section.id }} { position: relative; min-height: 100vh; margin-top: 0; }
+      /* Rimuove margine superiore predefinito delle index-section solo per questa section */
+      #HeroVolt-{{ section.id }}.index-section--hero { margin-top: 0 !important; }
+      #HeroVolt-{{ section.id }} .index-section { margin-top: 0 !important; }
+
+      /* Sfondo immagine full-bleed */
+      #HeroVolt-{{ section.id }} .hv-wrap { position: relative; min-height: 100vh; overflow: hidden; }
+      #HeroVolt-{{ section.id }} .hv-bg {
+        position: absolute; inset: 0; background-size: cover; background-position: center; background-repeat: no-repeat;
+        /* Z sotto l'header ma sopra allo sfondo della pagina */
+        z-index: 0;
+      }
+
+      /* Contenuti testuali in overlay */
+      #HeroVolt-{{ section.id }} .hv-content {
+        position: relative; z-index: 1;
+        min-height: 100vh;
+        display: flex; flex-direction: column; align-items: center; justify-content: center;
+        padding: 0 40px;
+        text-align: center;
+      }
+
+      /* Allineamento orizzontale selezionabile */
+      #HeroVolt-{{ section.id }} [data-align="left"] .hv-content{ align-items: flex-start; text-align: left; }
+      #HeroVolt-{{ section.id }} [data-align="center"] .hv-content{ align-items: center; text-align: center; }
+      #HeroVolt-{{ section.id }} [data-align="right"] .hv-content{ align-items: flex-end; text-align: right; }
+
+      /* Tipografia configurabile */
+      #HeroVolt-{{ section.id }} .hv-title{
+        margin: 0 0 10px; line-height: 1.05; font-weight: 800;
+        font-size: {{ section.settings.title_size | default: 72 }}px;
+        color: {{ section.settings.title_color | default: '#ffffff' }};
+      }
+      #HeroVolt-{{ section.id }} .hv-subtitle{
+        margin: 0 0 24px; line-height: 1.25; opacity: .95;
+        font-size: {{ section.settings.subtitle_size | default: 20 }}px;
+        color: {{ section.settings.subtitle_color | default: '#eaeaea' }};
+        max-width: 1000px;
+      }
+
+      /* CTA: wrapper con allineamento separato dal testo */
+      #HeroVolt-{{ section.id }} .hv-cta{ width: 100%; display: flex; }
+      #HeroVolt-{{ section.id }} .hv-cta--left{ justify-content: flex-start; }
+      #HeroVolt-{{ section.id }} .hv-cta--center{ justify-content: center; }
+      #HeroVolt-{{ section.id }} .hv-cta--right{ justify-content: flex-end; }
+
+      /* Bottone pill glassmorphism (flat) stile @designbottone.liquid, senza ombre interne */
+      #HeroVolt-{{ section.id }} .hv-btn{
+        position: relative;
+        display: inline-flex; align-items: center; justify-content: center;
+        padding: 14px 36px; border-radius: 9999px;
+        background: rgba(255,255,255,0.08);
+        -webkit-backdrop-filter: blur(12px) saturate(180%);
+        backdrop-filter: blur(12px) saturate(180%);
+        color: rgba(255,255,255,0.95);
+        text-decoration: none; letter-spacing: .5px; font-weight: 500; font-size: 16px;
+        transition: transform .2s ease, opacity .2s ease, box-shadow .2s ease;
+        box-shadow: 2px 4px 4px rgba(0,0,0,0.21);
+      }
+      #HeroVolt-{{ section.id }} .hv-btn::before{
+        content: '';
+        position: absolute; top: -0.5px; left: -0.5px; right: -0.5px; bottom: -0.5px;
+        border-radius: 9999px; padding: 1.5px;
+        background: conic-gradient(
+          from 315deg at 35% 60%,
+          rgba(255,255,255,0.85) 0deg,
+          rgba(255,255,255,0.7) 30deg,
+          rgba(255,255,255,0.4) 60deg,
+          rgba(255,255,255,0.15) 90deg,
+          rgba(255,255,255,0.05) 120deg,
+          rgba(255,255,255,0.35) 150deg,
+          rgba(255,255,255,0.35) 180deg,
+          rgba(255,255,255,0.02) 210deg,
+          rgba(255,255,255,0.02) 240deg,
+          rgba(255,255,255,0.02) 270deg,
+          rgba(255,255,255,0.02) 300deg,
+          rgba(255,255,255,0.7) 330deg,
+          rgba(255,255,255,0.85) 360deg
+        );
+        mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+        mask-composite: xor;
+        -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+        -webkit-mask-composite: xor;
+        pointer-events: none;
+      }
+      #HeroVolt-{{ section.id }} .hv-btn::after{
+        content: '';
+        position: absolute; top: 1px; left: 1px; right: 1px; bottom: 1px;
+        background: rgba(255,255,255,0.06);
+        -webkit-backdrop-filter: blur(16px) saturate(160%) brightness(110%);
+        backdrop-filter: blur(16px) saturate(160%) brightness(110%);
+        border-radius: 9999px; z-index: -1; pointer-events: none;
+      }
+      #HeroVolt-{{ section.id }} .hv-btn:active{ transform: scale(.97); }
+
+      /* Eliminazione forzata del gap superiore (solo homepage) */
+      .template-index #MainContent { padding-top: 0 !important; }
+      .template-index #MainContent > .shopify-section:first-child { margin-top: 0 !important; }
+    }
+  {% endstyle %}
+
+  <script>
+    (function(){
+      var root = document.getElementById('HeroVolt-{{ section.id }}');
+      if(!root) return;
+      var mqDesktop = window.matchMedia('(min-width: 1025px)');
+
+      function applyPullUp(){
+        if(!mqDesktop.matches){ root.style.marginTop = ''; return; }
+        var header = document.querySelector('.header-wrapper') || document.querySelector('.site-header');
+        var h = header ? header.getBoundingClientRect().height : 0;
+        root.style.marginTop = h ? ('-'+Math.round(h)+'px') : '0';
+      }
+
+      document.addEventListener('DOMContentLoaded', applyPullUp);
+      window.addEventListener('load', applyPullUp);
+      window.addEventListener('resize', function(){ applyPullUp(); }, { passive: true });
+    })();
+  </script>
+</section>
+
+{% schema %}
+{
+  "name": "Hero Volturia",
+  "settings": [
+    { "type": "image_picker", "id": "image", "label": "Hero image" },
+    { "type": "textarea", "id": "title", "label": "Title" },
+    { "type": "text", "id": "subtitle", "label": "Subtitle" },
+    { "type": "range", "id": "title_size", "label": "Title size (px)", "min": 24, "max": 120, "step": 2, "default": 72 },
+    { "type": "range", "id": "subtitle_size", "label": "Subtitle size (px)", "min": 12, "max": 48, "step": 1, "default": 20 },
+    { "type": "color", "id": "title_color", "label": "Title color", "default": "#ffffff" },
+    { "type": "color", "id": "subtitle_color", "label": "Subtitle color", "default": "#eaeaea" },
+    { "type": "select", "id": "text_align", "label": "Text alignment", "default": "center", "options": [
+      {"value":"left","label":"Left"}, {"value":"center","label":"Center"}, {"value":"right","label":"Right"}
+    ]},
+
+    { "type": "checkbox", "id": "show_button", "label": "Show button", "default": true },
+    { "type": "text", "id": "button_label", "label": "Button label", "default": "Enter" },
+    { "type": "url", "id": "button_url", "label": "Button URL" },
+    { "type": "select", "id": "button_align", "label": "Button alignment", "default": "center", "options": [
+      {"value":"left","label":"Left"}, {"value":"center","label":"Center"}, {"value":"right","label":"Right"}
+    ]}
+  ],
+  "presets": [ { "name": "Hero Volturia" } ]
+}
+{% endschema %}
+
+

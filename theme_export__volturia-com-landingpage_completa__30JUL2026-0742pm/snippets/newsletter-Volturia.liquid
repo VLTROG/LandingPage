@@ -1,0 +1,447 @@
+<!-- Snippet Newsletter per la pagina Password -->
+<div class="newsletter-container">
+  <h2>Join Newsletter</h2>
+  <form id="newsletter-form" method="post" action="/contact#newsletter">
+    <!-- Hidden fields per Shopify -->
+    <input type="hidden" name="form_type" value="customer">
+    <input type="hidden" name="contact[tags]" id="tag-field" value="Email Subscriber">
+    
+    <!-- Input per Email -->
+    <input type="email" name="contact[email]" placeholder="Enter your email" required>
+    
+    <!-- Container per il dropdown custom e il numero di telefono -->
+    <div class="phone-container">
+      <div class="dropdown-wrapper">
+        <div class="custom-dropdown" id="customDropdown">
+          <div class="selected-option">+39</div>
+          <div class="options" id="dropdownOptions">
+            <div class="option" data-value="+1">United States +1</div>
+            <div class="option" data-value="+1">Canada +1</div>
+            <div class="option" data-value="+44">United Kingdom +44</div>
+            <div class="option" data-value="+81">Japan +81</div>
+            <div class="option" data-value="+353">Ireland +353</div>
+            <div class="option" data-value="+49">Germany +49</div>
+            <div class="option" data-value="+43">Austria +43</div>
+            <div class="option" data-value="+41">Switzerland +41</div>
+            <div class="option" data-value="+82">South Korea +82</div>
+            <div class="option" data-value="+33">France +33</div>
+            <div class="option" data-value="+93">Afghanistan +93</div>
+            <div class="option" data-value="+358">Åland Islands +358</div>
+            <div class="option" data-value="+355">Albania +355</div>
+            <div class="option" data-value="+213">Algeria +213</div>
+            <div class="option" data-value="+376">Andorra +376</div>
+            <div class="option" data-value="+244">Angola +244</div>
+            <div class="option" data-value="+1">Anguilla +1</div>
+            <div class="option" data-value="+1">Antigua and Barbuda +1</div>
+            <div class="option" data-value="+966">Saudi Arabia +966</div>
+            <div class="option" data-value="+54">Argentina +54</div>
+            <div class="option" data-value="+374">Armenia +374</div>
+            <div class="option" data-value="+297">Aruba +297</div>
+            <div class="option" data-value="+61">Australia +61</div>
+            <div class="option" data-value="+994">Azerbaijan +994</div>
+            <div class="option" data-value="+1">Bahamas +1</div>
+            <div class="option" data-value="+973">Bahrain +973</div>
+            <div class="option" data-value="+880">Bangladesh +880</div>
+            <div class="option" data-value="+1">Barbados +1</div>
+            <div class="option" data-value="+32">Belgium +32</div>
+            <div class="option" data-value="+501">Belize +501</div>
+            <div class="option" data-value="+229">Benin +229</div>
+            <div class="option" data-value="+1">Bermuda +1</div>
+            <div class="option" data-value="+975">Bhutan +975</div>
+            <div class="option" data-value="+375">Belarus +375</div>
+            <div class="option" data-value="+591">Bolivia +591</div>
+            <div class="option" data-value="+599">Bonaire, Sint Eustatius and Saba +599</div>
+            <div class="option" data-value="+387">Bosnia and Herzegovina +387</div>
+            <div class="option" data-value="+267">Botswana +267</div>
+            <div class="option" data-value="+55">Brazil +55</div>
+            <div class="option" data-value="+673">Brunei +673</div>
+            <div class="option" data-value="+359">Bulgaria +359</div>
+            <div class="option" data-value="+226">Burkina Faso +226</div>
+            <div class="option" data-value="+257">Burundi +257</div>
+            <div class="option" data-value="+855">Cambodia +855</div>
+            <div class="option" data-value="+237">Cameroon +237</div>
+            <div class="option" data-value="+238">Cape Verde +238</div>
+            <div class="option" data-value="+1">Cayman Islands +1</div>
+            <div class="option" data-value="+236">Central African Republic +236</div>
+            <div class="option" data-value="+61">Christmas Island +61</div>
+            <div class="option" data-value="+235">Chad +235</div>
+            <div class="option" data-value="+56">Chile +56</div>
+            <div class="option" data-value="+86">China +86</div>
+            <div class="option" data-value="+357">Cyprus +357</div>
+            <div class="option" data-value="+39">Vatican City +39</div>
+            <div class="option" data-value="+61">Cocos (Keeling) Islands +61</div>
+            <div class="option" data-value="+57">Colombia +57</div>
+            <div class="option" data-value="+269">Comoros +269</div>
+            <div class="option" data-value="+242">Congo +242</div>
+            <div class="option" data-value="+243">Democratic Republic of the Congo +243</div>
+            <div class="option" data-value="+682">Cook Islands +682</div>
+            <div class="option" data-value="+850">North Korea +850</div>
+            <div class="option" data-value="+225">Ivory Coast +225</div>
+            <div class="option" data-value="+506">Costa Rica +506</div>
+            <div class="option" data-value="+385">Croatia +385</div>
+            <div class="option" data-value="+53">Cuba +53</div>
+            <div class="option" data-value="+599">Curaçao +599</div>
+            <div class="option" data-value="+45">Denmark +45</div>
+            <div class="option" data-value="+1">Dominica +1</div>
+            <div class="option" data-value="+1">Dominican Republic +1</div>
+            <div class="option" data-value="+593">Ecuador +593</div>
+            <div class="option" data-value="+20">Egypt +20</div>
+            <div class="option" data-value="+503">El Salvador +503</div>
+            <div class="option" data-value="+971">United Arab Emirates +971</div>
+            <div class="option" data-value="+291">Eritrea +291</div>
+            <div class="option" data-value="+372">Estonia +372</div>
+            <div class="option" data-value="+251">Ethiopia +251</div>
+            <div class="option" data-value="+500">Falkland Islands +500</div>
+            <div class="option" data-value="+298">Faroe Islands +298</div>
+            <div class="option" data-value="+679">Fiji +679</div>
+            <div class="option" data-value="+63">Philippines +63</div>
+            <div class="option" data-value="+358">Finland +358</div>
+            <div class="option" data-value="+594">French Guiana +594</div>
+            <div class="option" data-value="+241">Gabon +241</div>
+            <div class="option" data-value="+220">Gambia +220</div>
+            <div class="option" data-value="+995">Georgia +995</div>
+            <div class="option" data-value="+233">Ghana +233</div>
+            <div class="option" data-value="+1">Jamaica +1</div>
+            <div class="option" data-value="+350">Gibraltar +350</div>
+            <div class="option" data-value="+253">Djibouti +253</div>
+            <div class="option" data-value="+962">Jordan +962</div>
+            <div class="option" data-value="+30">Greece +30</div>
+            <div class="option" data-value="+1">Grenada +1</div>
+            <div class="option" data-value="+299">Greenland +299</div>
+            <div class="option" data-value="+590">Guadeloupe +590</div>
+            <div class="option" data-value="+1">Guam +1</div>
+            <div class="option" data-value="+502">Guatemala +502</div>
+            <div class="option" data-value="+44">Guernsey +44</div>
+            <div class="option" data-value="+224">Guinea +224</div>
+            <div class="option" data-value="+240">Equatorial Guinea +240</div>
+            <div class="option" data-value="+245">Guinea-Bissau +245</div>
+            <div class="option" data-value="+592">Guyana +592</div>
+            <div class="option" data-value="+509">Haiti +509</div>
+            <div class="option" data-value="+504">Honduras +504</div>
+            <div class="option" data-value="+852">Hong Kong +852</div>
+            <div class="option" data-value="+91">India +91</div>
+            <div class="option" data-value="+62">Indonesia +62</div>
+            <div class="option" data-value="+98">Iran +98</div>
+            <div class="option" data-value="+964">Iraq +964</div>
+            <div class="option" data-value="+354">Iceland +354</div>
+            <div class="option" data-value="+247">Ascension Island +247</div>
+            <div class="option" data-value="+1">U.S. Virgin Islands +1</div>
+            <div class="option" data-value="+1">British Virgin Islands +1</div>
+            <div class="option" data-value="+972">Israel +972</div>
+            <div class="option" data-value="+39">Italy +39</div>
+            <div class="option" data-value="+44">Jersey +44</div>
+            <div class="option" data-value="+7">Kazakhstan +7</div>
+            <div class="option" data-value="+254">Kenya +254</div>
+            <div class="option" data-value="+996">Kyrgyzstan +996</div>
+            <div class="option" data-value="+686">Kiribati +686</div>
+            <div class="option" data-value="+383">Kosovo +383</div>
+            <div class="option" data-value="+965">Kuwait +965</div>
+            <div class="option" data-value="+856">Laos +856</div>
+            <div class="option" data-value="+266">Lesotho +266</div>
+            <div class="option" data-value="+371">Latvia +371</div>
+            <div class="option" data-value="+961">Lebanon +961</div>
+            <div class="option" data-value="+231">Liberia +231</div>
+            <div class="option" data-value="+218">Libya +218</div>
+            <div class="option" data-value="+423">Liechtenstein +423</div>
+            <div class="option" data-value="+370">Lithuania +370</div>
+            <div class="option" data-value="+352">Luxembourg +352</div>
+            <div class="option" data-value="+853">Macao +853</div>
+            <div class="option" data-value="+389">Macedonia +389</div>
+            <div class="option" data-value="+261">Madagascar +261</div>
+            <div class="option" data-value="+265">Malawi +265</div>
+            <div class="option" data-value="+960">Maldives +960</div>
+            <div class="option" data-value="+60">Malaysia +60</div>
+            <div class="option" data-value="+223">Mali +223</div>
+            <div class="option" data-value="+356">Malta +356</div>
+            <div class="option" data-value="+44">Isle of Man +44</div>
+            <div class="option" data-value="+1">Northern Mariana Islands +1</div>
+            <div class="option" data-value="+212">Morocco +212</div>
+            <div class="option" data-value="+692">Marshall Islands +692</div>
+            <div class="option" data-value="+596">Martinique +596</div>
+            <div class="option" data-value="+222">Mauritania +222</div>
+            <div class="option" data-value="+230">Mauritius +230</div>
+            <div class="option" data-value="+262">Mayotte +262</div>
+            <div class="option" data-value="+52">Mexico +52</div>
+            <div class="option" data-value="+691">Micronesia +691</div>
+            <div class="option" data-value="+373">Moldova +373</div>
+            <div class="option" data-value="+377">Monaco +377</div>
+            <div class="option" data-value="+976">Mongolia +976</div>
+            <div class="option" data-value="+382">Montenegro +382</div>
+            <div class="option" data-value="+1">Montserrat +1</div>
+            <div class="option" data-value="+258">Mozambique +258</div>
+            <div class="option" data-value="+95">Myanmar +95</div>
+            <div class="option" data-value="+264">Namibia +264</div>
+            <div class="option" data-value="+674">Nauru +674</div>
+            <div class="option" data-value="+977">Nepal +977</div>
+            <div class="option" data-value="+505">Nicaragua +505</div>
+            <div class="option" data-value="+227">Niger +227</div>
+            <div class="option" data-value="+234">Nigeria +234</div>
+            <div class="option" data-value="+683">Niue +683</div>
+            <div class="option" data-value="+672">Norfolk Island +672</div>
+            <div class="option" data-value="+47">Norway +47</div>
+            <div class="option" data-value="+687">New Caledonia +687</div>
+            <div class="option" data-value="+64">New Zealand +64</div>
+            <div class="option" data-value="+968">Oman +968</div>
+            <div class="option" data-value="+31">Netherlands +31</div>
+            <div class="option" data-value="+92">Pakistan +92</div>
+            <div class="option" data-value="+680">Palau +680</div>
+            <div class="option" data-value="+970">Palestine +970</div>
+            <div class="option" data-value="+507">Panama +507</div>
+            <div class="option" data-value="+675">Papua New Guinea +675</div>
+            <div class="option" data-value="+595">Paraguay +595</div>
+            <div class="option" data-value="+51">Peru +51</div>
+            <div class="option" data-value="+689">French Polynesia +689</div>
+            <div class="option" data-value="+48">Poland +48</div>
+            <div class="option" data-value="+351">Portugal +351</div>
+            <div class="option" data-value="+1">Puerto Rico +1</div>
+            <div class="option" data-value="+974">Qatar +974</div>
+            <div class="option" data-value="+420">Czech Republic +420</div>
+            <div class="option" data-value="+262">Réunion +262</div>
+            <div class="option" data-value="+40">Romania +40</div>
+            <div class="option" data-value="+250">Rwanda +250</div>
+            <div class="option" data-value="+212">Western Sahara +212</div>
+            <div class="option" data-value="+590">Saint Barthélemy +590</div>
+            <div class="option" data-value="+1">Saint Kitts and Nevis +1</div>
+            <div class="option" data-value="+1">Saint Lucia +1</div>
+            <div class="option" data-value="+590">Saint Martin +590</div>
+            <div class="option" data-value="+508">Saint Pierre and Miquelon +508</div>
+            <div class="option" data-value="+1">Saint Vincent and the Grenadines +1</div>
+            <div class="option" data-value="+677">Solomon Islands +677</div>
+            <div class="option" data-value="+685">Samoa +685</div>
+            <div class="option" data-value="+1">American Samoa +1</div>
+            <div class="option" data-value="+378">San Marino +378</div>
+            <div class="option" data-value="+290">Saint Helena +290</div>
+            <div class="option" data-value="+239">São Tomé and Príncipe +239</div>
+            <div class="option" data-value="+221">Senegal +221</div>
+            <div class="option" data-value="+381">Serbia +381</div>
+            <div class="option" data-value="+248">Seychelles +248</div>
+            <div class="option" data-value="+232">Sierra Leone +232</div>
+            <div class="option" data-value="+65">Singapore +65</div>
+            <div class="option" data-value="+1">Sint Maarten +1</div>
+            <div class="option" data-value="+963">Syria +963</div>
+            <div class="option" data-value="+421">Slovakia +421</div>
+            <div class="option" data-value="+386">Slovenia +386</div>
+            <div class="option" data-value="+252">Somalia +252</div>
+            <div class="option" data-value="+34">Spain +34</div>
+            <div class="option" data-value="+94">Sri Lanka +94</div>
+            <div class="option" data-value="+27">South Africa +27</div>
+            <div class="option" data-value="+249">Sudan +249</div>
+            <div class="option" data-value="+211">South Sudan +211</div>
+            <div class="option" data-value="+597">Suriname +597</div>
+            <div class="option" data-value="+47">Svalbard and Jan Mayen +47</div>
+            <div class="option" data-value="+46">Sweden +46</div>
+            <div class="option" data-value="+268">Swaziland +268</div>
+            <div class="option" data-value="+992">Tajikistan +992</div>
+            <div class="option" data-value="+66">Thailand +66</div>
+            <div class="option" data-value="+886">Taiwan +886</div>
+            <div class="option" data-value="+255">Tanzania +255</div>
+            <div class="option" data-value="+246">British Indian Ocean Territory +246</div>
+            <div class="option" data-value="+670">East Timor +670</div>
+            <div class="option" data-value="+228">Togo +228</div>
+            <div class="option" data-value="+690">Tokelau +690</div>
+            <div class="option" data-value="+676">Tonga +676</div>
+            <div class="option" data-value="+1">Trinidad and Tobago +1</div>
+            <div class="option" data-value="+290">Tristan da Cunha +290</div>
+            <div class="option" data-value="+216">Tunisia +216</div>
+            <div class="option" data-value="+90">Turkey +90</div>
+            <div class="option" data-value="+993">Turkmenistan +993</div>
+            <div class="option" data-value="+1">Turks and Caicos Islands +1</div>
+            <div class="option" data-value="+688">Tuvalu +688</div>
+            <div class="option" data-value="+380">Ukraine +380</div>
+            <div class="option" data-value="+256">Uganda +256</div>
+            <div class="option" data-value="+36">Hungary +36</div>
+            <div class="option" data-value="+598">Uruguay +598</div>
+            <div class="option" data-value="+998">Uzbekistan +998</div>
+            <div class="option" data-value="+678">Vanuatu +678</div>
+            <div class="option" data-value="+58">Venezuela +58</div>
+            <div class="option" data-value="+84">Vietnam +84</div>
+            <div class="option" data-value="+681">Wallis and Futuna +681</div>
+            <div class="option" data-value="+967">Yemen +967</div>
+            <div class="option" data-value="+260">Zambia +260</div>
+            <div class="option" data-value="+263">Zimbabwe +263</div>
+          </div>
+        </div>
+        <!-- Hidden input per salvare il prefisso selezionato -->
+        <input type="hidden" name="country_code" id="countryCode" value="+39">
+      </div>
+      <!-- Input per il numero di telefono -->
+      <input type="tel" name="contact[phone]" placeholder="Enter your phone (optional)">
+    </div>
+    
+    <!-- Bottone Subscribe -->
+    <button type="submit">Subscribe</button>
+    
+    <!-- Disclaimer -->
+    <small>The phone field is optional.</small>
+  </form>
+</div>
+
+<style>
+  /* Animations */
+  @keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes fadeInDown {
+    from { opacity: 0; transform: translateY(-20px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  
+  /* Container principale */
+  .newsletter-container {
+    max-width: 400px;
+    margin: 2rem auto;
+    padding: 2rem;
+    background: rgba(255,255,255,0.2);
+    backdrop-filter: blur(10px);
+    border-radius: 100px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2), inset 0 0 5px rgba(255,255,255,0.5);
+    text-align: center;
+    animation: fadeInUp 1s ease both;
+    box-sizing: border-box;
+  }
+  .newsletter-container h2 {
+    margin-bottom: 1.5rem;
+    font-size: 1.5rem;
+  }
+  /* Input email */
+  #newsletter-form input[type="email"] {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    margin-bottom: 1rem;
+    border: none;
+    border-radius: 50px;
+    background: rgba(255,255,255,0.7);
+    font-size: 1rem;
+    box-sizing: border-box;
+  }
+  /* Container per telefono */
+  .phone-container {
+    display: flex;
+    width: 100%;
+    box-sizing: border-box;
+    margin-bottom: 1rem;
+  }
+  /* Dropdown Wrapper: larghezza fissa */
+  .dropdown-wrapper {
+    width: 150px;
+    position: relative;
+    box-sizing: border-box;
+  }
+  /* Custom Dropdown */
+  .custom-dropdown {
+    width: 100%;
+    background: #fff; /* sfondo opaco al 100% */
+    border-radius: 50px 0px 0px 50px;
+    padding: 0.75rem 0.5rem;
+    font-size: 1rem;
+    cursor: pointer;
+    box-sizing: border-box;
+  }
+  .custom-dropdown .selected-option {
+    width: 100%;
+    text-align: left;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
+  .custom-dropdown .options {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: -200px;  /* Sposta il dropdown verso sinistra per maggior spazio */
+    right: 0;
+    background: #fff;
+    border-radius: 0px;
+    max-height: 200px; /* circa 8 opzioni */
+    overflow-y: auto;
+    overflow-x: hidden; /* evita lo scroll orizzontale */
+    z-index: 10;
+    animation: fadeInDown 0.5s ease both;
+    box-sizing: border-box;
+  }
+  .custom-dropdown .option {
+    padding: 0.5rem;
+    cursor: pointer;
+    white-space: nowrap;
+    text-align: left;
+  }
+  .custom-dropdown .option:hover {
+    background: rgba(0,0,0,0.1);
+  }
+  /* Input per il telefono: occupa il resto dello spazio */
+  .phone-container input[type="tel"] {
+    flex: 1;
+    border: none;
+    border-radius: 0 50px 50px 0;
+    background: rgba(255,255,255,0.7);
+    padding: 0.75rem 1rem;
+    font-size: 1rem;
+    outline: none;
+    box-sizing: border-box;
+  }
+  /* Bottone Subscribe */
+  #newsletter-form button {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    background: #000;
+    color: #fff;
+    border: none;
+    border-radius: 50px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background 0.3s ease;
+    box-sizing: border-box;
+  }
+  #newsletter-form button:hover {
+    background: #555;
+  }
+  /* Disclaimer */
+  #newsletter-form small {
+    display: block;
+    margin-top: 0.5rem;
+    font-size: 0.8rem;
+    color: #333;
+    box-sizing: border-box;
+  }
+</style>
+
+<script>
+  // Gestione del dropdown custom
+  const customDropdown = document.getElementById('customDropdown');
+  const dropdownOptions = document.getElementById('dropdownOptions');
+  const countryCodeInput = document.getElementById('countryCode');
+
+  customDropdown.addEventListener('click', function(e) {
+    e.stopPropagation();
+    // Toggle visibilità opzioni
+    dropdownOptions.style.display = dropdownOptions.style.display === "block" ? "none" : "block";
+  });
+  
+  // Aggiorna la selezione quando si clicca su un'opzione
+  const options = dropdownOptions.querySelectorAll('.option');
+  options.forEach(function(option) {
+    option.addEventListener('click', function(e) {
+      const value = this.getAttribute('data-value');
+      // Mostra solo il prefisso invece del testo completo
+      customDropdown.querySelector('.selected-option').textContent = value;
+      countryCodeInput.value = value;
+      dropdownOptions.style.display = "none";
+      e.stopPropagation();
+    });
+  });
+  
+  // Chiude il dropdown cliccando fuori
+  document.addEventListener('click', function() {
+    dropdownOptions.style.display = "none";
+  });
+  
+  // Al submit, concatena il prefisso selezionato al numero di telefono
+  document.getElementById('newsletter-form').addEventListener('submit', function(e) {
+    var countryPrefix = countryCodeInput.value;
+    var phoneInput = this.querySelector('input[name="contact[phone]"]');
+    if (phoneInput.value.trim() !== "") {
+      phoneInput.value = countryPrefix + " " + phoneInput.value;
+    }
+  });
+</script>

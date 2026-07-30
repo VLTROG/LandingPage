@@ -1,0 +1,35 @@
+<section id="VolturiaTitlePSW2-{{ section.id }}" class="volturia-title-psw2">
+  <link
+    rel="stylesheet"
+    href="{{ 'VolturiaTitleAnimation.css' | asset_url }}"
+  >
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/5.0.0/normalize.min.css">
+
+  <h1 class="loader">
+    {%- assign text_chars = section.settings.text | split: '' -%}
+    {%- for char in text_chars -%}
+      <span style="--char-index: {{ forloop.index0 }};">
+        {{ char }}
+      </span>
+    {%- endfor -%}
+  </h1>
+</section>
+
+{% schema %}
+{
+  "name": "Volturia Title PSW2",
+  "settings": [
+    {
+      "type": "text",
+      "id": "text",
+      "label": "Testo",
+      "default": "VOLTURIA"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Volturia Title PSW2"
+    }
+  ]
+}
+{% endschema %}

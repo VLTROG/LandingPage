@@ -1,0 +1,15 @@
+{
+    "keep": {
+        "days": true,
+        "amount": 14
+    },
+    "auditLog": "/Users/valeriorossi/Documents/Volturia/LandingPage/logs/.70c56ce1f00dafec7db25aaf175e309cdab16314-audit.json",
+    "files": [
+        {
+            "date": 1785432913004,
+            "name": "/Users/valeriorossi/Documents/Volturia/LandingPage/logs/mcp-puppeteer-2026-07-30.log",
+            "hash": "d9341c1e2226c393c5e49f0c05b832494487609135411a87a6444aa4c3e2c0d3"
+        }
+    ],
+    "hashType": "sha256"
+}

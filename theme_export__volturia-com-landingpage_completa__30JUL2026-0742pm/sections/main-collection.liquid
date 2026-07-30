@@ -1,0 +1,476 @@
+{% comment %}
+  This sections requires the same `paginate_by` variable value as
+  the other sections for the ajax loading to work.
+  If you change the number below, it must also be changed in:
+  - sections/collection-template
+  - sections/featured-collection-slider
+  - snippets/page-block-featured-collection-slider
+{% endcomment %}
+{%- liquid
+  assign paginate_by = 24
+  assign per_row_desktop = 3
+  assign per_row_mobile = 1
+  assign mobile_flush = false
+
+  for block in section.blocks
+    case block.type
+    when 'product_grid'
+      assign per_row_desktop = block.settings.per_row_desktop
+      assign per_row_mobile = block.settings.per_row_mobile
+      if per_row_mobile == '2-flush'
+        assign mobile_flush = true
+      endif
+    endcase
+  endfor
+
+  case per_row_desktop
+    when 2
+      assign grid_large_width = 'medium-up--one-half'
+    when 3
+      assign grid_large_width = 'medium-up--one-third'
+    when 4
+      assign grid_large_width = 'medium-up--one-quarter'
+  endcase
+
+  assign grid_small_width = 'grid-product--padded'
+
+  if per_row_mobile contains '2'
+    assign per_row_mobile = 2
+    assign grid_small_width = 'small--one-half'
+  endif
+-%}
+
+{%- capture grid_item_width -%}{{ grid_small_width }} {{ grid_large_width}}{%- endcapture -%}
+
+{% paginate collection.products by paginate_by %}
+
+<div
+  id="CollectionGrid"
+  data-section-id="{{ section.id }}"
+  data-section-type="collection-grid"
+  data-product-sliders-mobile="{% if per_row_mobile == '1' %}true{% else %}false{% endif %}">
+
+  <div class="page-width">
+    {%- for block in section.blocks -%}
+      {%- case block.type -%}
+      {%- when 'collection_description' -%}
+        {%- if collection.description != blank -%}
+          <div class="rte text-center" {{ block.shopify_attributes }}>
+            {{ collection.description }}
+          </div>
+        {%- endif -%}
+      {%- when 'product_grid' -%}
+        <div id="CollectionAjaxContent">
+          <div
+            class="grid grid--uniform grid--scattered-large-{{ per_row_desktop }} grid--scattered-small-{{ per_row_mobile }}{% if mobile_flush %} small--grid--flush{% endif %}"
+            data-collection-container>
+
+            {%- for product in collection.products -%}
+              {%- render 'product-grid-item'
+                product: product,
+                grid_item_width: grid_item_width
+              -%}
+            {%- else -%}
+              <div class="grid__item">
+                <p>{{ 'collections.general.no_matches' | t }}</p>
+              </div>
+            {%- endfor -%}
+          </div>
+
+          {%- if paginate.pages > 1 -%}
+            {%- render 'pagination', paginate: paginate -%}
+          {%- endif -%}
+        </div>
+      {%- endcase -%}
+    {%- endfor -%}
+  </div>
+</div>
+
+{% endpaginate %}
+
+{%- style -%}
+  @media only screen and (min-width: 1025px) {
+    /* Container con margini laterali per non toccare i bordi */
+    #CollectionGrid .page-width {
+      max-width: 100% !important;
+      padding-left: 40px !important;
+      padding-right: 40px !important;
+    }
+
+    /* CSS Grid layout per la griglia prodotti (desktop-only) */
+    #CollectionAjaxContent [data-collection-container] {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      column-gap: 18px;
+      row-gap: 53px; /* gap verticale */
+      margin: 0 !important;
+      padding: 0 !important;
+      align-items: stretch;
+      justify-items: stretch;
+    }
+    #CollectionAjaxContent .grid__item {
+      width: auto !important;
+      margin: 0 !important;
+      padding: 0 !important;
+      border: 0 !important;
+    }
+    /* Rimuovi qualsiasi spazio aggiunto dall'ancora o badge recensioni */
+    #CollectionAjaxContent .grid-product__link {
+      display: block;
+      padding: 0 !important;
+      margin: 0 !important;
+      border: 0 !important;
+      background: transparent !important;
+    }
+    #CollectionAjaxContent .shopify-product-reviews-badge {
+      display: none !important;
+    }
+
+    /* Edge-to-edge verticale: rimuovi margini su item/componenti interni */
+    #CollectionAjaxContent .grid-product,
+    #CollectionAjaxContent .grid-product__content,
+    #CollectionAjaxContent .product-slide,
+    #CollectionAjaxContent .product-slider {
+      margin: 0 !important;
+      padding: 0 !important;
+    }
+
+    /* Card flottante: radius e glassmorphism */
+    #CollectionAjaxContent .grid-product__content {
+      border-radius: 24px;
+      overflow: hidden;
+      background: rgba(255,255,255,0.14);
+      -webkit-backdrop-filter: blur(12px);
+      backdrop-filter: blur(12px);
+      box-shadow: 0 10px 26px rgba(0,0,0,0.14);
+      position: relative;
+    }
+
+    /* Area immagine con rapporto 3:4 e cover */
+    #CollectionAjaxContent .product-slider {
+      position: relative;
+      aspect-ratio: 3 / 4;
+      overflow: hidden;
+      border-radius: 24px;
+    }
+    /* (overlay rimosso) */
+    #CollectionAjaxContent .product-slider .product-slide {
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+      transition: opacity 0.6s ease-in-out;
+    }
+    #CollectionAjaxContent .product-slider .product-slide.is-active {
+      opacity: 1;
+    }
+    #CollectionAjaxContent .product-slider .grid__image-ratio,
+    #CollectionAjaxContent .product-slider .image-wrap {
+      position: absolute;
+      inset: 0;
+      width: 100% !important;
+      height: 100% !important;
+      padding: 0 !important;
+    }
+    #CollectionAjaxContent .product-slider .grid__image-ratio {
+      background-size: cover;
+      background-position: center;
+    }
+    #CollectionAjaxContent .product-slider img.grid-product__image {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    /* Finestra rettangolare sotto la card: separata con gap, stessa ampiezza e radius */
+    #CollectionAjaxContent .grid-product__meta {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      height: 70px;
+      margin-top: 20px; /* gap visivo tra card e finestra */
+      padding: 0 14px;
+      background: rgba(255,255,255,0.14);
+      -webkit-backdrop-filter: blur(12px);
+      backdrop-filter: blur(12px);
+      border-radius: 20px;
+    }
+    /* Contenitore orizzontale: finestra (70%) + bottone (30%) */
+    #CollectionAjaxContent [data-desktop-actions] {
+      display: flex;
+      align-items: stretch;
+      gap: 18px; /* uguale al column-gap della griglia */
+      margin-top: 20px; /* gap rispetto alla card immagine */
+    }
+
+    /* Finestra info (desktop-only): restyle glassmorphism come @designbottone, senza alterare dimensioni o radius */
+    #CollectionAjaxContent [data-desktop-info-window] {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      justify-content: center;
+      gap: 4px;
+      min-height: 84px; /* invariato */
+      height: auto; /* invariato */
+      padding: 10px 14px; /* invariato */
+      position: relative;
+      overflow: hidden;
+      background: rgba(255, 255, 255, 0.08);
+      -webkit-backdrop-filter: blur(12px) saturate(180%);
+      backdrop-filter: blur(12px) saturate(180%);
+      border-radius: 24px; /* invariato */
+      flex: 0 0 calc(70% - 9px); /* invariato */
+      box-sizing: border-box;
+      transition: all 0.3s ease;
+      box-shadow: 2px 4px 4px rgba(0, 0, 0, 0.21);
+      border: none;
+      outline: none;
+    }
+    #CollectionAjaxContent [data-desktop-info-window]::before{
+      content: '';
+      position: absolute;
+      top: -0.5px; left: -0.5px; right: -0.5px; bottom: -0.5px;
+      border-radius: 25px; /* 24px + bordo mascherato */
+      padding: 1.5px;
+      background: conic-gradient(
+        from 315deg at 35% 60%,
+        rgba(255, 255, 255, 0.85) 0deg,
+        rgba(255, 255, 255, 0.7) 30deg,
+        rgba(255, 255, 255, 0.4) 60deg,
+        rgba(255, 255, 255, 0.15) 90deg,
+        rgba(255, 255, 255, 0.05) 120deg,
+        rgba(255, 255, 255, 0.35) 150deg,
+        rgba(255, 255, 255, 0.35) 120deg,
+        rgba(255, 255, 255, 0.02) 210deg,
+        rgba(255, 255, 255, 0.02) 240deg,
+        rgba(255, 255, 255, 0.02) 270deg,
+        rgba(255, 255, 255, 0.02) 300deg,
+        rgba(255, 255, 255, 0.7) 330deg,
+        rgba(255, 255, 255, 0.85) 360deg
+      );
+      mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+      mask-composite: xor;
+      -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+      -webkit-mask-composite: xor;
+      pointer-events: none;
+    }
+    #CollectionAjaxContent [data-desktop-info-window]::after{
+      content: '';
+      position: absolute;
+      top: 1px; left: 1px; right: 1px; bottom: 1px;
+      background: rgba(255, 255, 255, 0.06);
+      -webkit-backdrop-filter: blur(16px) saturate(160%) brightness(110%);
+      backdrop-filter: blur(16px) saturate(160%) brightness(110%);
+      border-radius: 23.5px; /* leggermente inferiore al 24px per layer interno */
+      z-index: -1;
+      pointer-events: none;
+    }
+
+    /* Bottone add-to-cart: restyle glassmorphism come @designbottone, senza alterare dimensioni o radius */
+    #CollectionAjaxContent .grid-product__add-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      text-transform: uppercase;
+      letter-spacing: .03em;
+      font-weight: 600;
+      height: 84px; /* invariato */
+      padding: 0 16px; /* invariato */
+      position: relative;
+      overflow: hidden;
+      background: rgba(255, 255, 255, 0.08);
+      -webkit-backdrop-filter: blur(12px) saturate(180%);
+      backdrop-filter: blur(12px) saturate(180%);
+      border-radius: 24px; /* invariato */
+      border: none;
+      outline: none;
+      color: inherit;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 2px 4px 4px rgba(0, 0, 0, 0.21);
+      flex: 0 0 calc(30% - 9px); /* invariato */
+      text-align: center;
+    }
+    #CollectionAjaxContent .grid-product__add-btn::before{
+      content: '';
+      position: absolute;
+      top: -0.5px; left: -0.5px; right: -0.5px; bottom: -0.5px;
+      border-radius: 25px; /* 24px + bordo mascherato */
+      padding: 1.5px;
+      background: conic-gradient(
+        from 315deg at 35% 60%,
+        rgba(255, 255, 255, 0.85) 0deg,
+        rgba(255, 255, 255, 0.7) 30deg,
+        rgba(255, 255, 255, 0.4) 60deg,
+        rgba(255, 255, 255, 0.15) 90deg,
+        rgba(255, 255, 255, 0.05) 120deg,
+        rgba(255, 255, 255, 0.35) 150deg,
+        rgba(255, 255, 255, 0.35) 120deg,
+        rgba(255, 255, 255, 0.02) 210deg,
+        rgba(255, 255, 255, 0.02) 240deg,
+        rgba(255, 255, 255, 0.02) 270deg,
+        rgba(255, 255, 255, 0.02) 300deg,
+        rgba(255, 255, 255, 0.7) 330deg,
+        rgba(255, 255, 255, 0.85) 360deg
+      );
+      mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+      mask-composite: xor;
+      -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+      -webkit-mask-composite: xor;
+      pointer-events: none;
+    }
+    #CollectionAjaxContent .grid-product__add-btn::after{
+      content: '';
+      position: absolute;
+      top: 1px; left: 1px; right: 1px; bottom: 1px;
+      background: rgba(255, 255, 255, 0.06);
+      -webkit-backdrop-filter: blur(16px) saturate(160%) brightness(110%);
+      backdrop-filter: blur(16px) saturate(160%) brightness(110%);
+      border-radius: 23.5px;
+      z-index: -1;
+      pointer-events: none;
+    }
+    #CollectionAjaxContent [data-desktop-info-window] .grid-product__title {
+      width: 100%;
+      text-align: left;
+      font-weight: 600;
+      line-height: 1.3;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      white-space: normal;
+      word-break: break-word;
+    }
+    #CollectionAjaxContent [data-desktop-info-window] .grid-product__price {
+      width: 100%;
+      text-align: left;
+      line-height: 1.2;
+      white-space: normal;
+    }
+    /* Finestra desktop visibile sotto l'immagine */
+    /* Titolo e prezzo dentro la finestra */
+    #CollectionAjaxContent .grid-product__title { font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    #CollectionAjaxContent .grid-product__price { white-space: nowrap; }
+
+    /* Nascondi color picker su desktop per mantenere finestra 50px fissa */
+    #CollectionAjaxContent .grid-product__colors { display: none !important; }
+  }
+{%- endstyle -%}
+
+<script>
+  (function() {
+    var mediaDesktop = window.matchMedia('(min-width: 1025px)');
+    var timers = new WeakMap();
+
+    function initSlider(el) {
+      var slides = el.querySelectorAll('.product-slide');
+      if (!slides || slides.length <= 1) return;
+
+      // Evita conflitti con eventuale slider nativo
+      if (el.classList.contains('flickity-enabled')) return;
+
+      slides.forEach(function(s, i) { s.classList.toggle('is-active', i === 0); });
+      var idx = 0;
+
+      function start() {
+        if (!mediaDesktop.matches) return;
+        if (timers.get(el)) return;
+        var id = setInterval(function() {
+          slides[idx].classList.remove('is-active');
+          idx = (idx + 1) % slides.length;
+          slides[idx].classList.add('is-active');
+        }, 900);
+        timers.set(el, id);
+      }
+
+      function stop() {
+        var id = timers.get(el);
+        if (id) { clearInterval(id); timers.delete(el); }
+        slides.forEach(function(s, i) { s.classList.toggle('is-active', i === 0); });
+      }
+
+      el.addEventListener('mouseenter', start);
+      el.addEventListener('mouseleave', stop);
+      window.addEventListener('blur', stop);
+      window.addEventListener('resize', function() { if (!mediaDesktop.matches) stop(); }, { passive: true });
+    }
+
+    function bindAll() {
+      if (!mediaDesktop.matches) return;
+      document.querySelectorAll('#CollectionAjaxContent .product-slider').forEach(initSlider);
+    }
+
+    document.addEventListener('DOMContentLoaded', bindAll);
+  })();
+</script>
+
+<script type="application/ld+json">
+  {
+    "@context": "http://schema.org",
+    "@type": "CollectionPage",
+    {% if collection.description != blank %}
+      "description": {{ collection.description | strip_html | json }},
+    {% endif %}
+    {% if page_image %}
+      {% assign image_size = page_image.width | append: 'x' %}
+      "image": {
+        "@type": "ImageObject",
+        "height": {{ page_image.height | json }},
+        "url": {{ page_image | img_url: image_size | prepend: "https:" | json }},
+        "width": {{ page_image.width | json }}
+      },
+    {% endif %}
+    "name": {{ collection.title | json }}
+  }
+</script>
+
+{% schema %}
+{
+  "name": "t:sections.main-collection.name",
+  "blocks": [
+    {
+      "type": "collection_description",
+      "name": "t:sections.main-collection.blocks.collection_description.name",
+      "limit": 1
+    },
+    {
+      "type": "product_grid",
+      "name": "t:sections.main-collection.blocks.products.name",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "range",
+          "id": "per_row_desktop",
+          "label": "t:sections.main-collection.blocks.products.settings.per_row_desktop.label",
+          "default": 3,
+          "min": 2,
+          "max": 4,
+          "step": 1
+        },
+        {
+          "type": "select",
+          "id": "per_row_mobile",
+          "label": "t:sections.main-collection.blocks.products.settings.per_row_mobile.label",
+          "default": "1",
+          "options": [
+            {
+              "value": "1",
+              "label": "1"
+            },
+            {
+              "value": "2",
+              "label": "t:sections.main-collection.blocks.products.settings.per_row_mobile.options.2.label"
+            },
+            {
+              "value": "2-flush",
+              "label": "t:sections.main-collection.blocks.products.settings.per_row_mobile.options.2-flush.label"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}
