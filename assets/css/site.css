@@ -41,11 +41,6 @@ h2.sw-title {
   color: #333333;
 }
 
-form.is-success .newsletter-form-group,
-form.is-success .nl-form-status {
-  display: none !important;
-}
-
 .nl-form-thanks {
   display: none;
   margin: 0;
@@ -66,7 +61,7 @@ form.is-success .nl-form-status {
   filter: blur(10px);
 }
 
-form.is-success .nl-form-thanks {
+.nl-form.is-success .nl-form-thanks {
   display: block;
   animation: nlThanksReveal 0.9s ease forwards;
 }

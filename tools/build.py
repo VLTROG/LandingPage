@@ -78,7 +78,7 @@ HEAD = f"""<!doctype html>
 
   <link rel="stylesheet" href="./assets/css/fonts.css">
   <link rel="stylesheet" href="./assets/css/theme.css">
-  <link rel="stylesheet" href="./assets/css/site.css?v=20260911-11">
+  <link rel="stylesheet" href="./assets/css/site.css?v=20260911-12">
 
   <script>
     document.documentElement.className = document.documentElement.className.replace('no-js', 'js');
@@ -183,7 +183,7 @@ def main() -> None:
 
     OUT.write_text(
         HEAD + body_tag + "\n" + body
-        + '\n  <script src="./assets/js/main.js?v=20260911-11"></script>\n</body>\n</html>\n',
+        + '\n  <script src="./assets/js/main.js?v=20260911-12"></script>\n</body>\n</html>\n',
         encoding="utf-8",
     )
 

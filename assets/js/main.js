@@ -32,17 +32,19 @@
   }
 
   function showThanks(form) {
-    var group = form.querySelector('.newsletter-form-group');
     var thanks = form.querySelector('[data-form-thanks]');
     var wrap = form.closest('.nl-form');
-    form.classList.add('is-success');
-    if (group) group.classList.add('is-success');
-    if (wrap) wrap.classList.add('is-success');
-    if (thanks) {
-      thanks.hidden = false;
-      thanks.textContent = SUCCESS_TEXT;
-    }
-    hideStatus(form);
+    if (!thanks || !wrap) return;
+
+    /*
+     * Il form desktop costruisce la capsula con .newsletter-form-group.
+     * Sostituire l'intero contenuto del wrapper la rimuove fisicamente dal
+     * DOM: nessuna regola inline o specificità CSS può lasciarla visibile.
+     */
+    thanks.hidden = false;
+    thanks.textContent = SUCCESS_TEXT;
+    wrap.classList.add('is-success');
+    wrap.replaceChildren(thanks);
   }
 
   function resolveEndpoint(form) {
