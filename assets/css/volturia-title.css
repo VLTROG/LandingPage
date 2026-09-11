@@ -19,10 +19,10 @@ h1.loader {
   text-transform: uppercase;
   font-family: VOLTURIARegular, sans-serif;
   font-size: 4.6875em;
-  /* Fill quasi invisibile (non transparent): su WebKit mobile
-     -webkit-text-fill-color eredita il nero di body e color:transparent
-     non lo azzera. Un fill 1% argento forza l'anti-alias e evita il
-     contrasto nero + ombre che Shopify non mostra. */
+  /* Le lettere sono le text-shadow, non il fill.
+     theme.css imposta body { color:#000 }. Su WebKit mobile
+     -webkit-text-fill-color eredita quel nero e color:transparent
+     non lo azzera: il glifo nero si somma alle ombre. */
   color: rgba(204, 208, 212, 0.01);
   -webkit-text-fill-color: rgba(204, 208, 212, 0.01);
   -webkit-font-smoothing: antialiased;
