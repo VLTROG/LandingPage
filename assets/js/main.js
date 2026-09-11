@@ -34,8 +34,10 @@
   function showThanks(form) {
     var group = form.querySelector('.newsletter-form-group');
     var thanks = form.querySelector('[data-form-thanks]');
+    var wrap = form.closest('.nl-form');
     form.classList.add('is-success');
     if (group) group.classList.add('is-success');
+    if (wrap) wrap.classList.add('is-success');
     if (thanks) {
       thanks.hidden = false;
       thanks.textContent = SUCCESS_TEXT;
