@@ -57,3 +57,57 @@
   --iconWeight: 4px;
   --iconLinecaps: miter;
 }
+
+/*
+ * Tipografia critica del tema Streamline (snippets/critical-css.liquid).
+ * Su Shopify viene iniettata inline nel <head>. Senza queste regole il
+ * titolo h1.loader (font-size: 4.6875em) eredita i 16px del browser invece
+ * dei 13.6px mobile di Shopify, e manca -webkit-font-smoothing: antialiased.
+ */
+body,
+input,
+textarea,
+button,
+select {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-text-size-adjust: 100%;
+  text-rendering: optimizeSpeed;
+  font-family: var(--typeBasePrimary), var(--typeBaseFallback);
+  font-size: calc(var(--typeBaseSize) * 0.85);
+  font-weight: var(--typeBaseWeight);
+  font-style: var(--typeBaseStyle);
+  letter-spacing: var(--typeBaseSpacing);
+  line-height: var(--typeBaseLineHeight);
+}
+
+@media only screen and (min-width: 769px) {
+  body,
+  input,
+  textarea,
+  button,
+  select {
+    font-size: var(--typeBaseSize);
+  }
+}
+
+h1, .h1,
+h3, .h3,
+h4, .h4,
+h5, .h5,
+h6, .h6,
+.section-header__title {
+  font-family: var(--typeHeaderPrimary), var(--typeHeaderFallback);
+  font-weight: var(--typeHeaderWeight);
+  font-style: var(--typeHeaderStyle);
+  letter-spacing: var(--typeHeaderSpacing);
+  line-height: var(--typeHeaderLineHeight);
+  word-break: break-word;
+}
+
+h2, .h2 {
+  font-family: var(--typeBasePrimary), var(--typeBaseFallback);
+  font-weight: var(--typeBaseWeight);
+  letter-spacing: var(--typeBaseSpacing);
+  line-height: var(--typeBaseLineHeight);
+}

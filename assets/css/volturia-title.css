@@ -19,11 +19,20 @@ h1.loader {
   text-transform: uppercase;
   font-family: VOLTURIARegular, sans-serif;
   font-size: 4.6875em;
-  color: transparent;
+  /* Fill quasi invisibile (non transparent): su WebKit mobile
+     -webkit-text-fill-color eredita il nero di body e color:transparent
+     non lo azzera. Un fill 1% argento forza l'anti-alias e evita il
+     contrasto nero + ombre che Shopify non mostra. */
+  color: rgba(204, 208, 212, 0.01);
+  -webkit-text-fill-color: rgba(204, 208, 212, 0.01);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
   letter-spacing: 0.03em;
 }
 
 .loader span {
+  color: inherit;
+  -webkit-text-fill-color: inherit;
   text-shadow:
     0 0 2px rgba(204, 208, 212, 0.9),
     0 15px 25px rgba(0, 0, 0, 1.3),

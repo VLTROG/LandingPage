@@ -75,9 +75,9 @@ HEAD = f"""<!doctype html>
   <link rel="preload" href="./media/fonts/ppneuemontreal-book.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="./media/fonts/ppneuemontreal-regular.woff2" as="font" type="font/woff2" crossorigin>
 
-  <link rel="stylesheet" href="./assets/css/fonts.css">
+  <link rel="stylesheet" href="./assets/css/fonts.css?v=20260911-4">
   <link rel="stylesheet" href="./assets/css/theme.css">
-  <link rel="stylesheet" href="./assets/css/site.css?v=20260911-3">
+  <link rel="stylesheet" href="./assets/css/site.css?v=20260911-4">
 
   <script>
     document.documentElement.className = document.documentElement.className.replace('no-js', 'js');
@@ -114,7 +114,7 @@ def replace_media_urls(html: str) -> str:
     # CSS titolo animato -> copia locale con font locali
     html = html.replace(
         "https://cdn.shopify.com/s/files/1/0234/8777/4816/files/movingtext.css?v=1679846472",
-        "./assets/css/volturia-title.css?v=20260911-2",
+        "./assets/css/volturia-title.css?v=20260911-4",
     )
 
     # normalize.css -> vendor locale
