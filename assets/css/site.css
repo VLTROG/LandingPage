@@ -41,31 +41,7 @@ h2.sw-title {
   color: #333333;
 }
 
-.newsletter-form-group.is-success {
-  justify-content: center;
-  pointer-events: none;
-  background: transparent !important;
-  border: none !important;
-  box-shadow: none !important;
-  backdrop-filter: none !important;
-  -webkit-backdrop-filter: none !important;
-  padding: 0 !important;
-  max-width: none !important;
-  transform: none !important;
-}
-
-.nl-form.is-success,
-.nl-form.is-success form {
-  background: transparent !important;
-  box-shadow: none !important;
-  border: none !important;
-  backdrop-filter: none !important;
-  -webkit-backdrop-filter: none !important;
-}
-
-.newsletter-form-group.is-success .newsletter-form-group__input,
-.newsletter-form-group.is-success .newsletter-form-group__submit,
-.newsletter-form-group.is-success .nl-pill-button,
+form.is-success .newsletter-form-group,
 form.is-success .nl-form-status {
   display: none !important;
 }
@@ -90,7 +66,7 @@ form.is-success .nl-form-status {
   filter: blur(10px);
 }
 
-.newsletter-form-group.is-success .nl-form-thanks {
+form.is-success .nl-form-thanks {
   display: block;
   animation: nlThanksReveal 0.9s ease forwards;
 }
