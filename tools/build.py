@@ -78,7 +78,7 @@ HEAD = f"""<!doctype html>
 
   <link rel="stylesheet" href="./assets/css/fonts.css">
   <link rel="stylesheet" href="./assets/css/theme.css">
-  <link rel="stylesheet" href="./assets/css/site.css?v=20260911-8">
+  <link rel="stylesheet" href="./assets/css/site.css?v=20260911-9">
 
   <script>
     document.documentElement.className = document.documentElement.className.replace('no-js', 'js');

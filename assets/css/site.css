@@ -63,12 +63,29 @@ form.is-success .nl-form-status {
   font-size: clamp(16px, 2.2vw, 22px);
   letter-spacing: 0.02em;
   line-height: 1.3;
-  color: #333333;
+  color: #00ff55;
+  text-decoration: underline;
+  text-underline-offset: 0.18em;
+  text-decoration-thickness: 2px;
   padding: 12px 20px;
+  opacity: 0;
+  filter: blur(10px);
 }
 
 .newsletter-form-group.is-success .nl-form-thanks {
   display: block;
+  animation: nlThanksReveal 0.9s ease forwards;
+}
+
+@keyframes nlThanksReveal {
+  from {
+    opacity: 0;
+    filter: blur(10px);
+  }
+  to {
+    opacity: 1;
+    filter: blur(0);
+  }
 }
 
 .nl-form-status.is-visible {
