@@ -19,20 +19,11 @@ h1.loader {
   text-transform: uppercase;
   font-family: VOLTURIARegular, sans-serif;
   font-size: 4.6875em;
-  /* Le lettere sono le text-shadow, non il fill.
-     theme.css imposta body { color:#000 }. Su WebKit mobile
-     -webkit-text-fill-color eredita quel nero e color:transparent
-     non lo azzera: il glifo nero si somma alle ombre. */
-  color: rgba(204, 208, 212, 0.01);
-  -webkit-text-fill-color: rgba(204, 208, 212, 0.01);
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+  color: transparent;
   letter-spacing: 0.03em;
 }
 
 .loader span {
-  color: inherit;
-  -webkit-text-fill-color: inherit;
   text-shadow:
     0 0 2px rgba(204, 208, 212, 0.9),
     0 15px 25px rgba(0, 0, 0, 1.3),
@@ -43,6 +34,25 @@ h1.loader {
     0 0 20px rgba(255, 255, 255, 0.45);
   -webkit-animation: loading 1.9s ease-in-out infinite alternate;
   animation: loading 1.9s ease-in-out infinite alternate;
+}
+
+/*
+ * Desktop: le ombre nere (15px / 25px) cadono sotto la lettera.
+ * Mobile: lo stesso blur avvolge il glifo e si somma tra lettere vicine,
+ * quindi l'alone diventa nero invece del grigio 204,208,212.
+ * Si tengono offset e blur; si abbassa solo il nero.
+ */
+@media (max-width: 768px) {
+  .loader span {
+    text-shadow:
+      0 0 2px rgba(204, 208, 212, 0.9),
+      0 15px 25px rgba(0, 0, 0, 0.28),
+      0 -2px 3px rgba(0, 0, 0, 0.06),
+      0 -5px 10px rgba(255, 255, 255, 0.5),
+      0 5px 10px rgba(0, 0, 0, 0.12),
+      0 3px 4px rgba(255, 255, 255, 0.2),
+      0 0 20px rgba(255, 255, 255, 0.45);
+  }
 }
 
 @-webkit-keyframes loading {

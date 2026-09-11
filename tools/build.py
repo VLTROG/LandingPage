@@ -114,7 +114,7 @@ def replace_media_urls(html: str) -> str:
     # CSS titolo animato -> copia locale con font locali
     html = html.replace(
         "https://cdn.shopify.com/s/files/1/0234/8777/4816/files/movingtext.css?v=1679846472",
-        "./assets/css/volturia-title.css?v=20260911-4",
+        "./assets/css/volturia-title.css?v=20260911-5",
     )
 
     # normalize.css -> vendor locale
