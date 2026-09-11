@@ -45,6 +45,7 @@ NEWSLETTER_FORM = """<form method="post" action="https://formspree.io/f/YOUR_FOR
       <button type="submit" id="newsletter-form-submit" class="newsletter-form-group__submit" title="Subscribe">
         <svg aria-hidden="true" focusable="false" role="presentation" class="icon icon-email" viewBox="0 0 64 64"><path d="M63 52H1V12h62zM1 12l25.68 24h9.72L63 12M21.82 31.68L1.56 51.16m60.78.78L41.27 31.68"/></svg>
       </button>
+      <p class="nl-form-thanks" data-form-thanks hidden>Thank you for trusting us</p>
     </div>
     <p class="nl-form-status" data-form-status role="status" aria-live="polite"></p></form>"""
 
@@ -77,7 +78,7 @@ HEAD = f"""<!doctype html>
 
   <link rel="stylesheet" href="./assets/css/fonts.css">
   <link rel="stylesheet" href="./assets/css/theme.css">
-  <link rel="stylesheet" href="./assets/css/site.css?v=20260911-7">
+  <link rel="stylesheet" href="./assets/css/site.css?v=20260911-8">
 
   <script>
     document.documentElement.className = document.documentElement.className.replace('no-js', 'js');
@@ -182,7 +183,7 @@ def main() -> None:
 
     OUT.write_text(
         HEAD + body_tag + "\n" + body
-        + '\n  <script src="./assets/js/main.js"></script>\n</body>\n</html>\n',
+        + '\n  <script src="./assets/js/main.js?v=20260911-8"></script>\n</body>\n</html>\n',
         encoding="utf-8",
     )
 
