@@ -43,6 +43,21 @@ h1.loader {
  * Si tengono offset e blur; si abbassa solo il nero.
  */
 @media (max-width: 768px) {
+  .volturia-title-psw {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+  }
+
+  h1.loader {
+    /* 4.6875em * 0.8 = 3.75em; clamp per telefoni più stretti */
+    font-size: clamp(2.4em, 15.5vw, 3.75em);
+    width: 100%;
+    text-align: center;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
   .loader span {
     text-shadow:
       0 0 2px rgba(204, 208, 212, 0.9),
