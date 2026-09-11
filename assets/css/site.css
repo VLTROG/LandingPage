@@ -19,6 +19,18 @@ body[data-animate_images="true"] [class*="appear-delay"] {
   transform: none !important;
 }
 
+/*
+ * I titoli principali (h2.to-title / h2.iad-header-title / h2.sw-title)
+ * avevano font-weight: 0, valore non valido: il browser lo ignora e
+ * l'h2 resta bold del user-agent. I titoli delle card figlie (.bento-content h2)
+ * non sono toccati.
+ */
+h2.to-title,
+h2.iad-header-title,
+h2.sw-title {
+  font-weight: 400 !important;
+}
+
 /* Messaggio di stato del form newsletter (successo/errore) */
 .nl-form-status {
   display: none;
